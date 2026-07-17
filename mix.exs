@@ -11,7 +11,9 @@ defmodule Wekui.MixProject do
       aliases: aliases(),
       deps: deps(),
       compilers: [:phoenix_live_view] ++ Mix.compilers(),
-      listeners: [Phoenix.CodeReloader]
+      listeners: [Phoenix.CodeReloader],
+      usage_rules: usage_rules(),
+      consolidate_protocols: Mix.env() != :dev
     ]
   end
 
@@ -40,6 +42,10 @@ defmodule Wekui.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:igniter, "~> 0.6", only: [:dev, :test]},
+      {:sourceror, "~> 1.8", only: [:dev, :test]},
+      {:ash, "~> 3.0"},
+      {:usage_rules, "~> 1.0", only: [:dev]},
       {:phoenix, "~> 1.8.1"},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.13"},
@@ -89,6 +95,39 @@ defmodule Wekui.MixProject do
         "phx.digest"
       ],
       precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"]
+    ]
+  end
+
+  defp usage_rules do
+    # Example for those using claude.
+    [
+      file: "CLAUDE.md",
+      # rules to include directly in CLAUDE.md
+      # :usage_rules itself provides rules for search_docs, docs, etc.
+      # use a regex to match multiple deps, or atoms/strings for specific ones
+      usage_rules: [:usage_rules, :ash, ~r/^ash_/],
+      # If your CLAUDE.md is getting too big, link instead of inlining:
+      usage_rules: [:ash, {~r/^ash_/, link: :markdown}],
+      # or use skills
+      skills: [
+        location: ".claude/skills",
+        # build skills that combine multiple usage rules
+        build: [
+          "ash-framework": [
+            # The description tells people how to use this skill.
+            description:
+              "Use this skill working with Ash Framework or any of its extensions. Always consult this when making any domain changes, features or fixes.",
+            # Include all Ash dependencies
+            usage_rules: [:ash, ~r/^ash_/]
+          ],
+          "phoenix-framework": [
+            description:
+              "Use this skill working with Phoenix Framework. Consult this when working with the web layer, controllers, views, liveviews etc.",
+            # Include all Phoenix dependencies
+            usage_rules: [:phoenix, ~r/^phoenix_/]
+          ]
+        ]
+      ]
     ]
   end
 end
