@@ -53,6 +53,19 @@ config :wekui,
   ecto_repos: [Wekui.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+# SQLite pragmas shared across all environments (dev/test/runtime.exs only add
+# :database and :pool_size). WAL allows concurrent readers during a write,
+# NORMAL synchronous relies on WAL for durability instead of fsync-per-commit,
+# and the larger cache/mmap trade memory for fewer disk reads.
+config :wekui, Wekui.Repo,
+  journal_mode: :wal,
+  synchronous: :normal,
+  foreign_keys: :on,
+  busy_timeout: 5_000,
+  cache_size: -64_000,
+  temp_store: :memory,
+  custom_pragmas: [mmap_size: 268_435_456]
+
 # Configures the endpoint
 config :wekui, WekuiWeb.Endpoint,
   url: [host: "localhost"],
