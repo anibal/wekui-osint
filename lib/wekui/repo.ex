@@ -1,5 +1,4 @@
 defmodule Wekui.Repo do
-  use Ecto.Repo,
-    otp_app: :wekui,
-    adapter: Ecto.Adapters.Postgres
+  use AshSqlite.Repo,
+    otp_app: :wekui
 end
