@@ -1,6 +1,6 @@
+status:: built
 title:: Place Name
 type:: concept
-status:: built
 
 - A **Place Name** is one string that people actually use for a [[place]]. A Place usually has several, because people rarely agree on one name.
 - Each Place Name is described on two separate axes, and neither axis tells us anything about the other:

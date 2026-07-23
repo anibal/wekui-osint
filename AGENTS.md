@@ -31,7 +31,7 @@ at `docs/` root and are never moved into `docs/pages/` (outl would bulletize the
 
 A Phoenix v1.8 web application whose domain layer is Ash Framework on SQLite
 (`ash_sqlite`). Domain logic lives in Ash resources under `lib/wekui/`
-(domains: `Wekui.Core`, `Wekui.Acquisition`); the web layer lives under
+(domains: `Wekui.Core`, `Wekui.Acquisition`, `Wekui.Capture`); the web layer lives under
 `lib/wekui_web/`.
 
 ## Standing decisions
