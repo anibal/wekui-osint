@@ -52,7 +52,7 @@ config :spark,
 config :wekui,
   ecto_repos: [Wekui.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [Wekui.Acquisition, Wekui.Core]
+  ash_domains: [Wekui.Acquisition, Wekui.Capture, Wekui.Core]
 
 # SQLite pragmas shared across all environments (dev/test/runtime.exs only add
 # :database and :pool_size). WAL allows concurrent readers during a write,

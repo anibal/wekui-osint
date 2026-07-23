@@ -1,10 +1,12 @@
 defmodule Wekui.Fixtures do
   @moduledoc """
   The smallest well-formed world a test can stand on: an Event, Places that can
-  actually be collected on, and a Search that is ready to be worked out.
+  actually be collected on, a Search that is ready to be worked out, and the
+  Posts, Authors and Appearances a Query brings back.
   """
 
   alias Wekui.Acquisition
+  alias Wekui.Capture
   alias Wekui.Core
 
   def event!(attrs \\ %{}) do
@@ -76,5 +78,46 @@ defmodule Wekui.Fixtures do
     |> Acquisition.decompose_search!()
     |> Acquisition.freeze_search!()
     |> Acquisition.activate_search!()
+  end
+
+  @doc "An Author of one Event, as first seen."
+  def author!(event, attrs \\ %{}) do
+    Capture.record_author!(
+      Map.merge(
+        %{
+          event_id: event.id,
+          x_id: "u#{System.unique_integer([:positive])}",
+          handle: "reporteya",
+          display_name: "Reporte Ya"
+        },
+        attrs
+      )
+    )
+  end
+
+  @doc "A collected Post, carrying a minimal well-formed Payload."
+  def post!(event, attrs \\ %{}) do
+    {author, attrs} = Map.pop_lazy(attrs, :author, fn -> author!(event) end)
+    x_id = Map.get(attrs, :x_id, "p#{System.unique_integer([:positive])}")
+    text = Map.get(attrs, :text, "temblor sentido en la guaira")
+
+    Capture.collect_post!(
+      Map.merge(
+        %{
+          event_id: event.id,
+          author_id: author.id,
+          x_id: x_id,
+          text: text,
+          posted_at: ~U[2026-06-24 22:05:00.000000Z],
+          payload: %{"id" => x_id, "text" => text}
+        },
+        attrs
+      )
+    )
+  end
+
+  @doc "An Appearance: one Query found one Post."
+  def appearance!(post, query) do
+    Capture.record_appearance!(%{post_id: post.id, query_id: query.id})
   end
 end
