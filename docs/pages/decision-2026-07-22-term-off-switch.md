@@ -1,7 +1,8 @@
+decided:: 2026-07-22
+evidence:: [[research-2026-07-23-old-app-corpus]]
+status:: settled
 title:: A Search Term has no off-switch
 type:: decision
-status:: settled
-evidence:: [[research-old-app-corpus]]
 
 - **Decision** — a [[search-term]] cannot be marked unusable; there is no off-switch.
 - The old design let a Term be marked unusable so a noisy word could be silenced without deleting it and losing the explanation for what it had already brought in.

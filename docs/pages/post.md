@@ -21,7 +21,7 @@ status:: built
 - A Post does not say where it is about. Working that out is a judgment, and it arrives with the judging vocabulary — see [[open-placement]].
 - A Post exists because a Query found it; every finding is recorded as an [[appearance]].
 - What a Post deliberately does not carry:
-  - no folded copy of its own text — see [[decision-no-folded-text]];
-  - no engagement lifted out of the Payload — see [[decision-engagement-in-payload]];
-  - no pointer to the Query that first found it — see [[decision-first-query]];
-  - no repost wrapper to see through — see [[decision-post-is-the-message]].
+  - no folded copy of its own text — see [[decision-2026-07-23-no-folded-text]];
+  - no engagement lifted out of the Payload — see [[decision-2026-07-23-engagement-in-payload]];
+  - no pointer to the Query that first found it — see [[decision-2026-07-23-first-query]];
+  - no repost wrapper to see through — see [[decision-2026-07-23-post-is-the-message]].

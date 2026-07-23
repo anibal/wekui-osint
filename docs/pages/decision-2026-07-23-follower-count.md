@@ -1,7 +1,8 @@
+decided:: 2026-07-23
+evidence:: [[research-2026-07-23-old-app-corpus]]
+status:: settled
 title:: How many followers an account has is not a fact about the account
 type:: decision
-status:: settled
-evidence:: [[research-old-app-corpus]]
 
 - **Decision** — an [[author]] carries no follower count and no verified flag; both stay in each [[post]]'s Payload.
 - The old design kept a follower count on the Author, taken the first time we saw them and never refreshed afterwards.

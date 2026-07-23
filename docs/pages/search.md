@@ -9,7 +9,7 @@ status:: built
   - **Intent** — a plain sentence saying what we are trying to collect and why. We write it down so that later we can hold the intention up against what actually came back.
   - **Window** — the stretch of time we want to cover, from its **window start** to its **window end**. A Search with no window end is **open**: it keeps covering time as time passes.
   - **Slice length** — a long window cannot be asked for in one request, because X returns only so much at a time. So we cut the window into consecutive **slices** of this length and ask about one slice at a time.
-    - The slice length is remembered on the Search, so that working the plan out again produces exactly the same Queries. If none is given, it is ten minutes — see [[decision-slice-length]].
+    - The slice length is remembered on the Search, so that working the plan out again produces exactly the same Queries. If none is given, it is ten minutes — see [[decision-2026-07-22-slice-length]].
     - Slices are always whole, which means the last one reaches a little past the window end when the window is not a whole number of slices long.
     - This is deliberate: it keeps the slices anchored to a grid that never moves, so pushing the window end out later only ever *adds* slices. A slice we have already asked about never turns into a different, longer one, and no two Queries ever ask about overlapping stretches of time.
   - **Result mode** — how we want X to choose what to return:

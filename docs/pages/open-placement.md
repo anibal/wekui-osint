@@ -1,6 +1,7 @@
+opened:: 2026-07-22
+status:: open
 title:: Placement does not exist yet
 type:: open-question
-status:: open
 
 - **Placement** — the answer to *where is this Post about* — does not exist yet.
 - Working it out is a judgment, so it arrives with the judging vocabulary, and until then a [[post]] points at no [[place]] at all.

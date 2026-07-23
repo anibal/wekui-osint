@@ -2,7 +2,7 @@
 
 **Status:** research, not built. This informs the open question
 [`pages/open-when-two-posts-say-the-same-thing.md`](pages/open-when-two-posts-say-the-same-thing.md)
-(outline summary: [`pages/research-clustering-spike.md`](pages/research-clustering-spike.md)).
+(outline summary: [`pages/research-2026-07-23-clustering-spike.md`](pages/research-2026-07-23-clustering-spike.md)).
 Nothing here is committed to; it is what we measured so the decision, when it is
 made, is made on evidence.
 

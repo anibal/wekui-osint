@@ -1,7 +1,8 @@
+decided:: 2026-07-23
+evidence:: [[research-2026-07-23-old-app-corpus]]
+status:: settled
 title:: An Appearance carries no engagement of its own
 type:: decision
-status:: settled
-evidence:: [[research-old-app-corpus]]
 
 - **Decision** — an [[appearance]] says which [[query]] found the [[post]], and that is all it says.
 - The old design recorded the likes and reposts seen *at each finding*, so that every re-finding of a Post would be a measurement of how that message was gaining traction.

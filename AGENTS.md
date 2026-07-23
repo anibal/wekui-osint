@@ -10,15 +10,16 @@ An emphasis file works on what it names; keep this one short and name only
 what moves behavior.
 -->
 
-## Ubiquitous language
+## Project outline (docs/)
 
-This project keeps a shared vocabulary as a linked outline: one page per concept
-under `docs/pages/`, with [`docs/pages/ubiquitous-language.md`](docs/pages/ubiquitous-language.md)
-as the hub that names them all. **Always** read the hub plus the pages relevant to
-your task, and use those exact terms — with the same meanings — when discussing,
-planning, implementing, and reporting back. When we introduce or refine a domain
-concept, update its page (and the hub) so the language, the code, and the database
-stay on the same page.
+The project's knowledge is a linked outline under `docs/pages/`, mapped from
+[`docs/pages/index.md`](docs/pages/index.md): first principles, the ubiquitous
+language (concepts + policies), search strategy, architecture stances, a dated
+append-only decision log, open questions, and research. **Always** read the index
+plus the pages relevant to your task. For domain work the vocabulary is the
+contract: use those exact terms — with the same meanings — when discussing,
+planning, implementing, and reporting back, and update the pages in the same
+change that changes the code.
 
 `docs/` is an outl workspace (outl.app: an outliner whose op-log treats the markdown
 as a projection — it can rewrite these files). Non-negotiable rules: every bullet in
@@ -73,6 +74,9 @@ When we settle a new durable convention, put it in exactly one place:
 - Web-layer only → `.claude/rules/web.md`.
 - A workflow, checklist, or reference topic → a new hand-written skill in
   `.claude/skills/<name>/SKILL.md` (safe alongside the managed ones).
-- A domain concept → its page in `docs/pages/` (plus the hub's index line), in the
-  same change. A decision settled by evidence → a `decision-*` page; a question we
-  cannot answer yet → an `open-*` page; measurements → a `research-*` page.
+- A domain concept → its page in `docs/pages/` plus its hub's index line, in the
+  same change. A decision settled by evidence → a dated `decision-YYYY-MM-DD-*`
+  page; a question we cannot answer yet → an `open-*` page (with `opened::`);
+  measurements → a dated `research-YYYY-MM-DD-*` page; a value the system obeys →
+  a `principle-*` page; collection doctrine → `search-strategy`; system-shape
+  stances → `architecture`. Slug prefix, `type::`, and hub membership must agree.
