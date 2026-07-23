@@ -95,9 +95,33 @@ defmodule Wekui.MixProject do
         "esbuild wekui --minify",
         "phx.digest"
       ],
-      precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"],
+      precommit: [
+        &docs_doctor/1,
+        "compile --warning-as-errors",
+        "deps.unlock --unused",
+        "format",
+        "test"
+      ],
       "ash.setup": ["ash.setup", "run priv/repo/seeds.exs"]
     ]
+  end
+
+  # Guard the docs/ outline: fail on pages outside the outl dialect (which can
+  # corrupt on outl's next write), skip silently when outl is not installed.
+  # "no sidecar" warnings are allowed — pages are committed before adoption.
+  defp docs_doctor(_args) do
+    case System.find_executable("outl") do
+      nil ->
+        Mix.shell().info("outl not installed — skipping docs outline check")
+
+      _outl ->
+        {out, status} = System.cmd("outl", ["-w", "docs", "doctor"], stderr_to_stdout: true)
+
+        if status != 0 or String.contains?(out, "outside outl dialect") do
+          Mix.shell().error(out)
+          Mix.raise("docs outline check failed — fix the pages flagged above")
+        end
+    end
   end
 
   defp usage_rules do
