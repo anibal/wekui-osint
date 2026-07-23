@@ -1,4 +1,4 @@
-status:: planned
+status:: built
 title:: Theme
 type:: concept
 
@@ -8,7 +8,7 @@ type:: concept
   - a Theme's **ancestors** are its parent, its parent's parent, and so on up to the root — always listed nearest first;
   - a Theme's **subtree** is the Theme itself together with everything below it.
 - A Theme has:
-  - **Name** — the display label people read, written as-is: never folded, never emitted, never matched.
+  - **Name** — the display label people read: never folded, never emitted, never matched.
   - **Status note** — a sentence saying why the Theme is where it is right now. When a Theme is retired, this is where we say why.
   - **Proposed by** #planned — the [[actor]] that suggested this Theme, and, when it was read out of a [[post]], the Post it was inferred from. Recording it is what lets us later ask *how good are we at reading Themes out of Posts*, per Actor. Deferred exactly as it is for a [[place]].
 - Lifecycle — a Theme moves through the same named steps as a [[place]], and each step is a deliberate decision by an [[actor]]:

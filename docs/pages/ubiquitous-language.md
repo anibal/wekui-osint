@@ -20,8 +20,8 @@ type:: hub
   - [[post]] — one message published on X that we have collected; never edited, never deleted.
   - [[author]] — the account that published a Post, recorded as it was when we first saw it.
   - [[appearance]] — the record that one Query found one Post.
-  - [[theme]] #planned — a label for what a Post is about; the Event's What axis, a Place-shaped tree without the name layer.
-  - [[author-tag]] #planned — a label for what an Author is; the Event's Who axis, flat, open, and multi-label.
+  - [[theme]] — a label for what a Post is about; the Event's What axis, a Place-shaped tree without the name layer.
+  - [[author-tag]] — a label for what an Author is; the Event's Who axis, flat, open, and multi-label.
 - Policies
   - [[settling-a-collected-place]] #planned — what becomes of the Posts collected under a Place that is later settled.
 - The rest of the documentation — principles, strategy, architecture, the decision log, open questions, research — is mapped from [[index]].

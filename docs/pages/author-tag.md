@@ -1,4 +1,4 @@
-status:: planned
+status:: built
 title:: Author Tag
 type:: concept
 
@@ -6,7 +6,7 @@ type:: concept
 - An Author Tag borrows the shape of a [[theme]] but drops the tree: it keeps the same lifecycle, the same status note, and the same idea of a replacement, but it has no parent and no children.
   - Author Tags are flat, open, and multi-label: the behaviour, institution, and stance axes coexist, and one Author can carry several tags at once. There is no single hierarchy to arrange them in, so we do not impose one.
 - An Author Tag has:
-  - **Name** — the display label people read, written as-is: never folded, never emitted, never matched.
+  - **Name** — the display label people read: never folded, never emitted, never matched.
   - **Status note** — a sentence saying why the Tag is where it is right now. When a Tag is retired, this is where we say why.
   - **Proposed by** #planned — the [[actor]] that suggested this Tag, and, when it was read out of a [[post]], the Post it was inferred from. Deferred exactly as it is for a [[theme]] and a [[place]].
 - Lifecycle — an Author Tag moves through the same named steps as a [[theme]], and each step is a deliberate decision by an [[actor]]:

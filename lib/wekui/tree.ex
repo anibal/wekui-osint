@@ -17,7 +17,7 @@ defmodule Wekui.Tree do
 
   @doc """
   A node's ancestor ids, nearest-first (parent, …, root), excluding the node
-  itself. This is the walk anchored emission composes qualifiers from.
+  itself.
   """
   @spec ancestor_ids(module(), Ash.UUID.t()) :: [Ash.UUID.t()]
   def ancestor_ids(resource, id) do
