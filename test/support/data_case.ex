@@ -55,4 +55,17 @@ defmodule Wekui.DataCase do
       end)
     end)
   end
+
+  @doc """
+  Every message an `Ash.Error.Invalid` carries about one field, joined.
+
+      assert {:error, error} = Core.create_place(%{parent_id: elsewhere.id})
+      assert error_on(error, :parent_id) =~ "same event"
+
+  """
+  def error_on(%Ash.Error.Invalid{errors: errors}, field) do
+    errors
+    |> Enum.filter(&(Map.get(&1, :field) == field))
+    |> Enum.map_join(" ", &Exception.message/1)
+  end
 end

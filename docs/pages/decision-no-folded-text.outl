@@ -1,0 +1,72 @@
+{
+  "version": 2,
+  "page_id": "792GJFZEF49MEBGJWY5TK83NDC",
+  "last_synced_hash": "sha256:599bd901f508cc2e5d72dfbc6baff08c9e818fee09ba9c5baf6f65a17dc61200",
+  "last_synced_at": "2026-07-23T14:43:43.282505-05:00",
+  "blocks": [
+    {
+      "id": "01KY882NNJ686D1TT4FM34Z6EH",
+      "line": 1,
+      "indent": 0,
+      "content_hash": "sha256:a573d0fcc0ac74f88f12c6535f8f1fc3195736c67702c02d04e5c41f0457b11b",
+      "ref_handle": "blk-34z6eh"
+    },
+    {
+      "id": "01KY882NNJ7WYV3ZXYTD1HADRP",
+      "line": 2,
+      "indent": 0,
+      "content_hash": "sha256:a86262488dc85dead2e95bd44f2ad9383e3d1d101d6e325bc8f283e276a59129",
+      "ref_handle": "blk-1hadrp"
+    },
+    {
+      "id": "01KY882NNJRTPPJD5CS3HH3JGF",
+      "line": 3,
+      "indent": 0,
+      "content_hash": "sha256:29c975d308321a71d3a6afa3b124da6eea8968964b7be267e22d11c109ba3a4a",
+      "ref_handle": "blk-hh3jgf"
+    },
+    {
+      "id": "01KY882NNJTW1V7QWM9X8V1PYZ",
+      "line": 4,
+      "indent": 0,
+      "content_hash": "sha256:6bde0c70227d6c149f9ea9b3aa623fa0a5e29d9a7ae3d34031ad7ef6196a9e5f",
+      "ref_handle": "blk-8v1pyz"
+    },
+    {
+      "id": "01KY882NNJPZGYK175GQJ1Y4P9",
+      "line": 5,
+      "indent": 1,
+      "content_hash": "sha256:3b14d4de8814e07a30fc10ed1fb3aa918dd34270ac13eb2e936540dedf7188cf",
+      "ref_handle": "blk-j1y4p9"
+    },
+    {
+      "id": "01KY882NNJAFP0T7Z3EKEC92N4",
+      "line": 6,
+      "indent": 0,
+      "content_hash": "sha256:9012209aa494cd619fa905ad6f9a257f45f47ed920aca8022620bab544fd75f4",
+      "ref_handle": "blk-ec92n4"
+    },
+    {
+      "id": "01KY882NNJBWXXT4AZ09XHJXJW",
+      "line": 7,
+      "indent": 0,
+      "content_hash": "sha256:70ba4798f11a0acac98ff19e8efb0e3532685bc95c3ef623b9338a3dbab96f7e",
+      "ref_handle": "blk-xhjxjw"
+    },
+    {
+      "id": "01KY882NNJ2E727VN49AV1PG80",
+      "line": 8,
+      "indent": 0,
+      "content_hash": "sha256:69fb3038e1d6fe0c400d97a9d5b5d0255da7739f90cff2f9c62b1b9bd7421d72",
+      "ref_handle": "blk-v1pg80"
+    },
+    {
+      "id": "01KY882NNJ092CXQQW8E0130GD",
+      "line": 9,
+      "indent": 0,
+      "content_hash": "sha256:4ffce150343d9700b8b4bee0f5994db5762af01c4042c749ca920df71a21f6d6",
+      "ref_handle": "blk-0130gd"
+    }
+  ],
+  "pipeline_version": 2
+}

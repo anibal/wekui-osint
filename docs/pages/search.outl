@@ -1,0 +1,261 @@
+{
+  "version": 2,
+  "page_id": "27PHW0H42824T6A1N44X4TY0NC",
+  "last_synced_hash": "sha256:dad59b673c9fce241c980f7c53bbedb8d876e68f52a353a59d186e618638acbb",
+  "last_synced_at": "2026-07-23T14:43:46.505862-05:00",
+  "blocks": [
+    {
+      "id": "01KY882RT920D067R1AAZYN6MP",
+      "line": 1,
+      "indent": 0,
+      "content_hash": "sha256:d1eb0d3c704051497018d8c38e65d1bde995a75f4ce64d08825364215a8ab971",
+      "ref_handle": "blk-zyn6mp"
+    },
+    {
+      "id": "01KY882RT9DF88WQKNYWRWWDGC",
+      "line": 2,
+      "indent": 0,
+      "content_hash": "sha256:9832a933e01c62d6bb1a88bc058aecbedfc2bc55affea791aaff32c73749dabf",
+      "ref_handle": "blk-rwwdgc"
+    },
+    {
+      "id": "01KY882RT9XH5XQ3J91FTK203G",
+      "line": 3,
+      "indent": 0,
+      "content_hash": "sha256:b85e8f445c0c1835d4b4446fbc28591aeccbd471ac0e7c28ab58ac08f7bb5ee4",
+      "ref_handle": "blk-tk203g"
+    },
+    {
+      "id": "01KY882RT9EKTQGTMF58KR6FSE",
+      "line": 4,
+      "indent": 1,
+      "content_hash": "sha256:92ebb5f0d703a30f81f3438c8fd7feac17298af0dc70b2a924d9bcc1eb5e64e5",
+      "ref_handle": "blk-kr6fse"
+    },
+    {
+      "id": "01KY882RT99HPA3SGRB1G9GH4J",
+      "line": 5,
+      "indent": 1,
+      "content_hash": "sha256:b121c340c905f5ce33b16de25d6c8f6c963191738a10f2fb85cb4194ee308e6c",
+      "ref_handle": "blk-g9gh4j"
+    },
+    {
+      "id": "01KY882RT9N2X5MDHDSN8QXTFF",
+      "line": 6,
+      "indent": 1,
+      "content_hash": "sha256:3458bc0bec67abe45a79bc17687093bba218614cf08ef8e3c4bc4bd0311f16be",
+      "ref_handle": "blk-8qxtff"
+    },
+    {
+      "id": "01KY882RT9G5CV1NSM45V6JFC2",
+      "line": 7,
+      "indent": 1,
+      "content_hash": "sha256:1731808071ebd249972b4f32b4d45289f50367a37bb3de944541e4bb2c80d029",
+      "ref_handle": "blk-v6jfc2"
+    },
+    {
+      "id": "01KY882RT9XA5FVGEEA9CXDNJ3",
+      "line": 8,
+      "indent": 2,
+      "content_hash": "sha256:9f1e9a9cf00cf537f794a55d5f52ecdef141a90e886c162e6cec56b70077d0da",
+      "ref_handle": "blk-cxdnj3"
+    },
+    {
+      "id": "01KY882RT96NJKV7X1W20HW270",
+      "line": 9,
+      "indent": 2,
+      "content_hash": "sha256:1940f7cae4dff688801374964d5a363b89c0a0d889e235a53305afdd38b1a77b",
+      "ref_handle": "blk-0hw270"
+    },
+    {
+      "id": "01KY882RT936FY9QTQKPQD0MM0",
+      "line": 10,
+      "indent": 2,
+      "content_hash": "sha256:2f421dd8853c19543db2e54a0100d7ce2a0a2bcf273ed409bd345005168232ba",
+      "ref_handle": "blk-qd0mm0"
+    },
+    {
+      "id": "01KY882RT9W2NZHX0PCYG26GEA",
+      "line": 11,
+      "indent": 1,
+      "content_hash": "sha256:a4fbf2a7f96d090530d24153cca17bda55eb75a8e701058bef12f675582a7e23",
+      "ref_handle": "blk-g26gea"
+    },
+    {
+      "id": "01KY882RT9T0WE0NVS87PH81P0",
+      "line": 12,
+      "indent": 2,
+      "content_hash": "sha256:4b197273b96e3fbc25cefdf15d42a6d498103d784c21f018a74f4a469da0f8bc",
+      "ref_handle": "blk-ph81p0"
+    },
+    {
+      "id": "01KY882RT9KXS0FRR7N55CW5JV",
+      "line": 13,
+      "indent": 2,
+      "content_hash": "sha256:977e483a5732a5d5aeb6e7e71cfbafdaebf9bc775e494e961caf34b165505ddc",
+      "ref_handle": "blk-5cw5jv"
+    },
+    {
+      "id": "01KY882RT942GWCZE9C9HZJ3AW",
+      "line": 14,
+      "indent": 2,
+      "content_hash": "sha256:aac62988a27718fd873bb804e4d0a515c05f30bdfe6a2ffaa7d6981dd7e32b71",
+      "ref_handle": "blk-hzj3aw"
+    },
+    {
+      "id": "01KY882RT9PCG29Y2ESP9G942S",
+      "line": 15,
+      "indent": 1,
+      "content_hash": "sha256:06ba057f3c8daddb62055b90eea52c5c5b24f5ef187e508229d97291a395aca2",
+      "ref_handle": "blk-9g942s"
+    },
+    {
+      "id": "01KY882RT9FNQ3GZQWWMXE1TRX",
+      "line": 16,
+      "indent": 2,
+      "content_hash": "sha256:b681d56d05303443119fbb7959bd6384714ce51602de697f714372ad857eb33e",
+      "ref_handle": "blk-xe1trx"
+    },
+    {
+      "id": "01KY882RT97WC8NR3SCNZ4VBE3",
+      "line": 17,
+      "indent": 2,
+      "content_hash": "sha256:d90d2d658a94f73ae69f47abdbf3d3bb7e3cf8b345e126d2e75ecfbc6c5cf881",
+      "ref_handle": "blk-z4vbe3"
+    },
+    {
+      "id": "01KY882RT9FSHK9KDDYT65PV6V",
+      "line": 18,
+      "indent": 2,
+      "content_hash": "sha256:eb6225c4e277db19ac56fc4700c41df0dbe65f0c83e6742d74a95e85da0c7f1b",
+      "ref_handle": "blk-65pv6v"
+    },
+    {
+      "id": "01KY882RT9KTZ2SAJM156K1N6T",
+      "line": 19,
+      "indent": 1,
+      "content_hash": "sha256:6a6291cccb839b769beabd37d7b0ef7a1028617f257bfd7caf529376474b9b24",
+      "ref_handle": "blk-6k1n6t"
+    },
+    {
+      "id": "01KY882RT9PH7BA5T2AT0KM9BJ",
+      "line": 20,
+      "indent": 1,
+      "content_hash": "sha256:95fababf480d5e5d2d1b76bd69e99c67918126a6e854d20067a26652c9cbdec5",
+      "ref_handle": "blk-0km9bj"
+    },
+    {
+      "id": "01KY882RT96W1T7NHZTWJA30EW",
+      "line": 21,
+      "indent": 0,
+      "content_hash": "sha256:46459b1fa9194f6ab92c85c47b97e2fc12cbe1bc17ba956d74016cea9c26eed9",
+      "ref_handle": "blk-ja30ew"
+    },
+    {
+      "id": "01KY882RT9TPE1V9M4W4SAF9DF",
+      "line": 22,
+      "indent": 1,
+      "content_hash": "sha256:bb931e8321a61a01a8fb4611fd69eac5a41edf7d555ec579431f778f70d4e492",
+      "ref_handle": "blk-saf9df"
+    },
+    {
+      "id": "01KY882RT9WQQCS4Q9B81Z79ZF",
+      "line": 23,
+      "indent": 1,
+      "content_hash": "sha256:3c2d8154860b55bc0507379b27512551a045b80588689d1dbbe2e551f930ea47",
+      "ref_handle": "blk-1z79zf"
+    },
+    {
+      "id": "01KY882RT9R67TF07QBPYRK8RQ",
+      "line": 24,
+      "indent": 1,
+      "content_hash": "sha256:0935da1024720adb865cd148d2d1dafe5739b30aa5ea11e5a02e0d025d49cbac",
+      "ref_handle": "blk-yrk8rq"
+    },
+    {
+      "id": "01KY882RT9K01K7MED7PN3T3WS",
+      "line": 25,
+      "indent": 1,
+      "content_hash": "sha256:6a0157ed5b4f7998855e30540e540ee0a6f7d0be9c3c3f743448b9a0ea15cb40",
+      "ref_handle": "blk-n3t3ws"
+    },
+    {
+      "id": "01KY882RT94Y6W0P2M513N63J0",
+      "line": 26,
+      "indent": 1,
+      "content_hash": "sha256:b5cab806ac372ab1fc912d3f271db07f7233c6f9649b1548ce3938c908b4d72c",
+      "ref_handle": "blk-3n63j0"
+    },
+    {
+      "id": "01KY882RT9VX1T89FX56RC20Q9",
+      "line": 27,
+      "indent": 0,
+      "content_hash": "sha256:4228aeb07c410ffc9d15b458bf7c2bf8d9dfa7af632f2c339e69f8cb54654da3",
+      "ref_handle": "blk-rc20q9"
+    },
+    {
+      "id": "01KY882RT9G3J9P3VCV43WNTJX",
+      "line": 28,
+      "indent": 1,
+      "content_hash": "sha256:6086a231ed3600a9a311df70e9b48e491739cc52f8bb64174906e8ab95e5a182",
+      "ref_handle": "blk-3wntjx"
+    },
+    {
+      "id": "01KY882RT9FDAAFEDQN0BB1H99",
+      "line": 29,
+      "indent": 1,
+      "content_hash": "sha256:ffcabf324f11714d25865f89d7e4ffbfd1bd7140e8c4385780c0b9ac74ba1584",
+      "ref_handle": "blk-bb1h99"
+    },
+    {
+      "id": "01KY882RT9XN8K6QQK4ZWEYRFE",
+      "line": 30,
+      "indent": 1,
+      "content_hash": "sha256:f546c5fee7e47f2d20562b419174b6010d5bd726018fcb4872028ff569d048fa",
+      "ref_handle": "blk-weyrfe"
+    },
+    {
+      "id": "01KY882RT9JZ83B4WC8E7KG3T6",
+      "line": 31,
+      "indent": 1,
+      "content_hash": "sha256:c532be1a5489d8b68d62d76ab0233d081b8facccfe910fa9df9fd5c0782b7681",
+      "ref_handle": "blk-7kg3t6"
+    },
+    {
+      "id": "01KY882RT9EYTQYQV4EF111EMJ",
+      "line": 32,
+      "indent": 1,
+      "content_hash": "sha256:688dbeecb5af82e040516137f68ea806b15797eca2b3f69d1bf9cb7b9a329daf",
+      "ref_handle": "blk-111emj"
+    },
+    {
+      "id": "01KY882RT9DGYDSTN126S8SHXX",
+      "line": 33,
+      "indent": 0,
+      "content_hash": "sha256:e02fe74e2e8480fc89b1ba56dcdef69fa8ad822648334324136558cc2903bd1f",
+      "ref_handle": "blk-s8shxx"
+    },
+    {
+      "id": "01KY882RT9SVXV6EK3VD9HF47C",
+      "line": 34,
+      "indent": 1,
+      "content_hash": "sha256:a4b03a5036a6c43bb6f3d0fe4ba5dd31ff41fe13f2534c8287db5fe6100ed82f",
+      "ref_handle": "blk-9hf47c"
+    },
+    {
+      "id": "01KY882RT97AWV6Y756003ES1M",
+      "line": 35,
+      "indent": 1,
+      "content_hash": "sha256:0a2403776f70e451b00ec55531eb42dbff594f173a71e5bf3a88b50e44f187f2",
+      "ref_handle": "blk-03es1m"
+    },
+    {
+      "id": "01KY882RT91S4QGKANGHEX9KMH",
+      "line": 36,
+      "indent": 0,
+      "content_hash": "sha256:4da56088353d037f7eb43b0565faa85105b16985818a1d5a0de1a40589ed6233",
+      "ref_handle": "blk-ex9kmh"
+    }
+  ],
+  "pipeline_version": 2
+}
