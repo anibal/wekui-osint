@@ -1,6 +1,6 @@
+status:: planned
 title:: Settling a Place we have already collected on
 type:: policy
-status:: planned
 
 - Collecting on a proposed [[place]] is allowed, so the question of what becomes of that collection has to be answered.
 - Whichever way the Place is settled, no [[post]] is ever left pointing at a Place that is no longer part of the [[event]]:

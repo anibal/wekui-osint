@@ -1,6 +1,6 @@
+status:: built
 title:: Place
 type:: concept
-status:: built
 
 - A **Place** is a location that matters to one [[event]]: a country, a state, a town, a neighbourhood, a building. Every Place belongs to exactly one Event.
 - Places are arranged in a tree. Each Place may have one **parent**, which is the larger Place that contains it, and any number of **children**. A Place with no parent is a **root**.
