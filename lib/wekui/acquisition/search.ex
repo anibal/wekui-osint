@@ -23,7 +23,8 @@ defmodule Wekui.Acquisition.Search do
   alias Wekui.Acquisition.Changes.StampOnce
   alias Wekui.Acquisition.Changes.WipePlan
   alias Wekui.Acquisition.Validations.Extendable
-  alias Wekui.Core.Validations.PlaceReference
+  alias Wekui.Core.Place
+  alias Wekui.Validations.Reference
 
   @default_slice_seconds 600
 
@@ -73,7 +74,7 @@ defmodule Wekui.Acquisition.Search do
         default []
       end
 
-      validate {PlaceReference, argument: :place_ids}
+      validate {Reference, resource: Place, argument: :place_ids}
 
       change manage_relationship(:place_ids, :places, type: :append_and_remove)
       change manage_relationship(:terms, :search_terms, type: :create)
@@ -102,7 +103,7 @@ defmodule Wekui.Acquisition.Search do
         message "only a draft Search can be edited"
       end
 
-      validate {PlaceReference, argument: :place_ids}
+      validate {Reference, resource: Place, argument: :place_ids}
 
       # Replacing the Scope or Terms, or moving the time grid, invalidates the
       # existing Queries — so the plan goes first. In a draft that costs
@@ -187,7 +188,7 @@ defmodule Wekui.Acquisition.Search do
       argument :now, :utc_datetime_usec
 
       validate Extendable
-      validate {PlaceReference, argument: :place_id}
+      validate {Reference, resource: Place, argument: :place_id}
 
       change manage_relationship(:place_id, :places, type: :append)
       change {Decompose, wipe_first?: false}

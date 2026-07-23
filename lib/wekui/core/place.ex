@@ -22,8 +22,8 @@ defmodule Wekui.Core.Place do
     extensions: [AshStateMachine]
 
   alias Wekui.Core.Changes.Fold
-  alias Wekui.Core.Place.Tree
-  alias Wekui.Core.Validations.PlaceReference
+  alias Wekui.Tree
+  alias Wekui.Validations.Reference
 
   require Ash.Query
 
@@ -33,7 +33,7 @@ defmodule Wekui.Core.Place do
 
     custom_indexes do
       index [:event_id]
-      # The tree walks in `Wekui.Core.Place.Tree` descend on this one.
+      # The tree walks in `Wekui.Tree` descend on this one.
       index [:parent_id]
       index [:replaced_by_id]
     end
@@ -86,7 +86,7 @@ defmodule Wekui.Core.Place do
         )
       end
 
-      validate {PlaceReference, attribute: :parent_id}
+      validate {Reference, resource: __MODULE__, attribute: :parent_id}
     end
 
     read :by_event do
@@ -110,7 +110,7 @@ defmodule Wekui.Core.Place do
       argument :place_id, :uuid, allow_nil?: false
 
       prepare fn query, _context ->
-        ids = Tree.ancestor_ids(query.arguments.place_id)
+        ids = Tree.ancestor_ids(__MODULE__, query.arguments.place_id)
 
         query
         |> Ash.Query.filter(id in ^ids)
@@ -125,7 +125,7 @@ defmodule Wekui.Core.Place do
       argument :place_id, :uuid, allow_nil?: false
 
       prepare fn query, _context ->
-        Ash.Query.filter(query, id in ^Tree.subtree_ids(query.arguments.place_id))
+        Ash.Query.filter(query, id in ^Tree.subtree_ids(__MODULE__, query.arguments.place_id))
       end
     end
 
@@ -142,7 +142,7 @@ defmodule Wekui.Core.Place do
       accept [:parent_id]
       require_atomic? false
 
-      validate {PlaceReference, attribute: :parent_id, outside_subtree?: true}
+      validate {Reference, resource: __MODULE__, attribute: :parent_id, outside_subtree?: true}
     end
 
     update :promote do
@@ -157,7 +157,11 @@ defmodule Wekui.Core.Place do
       argument :replaced_by_id, :uuid, allow_nil?: false
       argument :note, :string
 
-      validate {PlaceReference, argument: :replaced_by_id, not_self?: true, lifecycle: :active}
+      validate {Reference,
+                resource: __MODULE__,
+                argument: :replaced_by_id,
+                not_self?: true,
+                lifecycle: :active}
 
       change set_attribute(:replaced_by_id, arg(:replaced_by_id))
       change transition_state(:deprecated)
