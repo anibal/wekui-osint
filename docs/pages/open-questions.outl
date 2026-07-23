@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "page_id": "6VJXRG9BQBZTG0GTFNZZVN2WDS",
+  "last_synced_hash": "sha256:23e2c8ee7e1e42b134c1607c964196d7f8849d1e226e5d199129cc3af9b60501",
+  "last_synced_at": "2026-07-23T16:12:55.205588-05:00",
+  "blocks": [
+    {
+      "id": "01KY8D6055QVS9H84PJGV03AAR",
+      "line": 1,
+      "indent": 0,
+      "content_hash": "sha256:39ec9b937cc7869323ddd2648441448e6949c2de7d8d6bc190feda211b0c202e",
+      "ref_handle": "blk-v03aar"
+    },
+    {
+      "id": "01KY8D6055S58PVYPTW7CHB25N",
+      "line": 2,
+      "indent": 0,
+      "content_hash": "sha256:d1ec8f00dbb4b864326084dba884fb11bfc9d377252fdae4f3c073ce1ff029f4",
+      "ref_handle": "blk-chb25n"
+    },
+    {
+      "id": "01KY8D60553RTH40NV0TYP6T2R",
+      "line": 3,
+      "indent": 0,
+      "content_hash": "sha256:8462d42e95a4e6167c081b780ab09d9c4c1053f847931581c1f884d0a83726cd",
+      "ref_handle": "blk-yp6t2r"
+    },
+    {
+      "id": "01KY8D6055RERZFAQB3P8CV2K2",
+      "line": 4,
+      "indent": 0,
+      "content_hash": "sha256:826db6b43481be6cb3389e4c96cc15d1adaeb865ea371c1e0111b9d5ea0897c1",
+      "ref_handle": "blk-8cv2k2"
+    },
+    {
+      "id": "01KY8D6055AY85EMM3HZTZBFN1",
+      "line": 5,
+      "indent": 0,
+      "content_hash": "sha256:2f6495a88f3e8b0c9260b191088ec4ed89b31f918b4370396122aa8bcc677236",
+      "ref_handle": "blk-tzbfn1"
+    },
+    {
+      "id": "01KY8D6055TGJ54N04G9XAP858",
+      "line": 6,
+      "indent": 0,
+      "content_hash": "sha256:c08218eca85819191f48e37c861a9df2794b39bfa4d6ca389ff664bad5e98675",
+      "ref_handle": "blk-xap858"
+    },
+    {
+      "id": "01KY8D6055Q3YRZ4C4APJCXZ48",
+      "line": 7,
+      "indent": 0,
+      "content_hash": "sha256:3750255b15e6a41f1c9bc6841890cb05aad1610c8dfc46e2bea4e4d565dd2fce",
+      "ref_handle": "blk-jcxz48"
+    },
+    {
+      "id": "01KY8D60553HM7DRZ9Z1B9SWJF",
+      "line": 8,
+      "indent": 0,
+      "content_hash": "sha256:03cba024207034fda96d7b0c9689208b02c124e31195f45e5ba8cd2adf42c889",
+      "ref_handle": "blk-b9swjf"
+    }
+  ],
+  "pipeline_version": 2
+}

@@ -1,0 +1,135 @@
+{
+  "version": 2,
+  "page_id": "45X3RD8HT08WM4PF9RTJX9C665",
+  "last_synced_hash": "sha256:dc16a4c669e29465407b10189f50f29ee10d2b3a66d4e80795a85fb21f1bad00",
+  "last_synced_at": "2026-07-23T16:12:54.445599-05:00",
+  "blocks": [
+    {
+      "id": "01KY8D5ZDDJ4QE4ECGECR993MV",
+      "line": 1,
+      "indent": 0,
+      "content_hash": "sha256:8a4c53d550e0bbdc5f49a03674bd3eb118db7b3bd4d0a514d32953b78090d407",
+      "ref_handle": "blk-r993mv"
+    },
+    {
+      "id": "01KY8D5ZDD1BKEA3TSBEBW3SFT",
+      "line": 2,
+      "indent": 0,
+      "content_hash": "sha256:f957b948e507b1385f885779670f4f6e007419a54de8f95e604aa558b63480e3",
+      "ref_handle": "blk-bw3sft"
+    },
+    {
+      "id": "01KY8D5ZDD3NHZWNAFHQRYJW83",
+      "line": 3,
+      "indent": 1,
+      "content_hash": "sha256:7ad9d4a7b8ba82755d05d5656f16275b0b00fcf9b64cb8e0197373605cf33d43",
+      "ref_handle": "blk-ryjw83"
+    },
+    {
+      "id": "01KY8D5ZDDQ3XQFK4MX3ZDCWR6",
+      "line": 4,
+      "indent": 0,
+      "content_hash": "sha256:52eb8417881425adad4d1c1fec3f49945fc398380e99bae0a3b438a9b75a3e1b",
+      "ref_handle": "blk-zdcwr6"
+    },
+    {
+      "id": "01KY8D5ZDD5TPM518C8FT6WFJ6",
+      "line": 5,
+      "indent": 1,
+      "content_hash": "sha256:eec07c094213738256ac34ecb5c1b47d8f3d1e3c10b8e0ac0a90c1a9d1affd71",
+      "ref_handle": "blk-t6wfj6"
+    },
+    {
+      "id": "01KY8D5ZDDK5X32TR9WB72CPTA",
+      "line": 6,
+      "indent": 1,
+      "content_hash": "sha256:373d5833e53745a2953a613cb9ce08e2da7140e6bd798faf92548d5be353998a",
+      "ref_handle": "blk-72cpta"
+    },
+    {
+      "id": "01KY8D5ZDD8CG00KAPJDTXTG30",
+      "line": 7,
+      "indent": 1,
+      "content_hash": "sha256:37aad180bf5c234d1778fdfcc712c7b4edf90eeb7dd75ec87ddd7009d6950a64",
+      "ref_handle": "blk-txtg30"
+    },
+    {
+      "id": "01KY8D5ZDD2DPD3RXGKEEGMWDC",
+      "line": 8,
+      "indent": 0,
+      "content_hash": "sha256:e9df1eb72687c58b86fa7b5c6c74c5226caf6df2970e6d1cc14998079b08867e",
+      "ref_handle": "blk-egmwdc"
+    },
+    {
+      "id": "01KY8D5ZDDP8FQ2V889WQ7ZA40",
+      "line": 9,
+      "indent": 1,
+      "content_hash": "sha256:1b94a0b4a9422d0c9bb1ab281e3f6226b85098a6564d3aacf08e76cca6a35e01",
+      "ref_handle": "blk-q7za40"
+    },
+    {
+      "id": "01KY8D5ZDD9WGDZEWFQ384YG3M",
+      "line": 10,
+      "indent": 1,
+      "content_hash": "sha256:35b0fe028e5699994334ed2893b8d9aa88b8da5b77b3f9490a1692f88a72121c",
+      "ref_handle": "blk-84yg3m"
+    },
+    {
+      "id": "01KY8D5ZDDA0GR4T8WX10Z8A07",
+      "line": 11,
+      "indent": 1,
+      "content_hash": "sha256:51928e0c52a23d77c58b87c9beb93c3bed694dc1427549678d797485dc3bcde5",
+      "ref_handle": "blk-0z8a07"
+    },
+    {
+      "id": "01KY8D5ZDD7WD8FMVQHZJX79EN",
+      "line": 12,
+      "indent": 1,
+      "content_hash": "sha256:82ba169699e0658dbb849dbead4d9ac2d7da90b45d47b0a9037586bb2b4544f1",
+      "ref_handle": "blk-jx79en"
+    },
+    {
+      "id": "01KY8D5ZDD8WQBJB69RMSC5F1X",
+      "line": 13,
+      "indent": 0,
+      "content_hash": "sha256:4228aeb07c410ffc9d15b458bf7c2bf8d9dfa7af632f2c339e69f8cb54654da3",
+      "ref_handle": "blk-sc5f1x"
+    },
+    {
+      "id": "01KY8D5ZDD70WZV2GH56WKSKTX",
+      "line": 14,
+      "indent": 1,
+      "content_hash": "sha256:9d26f174b6dea78c86fba70665ba1edfe23a4a683b35638a0bea4d0f17f7f53e",
+      "ref_handle": "blk-wksktx"
+    },
+    {
+      "id": "01KY8D5ZDDYADMNWHXJQVA88N1",
+      "line": 15,
+      "indent": 1,
+      "content_hash": "sha256:4d3ca709cba97f66d95365ee18c8f5275125f28dca41315f5403a9999226327b",
+      "ref_handle": "blk-va88n1"
+    },
+    {
+      "id": "01KY8D5ZDD6ZRDK9XWAYK0YGHF",
+      "line": 16,
+      "indent": 1,
+      "content_hash": "sha256:44e8c75d4d7e8fca6ca56f65f2bc611d852f1188b63f033941c32de2e486a973",
+      "ref_handle": "blk-k0yghf"
+    },
+    {
+      "id": "01KY8D5ZDDPEHKWA2C0HNNNADM",
+      "line": 17,
+      "indent": 1,
+      "content_hash": "sha256:4bb854ce1df59a3b16a7e3108cfc80be8932ce2a19f799906bf2358ae726b01b",
+      "ref_handle": "blk-nnnadm"
+    },
+    {
+      "id": "01KY8D5ZDD9HG1H994GGR1E8JE",
+      "line": 18,
+      "indent": 0,
+      "content_hash": "sha256:60a6c55f98f44caaa8af8ae222bb259f39460367a932dbcfef5fd8815cb127ad",
+      "ref_handle": "blk-r1e8je"
+    }
+  ],
+  "pipeline_version": 2
+}
