@@ -1,9 +1,10 @@
 defmodule Wekui.Fixtures do
   @moduledoc """
-  The smallest well-formed world a test can stand on: an Event and Places that
-  can actually be collected on.
+  The smallest well-formed world a test can stand on: an Event, Places that can
+  actually be collected on, and a Search that is ready to be worked out.
   """
 
+  alias Wekui.Acquisition
   alias Wekui.Core
 
   def event!(attrs \\ %{}) do
@@ -50,5 +51,30 @@ defmodule Wekui.Fixtures do
       kind: :official,
       emission: emission
     })
+  end
+
+  @doc "A draft Search over a one-hour window cut into ten-minute slices."
+  def search!(event, attrs \\ %{}) do
+    Acquisition.create_search!(
+      Map.merge(
+        %{
+          event_id: event.id,
+          name: "search-#{System.unique_integer([:positive])}",
+          intent: "Collect what was said in the first hour",
+          window_start: ~U[2026-06-24 22:00:00.000000Z],
+          window_end: ~U[2026-06-24 23:00:00.000000Z]
+        },
+        attrs
+      )
+    )
+  end
+
+  @doc "A Search taken all the way to active, so its Queries can be asked."
+  def active_search!(event, attrs \\ %{}) do
+    event
+    |> search!(attrs)
+    |> Acquisition.decompose_search!()
+    |> Acquisition.freeze_search!()
+    |> Acquisition.activate_search!()
   end
 end
