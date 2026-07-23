@@ -1,6 +1,6 @@
+status:: built
 title:: The Unplaced Place
 type:: concept
-status:: built
 
 - Every [[event]] has exactly one **Unplaced** Place: the [[place]] where a [[post]] waits while we still do not know where it is about.
 - The Event points at its own Unplaced Place directly. That pointer is what makes it the Unplaced Place — not its name, and not its Type.
