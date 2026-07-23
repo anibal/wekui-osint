@@ -18,6 +18,7 @@ defmodule Wekui.Acquisition.Query do
   alias Wekui.Acquisition.Changes.StampOnce
   alias Wekui.Acquisition.QueryText
   alias Wekui.Acquisition.Validations.Askable
+  alias Wekui.Acquisition.Validations.SearchAsking
 
   # Coverage asks the same question `QueryText.result_mode_of/1` answers, but in
   # SQL. Deriving the pattern from the one definition keeps them from drifting.
@@ -94,6 +95,7 @@ defmodule Wekui.Acquisition.Query do
       require_atomic? false
 
       validate Askable
+      validate {SearchAsking, allow: [:active]}
 
       change {StampOnce, attribute: :started_at}
     end
@@ -106,6 +108,7 @@ defmodule Wekui.Acquisition.Query do
       argument :posts_new, :integer, constraints: [min: 0]
 
       validate Askable
+      validate {SearchAsking, allow: [:active, :paused]}
 
       change set_attribute(:posts_found, arg(:posts_found))
       change set_attribute(:posts_new, arg(:posts_new))
@@ -119,6 +122,7 @@ defmodule Wekui.Acquisition.Query do
       argument :note, :string, allow_nil?: false, constraints: [min_length: 1]
 
       validate Askable
+      validate {SearchAsking, allow: [:active, :paused]}
 
       change set_attribute(:status_note, arg(:note))
       change set_attribute(:discarded_at, &DateTime.utc_now/0)

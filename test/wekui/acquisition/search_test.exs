@@ -194,6 +194,35 @@ defmodule Wekui.Acquisition.SearchTest do
       assert {:error, error} = Acquisition.update_search(search, %{place_ids: [foreign.id]})
       assert error_on(error, :place_ids) =~ "same event"
     end
+
+    test "moving the window throws the plan away, so it is never frozen stale", %{event: event} do
+      place!(event)
+      search = event |> search!() |> Acquisition.decompose_search!()
+      {:ok, before} = Acquisition.list_queries(search.id)
+      assert before != []
+
+      {:ok, edited} =
+        Acquisition.update_search(search, %{window_end: ~U[2026-06-25 00:00:00.000000Z]})
+
+      {:ok, after_edit} = Acquisition.list_queries(edited.id)
+      assert after_edit == []
+
+      # The plan is recoverable — a wider window rebuilds to more Queries.
+      {:ok, redone} = Acquisition.decompose_search(edited)
+      {:ok, rebuilt} = Acquisition.list_queries(redone.id)
+      assert length(rebuilt) > length(before)
+    end
+
+    test "editing the intent alone leaves the plan standing", %{event: event} do
+      place!(event)
+      search = event |> search!() |> Acquisition.decompose_search!()
+      {:ok, before} = Acquisition.list_queries(search.id)
+
+      {:ok, edited} = Acquisition.update_search(search, %{intent: "Something else entirely"})
+
+      {:ok, after_edit} = Acquisition.list_queries(edited.id)
+      assert length(after_edit) == length(before)
+    end
   end
 
   describe "reads" do

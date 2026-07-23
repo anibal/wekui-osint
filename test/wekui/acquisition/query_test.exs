@@ -207,4 +207,60 @@ defmodule Wekui.Acquisition.QueryTest do
       assert length(queries) == length(Enum.uniq_by(queries, & &1.query_text))
     end
   end
+
+  describe "asking only while the Search is collecting" do
+    test "a draft's Query cannot be started — its questions are not yet real", %{event: event} do
+      query = event |> search!() |> Acquisition.decompose_search!() |> first_query()
+
+      assert {:error, error} = Acquisition.start_query(query)
+      assert Exception.message(error) =~ "must be active"
+    end
+
+    test "a ready Search's Query cannot be started until it is active", %{event: event} do
+      query =
+        event
+        |> search!()
+        |> Acquisition.decompose_search!()
+        |> Acquisition.freeze_search!()
+        |> first_query()
+
+      assert {:error, error} = Acquisition.start_query(query)
+      assert Exception.message(error) =~ "must be active"
+    end
+
+    test "an active Search's Query can be started", %{event: event} do
+      query = event |> active_search!() |> first_query()
+
+      assert {:ok, started} = Acquisition.start_query(query)
+      refute is_nil(started.started_at)
+    end
+
+    test "a Query running when the Search is paused can still be completed", %{event: event} do
+      search = active_search!(event)
+      query = first_query(search)
+      {:ok, _} = Acquisition.start_query(query)
+      {:ok, _} = Acquisition.pause_search(search)
+
+      assert {:ok, completed} = Acquisition.complete_query(query, %{posts_found: 3, posts_new: 2})
+      assert completed.posts_found == 3
+    end
+
+    test "a paused Search's Query can be discarded", %{event: event} do
+      search = active_search!(event)
+      query = first_query(search)
+      {:ok, _} = Acquisition.pause_search(search)
+
+      assert {:ok, discarded} = Acquisition.discard_query(query, %{note: "no longer needed"})
+      refute is_nil(discarded.discarded_at)
+    end
+
+    test "a closed Search's Query cannot be completed — closed is final", %{event: event} do
+      search = active_search!(event)
+      query = first_query(search)
+      {:ok, _} = Acquisition.close_search(search)
+
+      assert {:error, error} = Acquisition.complete_query(query, %{posts_found: 1, posts_new: 1})
+      assert Exception.message(error) =~ "must be active or paused"
+    end
+  end
 end

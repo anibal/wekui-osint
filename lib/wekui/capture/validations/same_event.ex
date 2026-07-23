@@ -40,8 +40,10 @@ defmodule Wekui.Capture.Validations.SameEvent do
 
   defp valid_reference?({field, resource}) when is_atom(field) and is_atom(resource), do: true
 
-  defp valid_reference?({field, resource, [_ | _] = path})
-       when is_atom(field) and is_atom(resource),
+  # A path is `[attribute]` or `[relationship, attribute]` — at most one hop, as
+  # the loader only performs a flat one-level load.
+  defp valid_reference?({field, resource, path})
+       when is_atom(field) and is_atom(resource) and length(path) in 1..2,
        do: Enum.all?(path, &is_atom/1)
 
   defp valid_reference?(_other), do: false
@@ -110,9 +112,18 @@ defmodule Wekui.Capture.Validations.SameEvent do
     end
   end
 
+  # Nil-safe: a nilable relationship left nil yields nil rather than crashing.
+  # The one configured path loads a non-null belongs_to, so this only guards
+  # against careless reuse.
   defp traverse(record, loads, attribute) do
     loads
-    |> Enum.reduce(record, fn relationship, acc -> Map.get(acc, relationship) end)
-    |> Map.get(attribute)
+    |> Enum.reduce(record, fn
+      _relationship, nil -> nil
+      relationship, acc -> Map.get(acc, relationship)
+    end)
+    |> case do
+      nil -> nil
+      resolved -> Map.get(resolved, attribute)
+    end
   end
 end

@@ -104,9 +104,12 @@ defmodule Wekui.Acquisition.Search do
 
       validate {PlaceReference, argument: :place_ids}
 
-      # The bridges point at the very Terms being replaced, so the plan has to
-      # go first. In a draft that costs nothing — decompose rebuilds it.
-      change {WipePlan, only_with_arguments: [:place_ids, :terms]}
+      # Replacing the Scope or Terms, or moving the time grid, invalidates the
+      # existing Queries — so the plan goes first. In a draft that costs
+      # nothing: a later decompose rebuilds it.
+      change {WipePlan,
+              only_with_arguments: [:place_ids, :terms],
+              or_changing_attributes: [:window_start, :window_end, :slice_seconds]}
 
       change manage_relationship(:place_ids, :places, type: :append_and_remove)
       change manage_relationship(:terms, :search_terms, type: :direct_control)
