@@ -1,0 +1,47 @@
+title:: Ubiquitous Language
+type:: hub
+
+- This is the shared vocabulary of the system: each term means the same thing in conversations, in the code, and in the database. When we name something here, we use that exact name everywhere.
+- Every concept has a page of its own, holding its definition, its attributes, its lifecycle, and its rules together. This hub only names them.
+- These pages describe *what things are*, not how they are stored or computed. Where a distinction matters to the meaning, it is on the page; where it is only a matter of technique, it belongs in the code.
+- Conventions
+  - `status:: planned` on a page marks agreed vocabulary that the code has not caught up with yet; the mark is removed as soon as it is built. A single planned piece inside a built page is tagged #planned.
+  - `type::` says what a page is: `concept`, `policy`, `decision`, `open-question`, `research`, or `hub`.
+  - Pages are outl outlines: one bullet per line (never hard-wrap inside a bullet), wiki-links between pages. Long-form prose research lives at `docs/` root, outside the outline — for example the [clustering spike](../clustering-spike.md).
+- Concepts
+  - [[event]] — a single real-world happening we are studying; the top-level thing, and nothing is ever shared between Events.
+  - [[actor]] #planned — whoever or whatever performed a deliberate act: a person or an agent.
+  - [[place]] — a location that matters to one Event; Places form a tree and move through proposed → active → deprecated / discarded.
+  - [[unplaced-place]] — the one Place per Event where a Post waits while we still do not know where it is about.
+  - [[no-place]] #planned — the recorded answer *this Post is about nowhere*; never confused with Unplaced.
+  - [[place-name]] — one string people actually use for a Place, described by a Kind and an Emission.
+  - [[search]] — one Actor's stated intention to collect: these Places, over this stretch of time, optionally about these words.
+  - [[search-term]] — one word or phrase a Search asks about, together with its language.
+  - [[query]] — one exact question actually asked of X: one Place, one slice, one exact request; the atom of collection.
+  - [[query-text]] — the exact request as sent, written in one settled way.
+  - [[decomposition]] — working a Search out into its Queries; a calculation, not a decision.
+  - [[coverage]] — what have we actually asked; counted only from completed latest-mode Queries.
+  - [[post]] — one message published on X that we have collected; never edited, never deleted.
+  - [[author]] — the account that published a Post, recorded as it was when we first saw it.
+  - [[appearance]] — the record that one Query found one Post.
+- Policies
+  - [[settling-a-collected-place]] #planned — what becomes of the Posts collected under a Place that is later settled.
+- Settled by observation — the decision log; every entry cites its evidence:
+  - [[decision-term-off-switch]] — a Search Term has no off-switch.
+  - [[decision-appearance-engagement]] — an Appearance carries no engagement of its own.
+  - [[decision-no-folded-text]] — a Post carries no folded copy of its own text.
+  - [[decision-engagement-in-payload]] — engagement stays in the Payload.
+  - [[decision-follower-count]] — how many followers an account has is not a fact about the account.
+  - [[decision-first-query]] — the Query that first found a Post is not written down.
+  - [[decision-post-is-the-message]] — a Post is always the message itself.
+  - [[decision-slice-length]] — the default slice length is ten minutes.
+- Still open
+  - [[open-actor]] — Actor is vocabulary so far, not a thing in the system.
+  - [[open-placement]] — Placement, the answer to *where is this Post about*, does not exist yet.
+  - [[open-query-state]] — whether a Query's state should also be written down.
+  - [[open-payload-facts]] — which further facts should be lifted out of the Payload.
+  - [[open-when-two-posts-say-the-same-thing]] — there is no word for this yet, on purpose.
+  - [[open-latest-vs-top]] — whether latest simply extends top.
+- Research
+  - [[research-old-app-corpus]] — the old app's real database; the evidence base behind the decision log.
+  - [[research-clustering-spike]] — telling Posts apart; informs the open dedup question.

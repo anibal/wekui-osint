@@ -12,10 +12,19 @@ what moves behavior.
 
 ## Ubiquitous language
 
-This project keeps a shared vocabulary in [`docs/ubiquitous-language.md`](docs/ubiquitous-language.md).
-**Always** read it and use those exact terms — with the same meanings — when discussing,
-planning, implementing, and reporting back. When we introduce or refine a domain concept,
-update that file so the language, the code, and the database stay on the same page.
+This project keeps a shared vocabulary as a linked outline: one page per concept
+under `docs/pages/`, with [`docs/pages/ubiquitous-language.md`](docs/pages/ubiquitous-language.md)
+as the hub that names them all. **Always** read the hub plus the pages relevant to
+your task, and use those exact terms — with the same meanings — when discussing,
+planning, implementing, and reporting back. When we introduce or refine a domain
+concept, update its page (and the hub) so the language, the code, and the database
+stay on the same page.
+
+`docs/` is an outl workspace (outl.app: an outliner whose op-log treats the markdown
+as a projection — it can rewrite these files). Non-negotiable rules: every bullet in
+`docs/pages/*.md` is ONE line — never hard-wrap inside a bullet; prose documents live
+at `docs/` root and are never moved into `docs/pages/` (outl would bulletize them);
+`docs/ops/` and `docs/.outl/` are gitignored machinery, everything else is committed.
 
 ## What this is
 
@@ -64,4 +73,6 @@ When we settle a new durable convention, put it in exactly one place:
 - Web-layer only → `.claude/rules/web.md`.
 - A workflow, checklist, or reference topic → a new hand-written skill in
   `.claude/skills/<name>/SKILL.md` (safe alongside the managed ones).
-- A domain concept → `docs/ubiquitous-language.md`, in the same change.
+- A domain concept → its page in `docs/pages/` (plus the hub's index line), in the
+  same change. A decision settled by evidence → a `decision-*` page; a question we
+  cannot answer yet → an `open-*` page; measurements → a `research-*` page.

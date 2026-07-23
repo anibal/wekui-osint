@@ -45,3 +45,8 @@ npm-debug.log
 # Local Claude Code settings
 .claude/settings.local.json
 
+# outl workspace machinery (per-device op logs and local config).
+# Pages, sidecars (*.outl), journals and templates ARE committed.
+/docs/ops/
+/docs/.outl/
+

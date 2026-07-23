@@ -1,9 +1,10 @@
 # Spike: telling Posts apart, and telling when they say the same thing
 
-**Status:** research, not built. This informs the deferred work in
-[`ubiquitous-language.md`](ubiquitous-language.md) → **Still open #5** ("When two
-Posts are saying the same thing"). Nothing here is committed to; it is what we
-measured so the decision, when it is made, is made on evidence.
+**Status:** research, not built. This informs the open question
+[`pages/open-when-two-posts-say-the-same-thing.md`](pages/open-when-two-posts-say-the-same-thing.md)
+(outline summary: [`pages/research-clustering-spike.md`](pages/research-clustering-spike.md)).
+Nothing here is committed to; it is what we measured so the decision, when it is
+made, is made on evidence.
 
 **Evidence base:** the old app's real database — one Event, 13,248 Posts, 6,239
 Authors, 20,611 Appearances. Measured on a disposable copy; the original was
