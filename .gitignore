@@ -39,3 +39,9 @@ npm-debug.log
 *.db
 *.db-*
 
+# macOS
+.DS_Store
+
+# Local Claude Code settings
+.claude/settings.local.json
+

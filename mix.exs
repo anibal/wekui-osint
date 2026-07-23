@@ -42,6 +42,7 @@ defmodule Wekui.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:ash_state_machine, "~> 0.2"},
       {:ash_sqlite, "~> 0.2"},
       {:igniter, "~> 0.6", only: [:dev, :test]},
       {:sourceror, "~> 1.8", only: [:dev, :test]},
@@ -101,27 +102,22 @@ defmodule Wekui.MixProject do
 
   defp usage_rules do
     [
-      file: "CLAUDE.md",
-      # :usage_rules itself provides rules for search_docs, docs, etc.
-      # use a regex to match multiple deps, or atoms/strings for specific ones
-      usage_rules: [:usage_rules, :ash, ~r/^ash_/],
+      # Nothing is inlined into AGENTS.md/CLAUDE.md: always-on context stays
+      # hand-curated (see the curation note at the top of AGENTS.md).
+      # Framework rules are delivered as on-demand skills, one per activity,
+      # so only the relevant rules enter the context window.
       skills: [
         location: ".claude/skills",
-        # build skills that combine multiple usage rules
         build: [
           "ash-framework": [
-            # The description tells people how to use this skill.
             description:
-              "Use this skill working with Ash Framework or any of its extensions. Always consult this when making any domain changes, features or fixes.",
-            # Include all Ash dependencies
+              "Use when creating or changing Ash resources, domains, actions, relationships, policies, calculations, or running codegen/migrations — any domain change under lib/wekui/.",
             usage_rules: [:ash, ~r/^ash_/]
-          ],
-          "phoenix-framework": [
-            description:
-              "Use this skill working with Phoenix Framework. Consult this when working with the web layer, controllers, views, liveviews etc.",
-            # Include all Phoenix dependencies
-            usage_rules: [:phoenix, ~r/^phoenix_/]
           ]
+          # The fine-grained phoenix-* skills are hand-written pointers to
+          # deps/phoenix/usage-rules/*.md (usage_rules can only build whole
+          # packages into one skill). They read the installed version directly,
+          # so they never go stale and need no sync.
         ]
       ]
     ]
