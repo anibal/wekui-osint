@@ -2,7 +2,7 @@ title:: Open Questions
 type:: hub
 
 - What we cannot answer yet. Every page carries `opened::` so the age of an unknown stays visible, and each is linked from the concepts it blocks.
-- [[open-actor]] — Actor is vocabulary so far, not a thing in the system.
+- [[open-actor]] — the agent side of Actor is built; how a person's acts are recorded and attributed is not.
 - [[open-placement]] — Placement, the answer to *where is this Post about*, does not exist yet; No place, Proposed by, and Settling all wait on it.
 - [[open-query-state]] — whether a Query's state should also be written down.
 - [[open-latest-vs-top]] — whether latest simply extends top.

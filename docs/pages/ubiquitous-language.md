@@ -6,7 +6,7 @@ type:: hub
 - These pages describe *what things are*, not how they are stored or computed. Where a distinction matters to the meaning, it is on the page; where it is only a matter of technique, it belongs in the code.
 - Concepts
   - [[event]] — a single real-world happening we are studying; the top-level thing, and nothing is ever shared between Events.
-  - [[actor]] #planned — whoever or whatever performed a deliberate act: a person or an agent.
+  - [[actor]] — whoever or whatever performed a deliberate act: a person or an agent.
   - [[place]] — a location that matters to one Event; Places form a tree and move through proposed → active → deprecated / discarded.
   - [[unplaced-place]] — the one Place per Event where a Post waits while we still do not know where it is about.
   - [[no-place]] #planned — the recorded answer *this Post is about nowhere*; never confused with Unplaced.

@@ -55,6 +55,20 @@ defmodule Wekui.Fixtures do
     })
   end
 
+  @doc "An agent Actor — a (model, prompt) worker — registered for one Event."
+  def agent!(event, attrs \\ %{}) do
+    Core.register_agent!(
+      Map.merge(
+        %{
+          event_id: event.id,
+          model: "deepseek-ai/DeepSeek-V4-Flash",
+          prompt: "clasifica el tema del mensaje ##{System.unique_integer([:positive])}"
+        },
+        attrs
+      )
+    )
+  end
+
   @doc "A draft Search over a one-hour window cut into ten-minute slices."
   def search!(event, attrs \\ %{}) do
     Acquisition.create_search!(

@@ -32,5 +32,11 @@ defmodule Wekui.Core do
       define :set_place_name_kind, action: :set_kind
       define :set_place_name_emission, action: :set_emission
     end
+
+    resource Wekui.Core.Actor do
+      define :register_agent, action: :register_agent
+      define :get_actor, action: :read, get_by: [:id]
+      define :list_actors, action: :by_event, args: [:event_id]
+    end
   end
 end
