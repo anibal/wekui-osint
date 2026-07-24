@@ -34,5 +34,20 @@ defmodule Wekui.Judgment do
       define :get_author_tag_none, action: :read, get_by: [:id]
       define :current_author_tag_none, action: :current_for_author, args: [:author_id]
     end
+
+    resource Wekui.Judgment.Placement do
+      define :place_post, action: :place
+      define :retract_placement, action: :retract
+      define :get_placement, action: :read, get_by: [:id]
+      define :current_placement, action: :current_for_post, args: [:post_id]
+      define :list_placements, action: :by_event, args: [:event_id]
+    end
+
+    resource Wekui.Judgment.NoPlace do
+      define :judge_no_place, action: :judge_none
+      define :retract_no_place, action: :retract
+      define :get_no_place, action: :read, get_by: [:id]
+      define :current_no_place, action: :current_for_post, args: [:post_id]
+    end
   end
 end

@@ -9,7 +9,7 @@ type:: hub
   - [[actor]] — whoever or whatever performed a deliberate act: a person or an agent.
   - [[place]] — a location that matters to one Event; Places form a tree and move through proposed → active → deprecated / discarded.
   - [[unplaced-place]] — the one Place per Event where a Post waits while we still do not know where it is about.
-  - [[no-place]] #planned — the recorded answer *this Post is about nowhere*; never confused with Unplaced.
+  - [[no-place]] — the recorded answer *this Post is about nowhere*; never confused with Unplaced.
   - [[place-name]] — one string people actually use for a Place, described by a Kind and an Emission.
   - [[search]] — one Actor's stated intention to collect: these Places, over this stretch of time, optionally about these words.
   - [[search-term]] — one word or phrase a Search asks about, together with its language.
@@ -25,7 +25,7 @@ type:: hub
   - [[judgment]] — an Actor's answer about a Post or an Author; append-only, superseding, always carrying who made it and, for an agent, a confidence.
   - [[theme-judgment]] — the answer to *what a Post is about*: a Post carries a Theme; any number current, at most one per Theme.
   - [[author-tag-judgment]] — the answer to *what an Author is*: an Author carries a Tag; the author-scoped twin of a Theme judgment.
-  - [[placement]] #planned — the answer to *where a Post is about*: a Post points at a Place, or at No place, or waits Unplaced.
+  - [[placement]] — the answer to *where a Post is about*: a Post points at a Place, or at No place, or waits Unplaced.
 - Policies
-  - [[settling-a-collected-place]] #planned — what becomes of the Posts collected under a Place that is later settled.
+  - [[settling-a-collected-place]] — what becomes of the Posts collected under a Place that is later settled.
 - The rest of the documentation — principles, strategy, architecture, the decision log, open questions, research — is mapped from [[index]].

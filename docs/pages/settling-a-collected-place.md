@@ -1,4 +1,4 @@
-status:: planned
+status:: built
 title:: Settling a Place we have already collected on
 type:: policy
 

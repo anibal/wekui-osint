@@ -1,9 +1,9 @@
+answered:: 2026-07-24
 opened:: 2026-07-22
-status:: open
-title:: Placement does not exist yet
+status:: answered
+title:: Placement now exists
 type:: open-question
 
-- **Placement** — the answer to *where is this Post about* — does not exist yet.
-- Working it out is a judgment, so it arrives with the judging vocabulary, and until then a [[post]] points at no [[place]] at all.
-- [[no-place]], **Proposed by** (see [[place]]), and [[settling-a-collected-place]] all wait on it: they are three answers to a question we cannot yet ask.
-- The [[unplaced-place]] is built and still waiting for something to hold.
+- **Answered.** Placement is built: a [[post]]'s where is read from its current [[placement]], never stored on the Post. See [[placement]].
+- What waited on it is settled with it: [[no-place]] (the examined-empty *nowhere*) and [[settling-a-collected-place]] (how a settled Place reads back) are both built.
+- The one residual is **Proposed by** (see [[place]]), still #planned until its own change lands — it is tracked there, not here.
