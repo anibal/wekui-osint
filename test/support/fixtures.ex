@@ -8,6 +8,7 @@ defmodule Wekui.Fixtures do
   alias Wekui.Acquisition
   alias Wekui.Capture
   alias Wekui.Core
+  alias Wekui.Taxonomy
 
   def event!(attrs \\ %{}) do
     Core.create_event!(
@@ -63,6 +64,20 @@ defmodule Wekui.Fixtures do
           event_id: event.id,
           model: "deepseek-ai/DeepSeek-V4-Flash",
           prompt: "clasifica el tema del mensaje ##{System.unique_integer([:positive])}"
+        },
+        attrs
+      )
+    )
+  end
+
+  @doc "An active Theme of one Event — a classification target a Post can be judged against."
+  def theme!(event, attrs \\ %{}) do
+    Taxonomy.create_theme!(
+      Map.merge(
+        %{
+          event_id: event.id,
+          name: "tema-#{System.unique_integer([:positive])}",
+          lifecycle: :active
         },
         attrs
       )
