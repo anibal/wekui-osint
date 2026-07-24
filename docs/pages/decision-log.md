@@ -13,4 +13,6 @@ type:: hub
   - [[decision-2026-07-23-follower-count]] — how many followers an account has is not a fact about the account.
   - [[decision-2026-07-23-first-query]] — the Query that first found a Post is not written down.
   - [[decision-2026-07-23-post-is-the-message]] — a Post is always the message itself.
+- 2026-07-24
+  - [[decision-2026-07-24-merge-is-deprecation]] — a merge is a deprecation, not a judgment of its own.
 - Dates say when a decision was recorded in this log; the measurements behind the earliest entries predate it.
