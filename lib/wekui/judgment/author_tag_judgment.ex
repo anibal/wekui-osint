@@ -20,8 +20,6 @@ defmodule Wekui.Judgment.AuthorTagJudgment do
   alias Wekui.Judgment.Validations.Provenance
   alias Wekui.Validations.Reference
 
-  require Ash.Query
-
   sqlite do
     table "author_tag_judgments"
     repo Wekui.Repo
@@ -180,46 +178,13 @@ defmodule Wekui.Judgment.AuthorTagJudgment do
   end
 
   @doc false
-  # Set-replacement body for `judge_set`, wrapped in an explicit Repo.transaction
-  # (ash_sqlite cannot run Ash-managed transactions). Mirrors ThemeJudgment.
   def run_judge_set(input, _context) do
     a = input.arguments
-    judged_at = Map.get(a, :judged_at) || DateTime.utc_now()
-    target = MapSet.new(a.tag_ids)
 
-    Wekui.Repo.transaction(fn ->
-      {:ok, current} =
-        Ash.read(
-          Ash.Query.filter(__MODULE__, author_id == ^a.author_id and is_nil(superseded_at)),
-          authorize?: false
-        )
-
-      Enum.each(current, fn judgment ->
-        unless MapSet.member?(target, judgment.tag_id) do
-          judgment |> Ash.Changeset.for_update(:retract) |> Ash.update!(authorize?: false)
-        end
-      end)
-
-      Enum.each(a.tag_ids, fn tag_id ->
-        __MODULE__
-        |> Ash.Changeset.for_create(:judge, %{
-          event_id: a.event_id,
-          author_id: a.author_id,
-          tag_id: tag_id,
-          actor_id: a.actor_id,
-          confidence: Map.get(a, :confidence),
-          judged_at: judged_at
-        })
-        |> Ash.create!(authorize?: false)
-      end)
-
-      {:ok, set} =
-        Ash.read(
-          Ash.Query.filter(__MODULE__, author_id == ^a.author_id and is_nil(superseded_at)),
-          authorize?: false
-        )
-
-      set
-    end)
+    Wekui.Judgment.SetReplacement.run(__MODULE__,
+      scope: {:author_id, a.author_id},
+      target: {:tag_id, a.tag_ids},
+      judge: %{event_id: a.event_id, actor_id: a.actor_id, confidence: Map.get(a, :confidence)}
+    )
   end
 end

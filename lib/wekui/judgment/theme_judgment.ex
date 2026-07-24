@@ -22,8 +22,6 @@ defmodule Wekui.Judgment.ThemeJudgment do
   alias Wekui.Judgment.Validations.Provenance
   alias Wekui.Validations.Reference
 
-  require Ash.Query
-
   sqlite do
     table "theme_judgments"
     repo Wekui.Repo
@@ -187,50 +185,13 @@ defmodule Wekui.Judgment.ThemeJudgment do
   end
 
   @doc false
-  # The set-replacement body for `judge_set`. ash_sqlite reports it cannot run
-  # Ash-managed transactions (`can?(:transact) == false`), so `transaction?` is a
-  # no-op here — the multi-step retract-and-rejudge is wrapped in an explicit
-  # `Repo.transaction` instead, the same way the old app did. Any failure rolls
-  # back the partial writes and re-raises, leaving the Post's Themes as they were.
   def run_judge_set(input, _context) do
     a = input.arguments
-    judged_at = Map.get(a, :judged_at) || DateTime.utc_now()
-    target = MapSet.new(a.theme_ids)
 
-    Wekui.Repo.transaction(fn ->
-      {:ok, current} =
-        Ash.read(Ash.Query.filter(__MODULE__, post_id == ^a.post_id and is_nil(superseded_at)),
-          authorize?: false
-        )
-
-      # Retract the Themes no longer present.
-      Enum.each(current, fn judgment ->
-        unless MapSet.member?(target, judgment.theme_id) do
-          judgment |> Ash.Changeset.for_update(:retract) |> Ash.update!(authorize?: false)
-        end
-      end)
-
-      # Judge every Theme in the set, so the whole current set reads as one Actor's
-      # answer (a Theme already current is superseded by its fresh row).
-      Enum.each(a.theme_ids, fn theme_id ->
-        __MODULE__
-        |> Ash.Changeset.for_create(:judge, %{
-          event_id: a.event_id,
-          post_id: a.post_id,
-          theme_id: theme_id,
-          actor_id: a.actor_id,
-          confidence: Map.get(a, :confidence),
-          judged_at: judged_at
-        })
-        |> Ash.create!(authorize?: false)
-      end)
-
-      {:ok, set} =
-        Ash.read(Ash.Query.filter(__MODULE__, post_id == ^a.post_id and is_nil(superseded_at)),
-          authorize?: false
-        )
-
-      set
-    end)
+    Wekui.Judgment.SetReplacement.run(__MODULE__,
+      scope: {:post_id, a.post_id},
+      target: {:theme_id, a.theme_ids},
+      judge: %{event_id: a.event_id, actor_id: a.actor_id, confidence: Map.get(a, :confidence)}
+    )
   end
 end
