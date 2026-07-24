@@ -17,28 +17,31 @@ defmodule Wekui.Judgment.SetReplacement do
   examined-empty exclusion; this only orchestrates the set.
   """
 
-  require Ash.Query
-  import Ash.Expr
+  alias Wekui.Judgment.Slot
 
   def run(resource, opts) do
     {scope_field, scope_id} = Keyword.fetch!(opts, :scope)
     {target_field, target_ids} = Keyword.fetch!(opts, :target)
     base = Keyword.fetch!(opts, :judge)
     judged_at = base[:judged_at] || DateTime.utc_now()
+    # A set: judging the same target twice is one answer.
+    target_ids = Enum.uniq(target_ids)
     target = MapSet.new(target_ids)
 
     Wekui.Repo.transaction(fn ->
-      {:ok, current} = current(resource, scope_field, scope_id)
+      {:ok, existing} =
+        Ash.read(Slot.current(resource, [{scope_field, scope_id}]), authorize?: false)
 
       # Retract the targets no longer present.
-      Enum.each(current, fn judgment ->
+      Enum.each(existing, fn judgment ->
         unless MapSet.member?(target, Map.fetch!(judgment, target_field)) do
           judgment |> Ash.Changeset.for_update(:retract) |> Ash.update!(authorize?: false)
         end
       end)
 
-      # Judge every target in the set, from one Actor.
-      Enum.each(target_ids, fn target_id ->
+      # Judge every target in the set, from one Actor. The results are exactly the
+      # new current set (each is current, the departed were retracted above).
+      Enum.map(target_ids, fn target_id ->
         attrs =
           base
           |> Map.put(scope_field, scope_id)
@@ -49,15 +52,6 @@ defmodule Wekui.Judgment.SetReplacement do
         |> Ash.Changeset.for_create(:judge, attrs)
         |> Ash.create!(authorize?: false)
       end)
-
-      {:ok, set} = current(resource, scope_field, scope_id)
-      set
     end)
-  end
-
-  defp current(resource, scope_field, scope_id) do
-    resource
-    |> Ash.Query.filter(^ref(scope_field) == ^scope_id and is_nil(superseded_at))
-    |> Ash.read(authorize?: false)
   end
 end

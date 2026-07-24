@@ -19,12 +19,11 @@ defmodule Wekui.Judgment.Changes.Supersede do
 
   use Ash.Resource.Change
 
-  require Ash.Query
-  import Ash.Expr
+  alias Wekui.Judgment.Slot
 
   @impl true
   def init(opts) do
-    if is_list(opts[:slot]) and opts[:slot] != [] and Enum.all?(opts[:slot], &is_atom/1) do
+    if Slot.nonempty_atom_list?(opts[:slot]) do
       {:ok, opts}
     else
       {:error, "Supersede expects a non-empty :slot list of attribute atoms"}
@@ -41,21 +40,15 @@ defmodule Wekui.Judgment.Changes.Supersede do
   end
 
   defp close_current(changeset, slot) do
-    resource = changeset.resource
+    pairs = Enum.map(slot, &{&1, Ash.Changeset.get_attribute(changeset, &1)})
 
-    filter =
-      Enum.reduce(slot, expr(is_nil(superseded_at)), fn field, acc ->
-        value = Ash.Changeset.get_attribute(changeset, field)
-        expr(^acc and ^ref(field) == ^value)
-      end)
-
-    case Ash.read_one(Ash.Query.filter(resource, ^filter), authorize?: false) do
+    case Ash.read_one(Slot.current(changeset.resource, pairs), authorize?: false) do
       {:ok, nil} ->
         changeset
 
       {:ok, current} ->
         closed = current |> Ash.Changeset.for_update(:retract) |> Ash.update!(authorize?: false)
-        Ash.Changeset.put_context(changeset, :supersede, %{closed: closed})
+        Ash.Changeset.put_context(changeset, :supersede, closed)
 
       {:error, error} ->
         Ash.Changeset.add_error(changeset, error)
@@ -64,7 +57,7 @@ defmodule Wekui.Judgment.Changes.Supersede do
 
   defp link_successor(changeset, result) do
     case changeset.context do
-      %{supersede: %{closed: closed}} ->
+      %{supersede: closed} ->
         closed
         |> Ash.Changeset.for_update(:link_successor, %{superseded_by_id: result.id})
         |> Ash.update!(authorize?: false)

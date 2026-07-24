@@ -15,16 +15,15 @@ defmodule Wekui.Judgment.Changes.CloseCurrent do
 
   use Ash.Resource.Change
 
-  require Ash.Query
-  import Ash.Expr
+  alias Wekui.Judgment.Slot
 
   @impl true
   def init(opts) do
     cond do
-      not (is_atom(opts[:resource]) and not is_nil(opts[:resource])) ->
+      not is_atom(opts[:resource]) or is_nil(opts[:resource]) ->
         {:error, "CloseCurrent expects a :resource module"}
 
-      not (is_list(opts[:match]) and opts[:match] != [] and Enum.all?(opts[:match], &is_atom/1)) ->
+      not Slot.nonempty_atom_list?(opts[:match]) ->
         {:error, "CloseCurrent expects a non-empty :match list of attribute atoms"}
 
       true ->
@@ -35,15 +34,9 @@ defmodule Wekui.Judgment.Changes.CloseCurrent do
   @impl true
   def change(changeset, opts, _context) do
     Ash.Changeset.after_action(changeset, fn changeset, result ->
-      resource = opts[:resource]
+      pairs = Enum.map(opts[:match], &{&1, Ash.Changeset.get_attribute(changeset, &1)})
 
-      filter =
-        Enum.reduce(opts[:match], expr(is_nil(superseded_at)), fn field, acc ->
-          value = Ash.Changeset.get_attribute(changeset, field)
-          expr(^acc and ^ref(field) == ^value)
-        end)
-
-      {:ok, rows} = Ash.read(Ash.Query.filter(resource, ^filter), authorize?: false)
+      {:ok, rows} = Ash.read(Slot.current(opts[:resource], pairs), authorize?: false)
 
       Enum.each(rows, fn row ->
         row |> Ash.Changeset.for_update(:retract) |> Ash.update!(authorize?: false)

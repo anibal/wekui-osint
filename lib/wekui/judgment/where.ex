@@ -17,9 +17,7 @@ defmodule Wekui.Judgment.Where do
 
   alias Wekui.Core.{Event, Place}
   alias Wekui.Capture.Post
-  alias Wekui.Judgment.{NoPlace, Placement}
-
-  require Ash.Query
+  alias Wekui.Judgment.{NoPlace, Placement, Slot}
 
   @typedoc "Where a Post is about, resolved from its current judgments."
   @type t :: {:place, Place.t()} | {:unplaced, Place.t()} | :no_place
@@ -67,8 +65,6 @@ defmodule Wekui.Judgment.Where do
   defp event_id_of_post(post_id), do: Ash.get!(Post, post_id, authorize?: false).event_id
 
   defp current(resource, post_id) do
-    resource
-    |> Ash.Query.filter(post_id == ^post_id and is_nil(superseded_at))
-    |> Ash.read_one!(authorize?: false)
+    Slot.current(resource, [{:post_id, post_id}]) |> Ash.read_one!(authorize?: false)
   end
 end
