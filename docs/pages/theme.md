@@ -10,7 +10,7 @@ type:: concept
 - A Theme has:
   - **Name** — the display label people read: never folded, never emitted, never matched.
   - **Status note** — a sentence saying why the Theme is where it is right now. When a Theme is retired, this is where we say why.
-  - **Proposed by** #planned — the [[actor]] that suggested this Theme, and, when it was read out of a [[post]], the Post it was inferred from. Recording it is what lets us later ask *how good are we at reading Themes out of Posts*, per Actor. Deferred exactly as it is for a [[place]].
+  - **Proposed by** — the [[actor]] that suggested this Theme, and, when it was read out of a [[post]], the Post it was inferred from. Recording it is what lets us later ask *how good are we at reading Themes out of Posts*, per Actor. Both are optional, exactly as for a [[place]].
 - Lifecycle — a Theme moves through the same named steps as a [[place]], and each step is a deliberate decision by an [[actor]]:
   - **Proposed** — someone or something has suggested this Theme, and nobody has ruled on it yet.
   - **Active** — an Actor has approved it. It is part of the Event's settled What axis: the labels a Post can be judged to be about.

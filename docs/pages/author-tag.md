@@ -8,7 +8,7 @@ type:: concept
 - An Author Tag has:
   - **Name** — the display label people read: never folded, never emitted, never matched.
   - **Status note** — a sentence saying why the Tag is where it is right now. When a Tag is retired, this is where we say why.
-  - **Proposed by** #planned — the [[actor]] that suggested this Tag, and, when it was read out of a [[post]], the Post it was inferred from. Deferred exactly as it is for a [[theme]] and a [[place]].
+  - **Proposed by** — the [[actor]] that suggested this Tag, and, when it was read out of a [[post]], the Post it was inferred from. Both are optional, exactly as for a [[theme]] and a [[place]].
 - Lifecycle — an Author Tag moves through the same named steps as a [[theme]], and each step is a deliberate decision by an [[actor]]:
   - **Proposed** — someone or something has suggested this Tag, and nobody has ruled on it yet.
   - **Active** — an Actor has approved it. It is part of the Event's settled Who axis: the labels an Author can be judged to carry.

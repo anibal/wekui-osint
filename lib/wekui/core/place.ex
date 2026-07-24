@@ -36,15 +36,20 @@ defmodule Wekui.Core.Place do
       # The tree walks in `Wekui.Tree` descend on this one.
       index [:parent_id]
       index [:replaced_by_id]
+      # "How good is this Actor at reading Places out of Posts" reads on these.
+      index [:proposed_by_actor_id]
+      index [:proposed_from_post_id]
     end
 
     # Nothing in this model is ever deleted — a Place leaves the working
     # vocabulary by moving to :deprecated or :discarded, and its Event, its
-    # parent and its replacement all outlive it.
+    # parent, its replacement and whatever proposed it all outlive it.
     references do
       reference :event, on_delete: :restrict
       reference :parent, on_delete: :restrict
       reference :replaced_by, on_delete: :restrict
+      reference :proposed_by_actor, on_delete: :restrict
+      reference :proposed_from_post, on_delete: :restrict
     end
   end
 
@@ -67,7 +72,15 @@ defmodule Wekui.Core.Place do
     create :create do
       primary? true
       description "Adds a Place to an Event's tree. Born :proposed unless created :active."
-      accept [:type, :canonical_name, :event_id, :parent_id]
+
+      accept [
+        :type,
+        :canonical_name,
+        :event_id,
+        :parent_id,
+        :proposed_by_actor_id,
+        :proposed_from_post_id
+      ]
 
       argument :lifecycle, :atom do
         description "Manual curation may skip the proposal step and create a Place :active."
@@ -87,6 +100,10 @@ defmodule Wekui.Core.Place do
       end
 
       validate {Reference, resource: __MODULE__, attribute: :parent_id}
+      # Provenance is optional (a hand-typed Place has neither), but whatever it
+      # names must belong to the same Event.
+      validate {Reference, resource: Wekui.Core.Actor, attribute: :proposed_by_actor_id}
+      validate {Reference, resource: Wekui.Capture.Post, attribute: :proposed_from_post_id}
     end
 
     read :by_event do
@@ -217,6 +234,16 @@ defmodule Wekui.Core.Place do
     end
 
     belongs_to :replaced_by, __MODULE__ do
+      public? true
+    end
+
+    belongs_to :proposed_by_actor, Wekui.Core.Actor do
+      description "The Actor that proposed this Place. Absent when it was typed in by hand."
+      public? true
+    end
+
+    belongs_to :proposed_from_post, Wekui.Capture.Post do
+      description "The Post this Place was read out of, when it was inferred from one."
       public? true
     end
 

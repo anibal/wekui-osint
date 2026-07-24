@@ -12,7 +12,7 @@ type:: concept
     - A Place has a Type; a [[place-name]] has a Kind. They are different things and we never swap the words.
   - **Canonical name** — the name we ourselves use for the Place when we write about it.
   - **Status note** — a sentence saying why the Place is where it is right now. When a Place is retired, this is where we say why.
-  - **Proposed by** #planned — the [[actor]] that suggested this Place, and, when it was inferred from a [[post]], the Post it was inferred from.
+  - **Proposed by** — the [[actor]] that suggested this Place, and, when it was inferred from a [[post]], the Post it was inferred from. Both are optional: a Place typed in by hand carries neither.
     - Places do not only come from people typing them in. A Place can be read out of a Post — someone mentions a building, a bridge, a stretch of road that is not in our tree yet — and that suggestion becomes a proposed Place.
     - Recording who proposed it and what they read it from is what lets us later ask *how good are we at reading Places out of Posts*, per Actor, and improve the prompt on evidence.
 - Lifecycle — a Place moves through named steps, and each step is a deliberate decision by an [[actor]]:
@@ -29,6 +29,6 @@ type:: concept
   - Only a proposed or active Place can be discarded. Deprecated and discarded are final.
   - A Place's parent must belong to the same Event.
   - A Place can never be moved underneath itself or underneath one of its own descendants, because that would detach it from the tree.
-- What becomes of the Posts collected under a Place that is later settled: [[settling-a-collected-place]] #planned
+- What becomes of the Posts collected under a Place that is later settled: [[settling-a-collected-place]].
 - Every Event has one special Place that is not part of its geography: [[unplaced-place]].
 - **Unplaced** is not the same answer as **No place** — see [[no-place]].

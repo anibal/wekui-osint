@@ -27,14 +27,19 @@ defmodule Wekui.Taxonomy.AuthorTag do
     custom_indexes do
       index [:event_id]
       index [:replaced_by_id]
+      # "How good is this Actor at reading Tags out of Posts" reads on these.
+      index [:proposed_by_actor_id]
+      index [:proposed_from_post_id]
     end
 
     # An Author Tag is never deleted — it leaves the working vocabulary by
-    # moving to :deprecated or :discarded, and its Event and its replacement
-    # both outlive it.
+    # moving to :deprecated or :discarded, and its Event, its replacement and
+    # whatever proposed it all outlive it.
     references do
       reference :event, on_delete: :restrict
       reference :replaced_by, on_delete: :restrict
+      reference :proposed_by_actor, on_delete: :restrict
+      reference :proposed_from_post, on_delete: :restrict
     end
   end
 
@@ -59,7 +64,7 @@ defmodule Wekui.Taxonomy.AuthorTag do
 
       description "Adds an Author Tag to an Event's vocabulary. Born :proposed unless created :active."
 
-      accept [:name, :event_id]
+      accept [:name, :event_id, :proposed_by_actor_id, :proposed_from_post_id]
 
       argument :lifecycle, :atom do
         description "Manual curation may skip the proposal step and create a Tag :active."
@@ -75,6 +80,10 @@ defmodule Wekui.Taxonomy.AuthorTag do
           Ash.Changeset.get_argument(changeset, :lifecycle)
         )
       end
+
+      # Provenance is optional, but whatever it names must be of the same Event.
+      validate {Reference, resource: Wekui.Core.Actor, attribute: :proposed_by_actor_id}
+      validate {Reference, resource: Wekui.Capture.Post, attribute: :proposed_from_post_id}
     end
 
     read :by_event do
@@ -156,6 +165,16 @@ defmodule Wekui.Taxonomy.AuthorTag do
     end
 
     belongs_to :replaced_by, __MODULE__ do
+      public? true
+    end
+
+    belongs_to :proposed_by_actor, Wekui.Core.Actor do
+      description "The Actor that proposed this Tag. Absent when it was typed in by hand."
+      public? true
+    end
+
+    belongs_to :proposed_from_post, Wekui.Capture.Post do
+      description "The Post this Tag was read out of, when it was inferred from one."
       public? true
     end
   end
