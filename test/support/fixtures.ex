@@ -84,6 +84,20 @@ defmodule Wekui.Fixtures do
     )
   end
 
+  @doc "An active Author Tag of one Event — a label an Author can be judged to carry."
+  def author_tag!(event, attrs \\ %{}) do
+    Taxonomy.create_author_tag!(
+      Map.merge(
+        %{
+          event_id: event.id,
+          name: "etiqueta-#{System.unique_integer([:positive])}",
+          lifecycle: :active
+        },
+        attrs
+      )
+    )
+  end
+
   @doc "A draft Search over a one-hour window cut into ten-minute slices."
   def search!(event, attrs \\ %{}) do
     Acquisition.create_search!(
