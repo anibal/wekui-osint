@@ -7,4 +7,5 @@ type:: principle
   - [[author]] — recorded as first seen: "If someone renames themselves afterwards we do not chase the change."
   - [[search]] — extending "only ever *adds* Queries; it never rewrites or removes the ones already there"; the slice grid is "anchored to a grid that never moves," so "a slice we have already asked about never turns into a different, longer one."
   - [[appearance]] — "Asking a Query again finds the same Posts and changes nothing."
+  - [[judgment]] — "Judgments are append-only. We never edit an answer and we never delete one"; re-judging supersedes and retraction closes without a successor.
   - The [[decision-log]] — append-only: a reversed decision is a new dated entry, never an edit of the old one.

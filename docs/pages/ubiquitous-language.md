@@ -22,6 +22,10 @@ type:: hub
   - [[appearance]] — the record that one Query found one Post.
   - [[theme]] — a label for what a Post is about; the Event's What axis, a Place-shaped tree without the name layer.
   - [[author-tag]] — a label for what an Author is; the Event's Who axis, flat, open, and multi-label.
+  - [[judgment]] #planned — an Actor's answer about a Post or an Author; append-only, superseding, always carrying who made it and, for an agent, a confidence.
+  - [[theme-judgment]] #planned — the answer to *what a Post is about*: a Post carries a Theme; any number current, at most one per Theme.
+  - [[author-tag-judgment]] #planned — the answer to *what an Author is*: an Author carries a Tag; the author-scoped twin of a Theme judgment.
+  - [[placement]] #planned — the answer to *where a Post is about*: a Post points at a Place, or at No place, or waits Unplaced.
 - Policies
   - [[settling-a-collected-place]] #planned — what becomes of the Posts collected under a Place that is later settled.
 - The rest of the documentation — principles, strategy, architecture, the decision log, open questions, research — is mapped from [[index]].
