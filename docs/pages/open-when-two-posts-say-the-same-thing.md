@@ -14,4 +14,5 @@ type:: open-question
 - Whatever we build has to survive one thing we already know about this corpus:
   - 981 Posts, 7.4% of them, share the same missing-person wording and differ only in the name of the person who is missing.
   - They read as near-identical and they mean opposite things. A rule that quietly merges them is worse than no rule at all.
+- The second of these questions — *are these two people telling us about the same happening* — is taking the name [[claim]] (planned): the happening is one claim, the two Posts cite the same one, and they are merged only on marks specific enough to bear it — never on the shared missing-person wording above.
 - Related decision: [[decision-2026-07-23-no-folded-text]].
