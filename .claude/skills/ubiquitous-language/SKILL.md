@@ -73,6 +73,13 @@ dated decision page and shrink the open page to a pointer — never delete it.
    - commit the new `.outl` sidecar.
 5. `mix precommit` as usual.
 
+A committed `pre-commit` hook automates step 4's adopt pass — enable it once
+per clone with `git config core.hooksPath .githooks`. On any commit touching
+`docs/`: if no outl process is attached it runs `outl serve --once`, stages the
+regenerated `.outl` sidecars, and blocks on a `doctor` integrity error; if a
+TUI/GUI is attached it defers to it (never a second process) and only warns.
+It does not remove the manual dance — it just catches sidecars you forget.
+
 ## Reading and querying
 
 Read the files directly — hub first, then the pages the task touches; Grep
