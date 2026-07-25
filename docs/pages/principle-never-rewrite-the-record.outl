@@ -1,8 +1,8 @@
 {
   "version": 2,
   "page_id": "2Y4NCHEPJWY8C9MW017ZSDJ7EK",
-  "last_synced_hash": "sha256:b13bac42fc97737cfd338785c8e8c803a4649b6527483c3a34ed12c540f0d5a3",
-  "last_synced_at": "2026-07-23T16:12:55.496533-05:00",
+  "last_synced_hash": "sha256:d4627625ffb7d0fae2deef5ff2569c845723f188d7645dbe88bbbc5250563332",
+  "last_synced_at": "2026-07-24T18:52:59.084187-05:00",
   "blocks": [
     {
       "id": "01KY8D60E8MEC3BEWEK7AZGKNE",
@@ -47,8 +47,15 @@
       "ref_handle": "blk-b7j6qd"
     },
     {
-      "id": "01KY8D60E8MVFSH55GX1S5S852",
+      "id": "01KYB8QSYC72X7PK54CQN8TJBV",
       "line": 7,
+      "indent": 1,
+      "content_hash": "sha256:002df33dd9e9044c2ee59d0c498bd1d7b69e99073b552ae804baaed3a87f1049",
+      "ref_handle": "blk-n8tjbv"
+    },
+    {
+      "id": "01KY8D60E8MVFSH55GX1S5S852",
+      "line": 8,
       "indent": 1,
       "content_hash": "sha256:abf3f1b4328150a1b00a40ee60b7b8578d9bfae3d87fa655af7641a319dcdb1e",
       "ref_handle": "blk-s5s852"
