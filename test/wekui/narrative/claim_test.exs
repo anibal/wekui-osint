@@ -143,4 +143,28 @@ defmodule Wekui.Narrative.ClaimTest do
                Narrative.cite_post(%{claim_id: c.id, post_id: other_post.id})
     end
   end
+
+  describe "the person red line — no private individual is named" do
+    test "refuses a private name in the subject", ctx do
+      assert {:error, %Ash.Error.Invalid{}} =
+               draft(ctx, %{subject: "Belkys Josefina Barreto García"})
+    end
+
+    test "refuses a private name in the nuance", ctx do
+      assert {:error, %Ash.Error.Invalid{}} =
+               draft(ctx, %{nuance: "rescatada junto a Pedro Ramírez González"})
+    end
+
+    test "accepts a role-only subject", ctx do
+      assert %{} = draft!(ctx, %{subject: "una mujer de 60 años y sus dos hijos"})
+    end
+
+    test "accepts a public figure from the allowlist", ctx do
+      assert %{} = draft!(ctx, %{subject: "Nicolás Maduro"})
+    end
+
+    test "accepts an institution acting publicly", ctx do
+      assert %{} = draft!(ctx, %{subject: nil, nuance: "arribó USAR de El Salvador"})
+    end
+  end
 end

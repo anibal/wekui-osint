@@ -61,6 +61,29 @@ config :wekui,
     Wekui.Taxonomy
   ]
 
+# The persons red line's allowlist (F54): people who MAY be named in a Claim —
+# public officials and figures acting in a public capacity. Everything not here
+# and not gazetteer geography is treated as a private individual and refused by
+# `Wekui.Narrative.Validations.NoPrivateName`. Adding a name here is a deliberate
+# act with dignity and safety weight: victims, survivors, the missing and the
+# dead NEVER belong on this list.
+config :wekui, :public_figures, [
+  # Venezuela — government
+  "Nicolás Maduro",
+  "Delcy Rodríguez",
+  "Jorge Rodríguez",
+  "Diosdado Cabello",
+  # Venezuela — opposition
+  "María Corina Machado",
+  "Edmundo González",
+  # foreign heads of state / officials acting officially
+  "Nayib Bukele",
+  "Donald Trump",
+  "Gustavo Petro",
+  "Claudia Sheinbaum",
+  "Luiz Inácio Lula da Silva"
+]
+
 # SQLite pragmas shared across all environments (dev/test/runtime.exs only add
 # :database and :pool_size). WAL allows concurrent readers during a write,
 # NORMAL synchronous relies on WAL for durability instead of fsync-per-commit,

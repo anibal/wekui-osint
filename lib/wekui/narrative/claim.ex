@@ -21,17 +21,22 @@ defmodule Wekui.Narrative.Claim do
   event-wide), `first_seen_at` (when first evidenced), `magnitude`, `status`. The
   Spanish a reader sees is a Beat rendered from these, never stored here.
 
-  NOT YET GATED — the person red line. `docs/pages/claim.md` forbids naming a
-  private individual absolutely, and F54 is why that must live in the write path,
-  not in a prompt. A `NoPrivateName` validation on `subject`/`nuance` is the
-  immediate next sub-concept; no LLM-produced claim ships before it exists. This
-  first slice is exercised by fixtures only, so nothing person-naming is written.
+  The person red line is gated on the write path (F54): `draft` refuses a
+  `subject` or `nuance` that names a private individual, checked mechanically by
+  `Wekui.Narrative.Validations.NoPrivateName` against the event's gazetteer and
+  the public-figure allowlist — never by a prompt. Only roles, places and public
+  figures may appear.
+
+  Still deferred, each its own sub-concept: the merge (folding two accounts of
+  one happening into one claim, with status threading), the support gate (an
+  LLM-judge that verifies the evidence bears the assertion), and Beat rendering.
   """
 
   use Ash.Resource, otp_app: :wekui, domain: Wekui.Narrative, data_layer: AshSqlite.DataLayer
 
   alias Wekui.Judgment.Changes.Retract
   alias Wekui.Judgment.Validations.Provenance
+  alias Wekui.Narrative.Validations.NoPrivateName
   alias Wekui.Validations.Reference
 
   sqlite do
@@ -88,6 +93,10 @@ defmodule Wekui.Narrative.Claim do
       validate {Reference, resource: Wekui.Core.Place, attribute: :place_id}
       validate {Reference, resource: Wekui.Core.Actor, attribute: :actor_id}
       validate Provenance
+
+      # The persons red line, on the write path (F54): subject and nuance name no
+      # private individual — only roles, places, and public figures.
+      validate {NoPrivateName, fields: [:subject, :nuance]}
     end
 
     update :retract do
