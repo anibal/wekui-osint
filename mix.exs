@@ -5,7 +5,7 @@ defmodule Wekui.MixProject do
     [
       app: :wekui,
       version: "0.1.0",
-      elixir: "~> 1.15",
+      elixir: "~> 1.17",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -67,6 +67,11 @@ defmodule Wekui.MixProject do
        depth: 1},
       {:swoosh, "~> 1.16"},
       {:req, "~> 0.5"},
+      # The in-app research agent runtime (Sage over Elixir LangChain). Sage
+      # provides the interactive agent loop, HITL approval gates, subagents and
+      # LiveView streaming; LangChain the model calls and structured output.
+      {:sagents, "~> 0.9"},
+      {:langchain, "~> 0.9"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.26"},
