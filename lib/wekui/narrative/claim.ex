@@ -27,8 +27,10 @@ defmodule Wekui.Narrative.Claim do
   the public-figure allowlist — never by a prompt. Only roles, places and public
   figures may appear.
 
-  Still deferred, each its own sub-concept: the merge (folding two accounts of
-  one happening into one claim, with status threading), the support gate (an
+  Folding two accounts of one happening into one claim — canonical = the earliest
+  occurrence, absorbing the duplicate's citations, the duplicate closed and linked
+  — is `Wekui.Narrative.Merge`. Still deferred, each its own sub-concept: status
+  threading (a claim's status changing as the world moves), the support gate (an
   LLM-judge that verifies the evidence bears the assertion), and Beat rendering.
   """
 
@@ -104,6 +106,14 @@ defmodule Wekui.Narrative.Claim do
       accept []
       require_atomic? false
       change Retract
+    end
+
+    update :link_successor do
+      description "Internal: points a just-closed claim at the canonical it was folded into (merge)."
+      accept []
+      require_atomic? false
+      argument :superseded_by_id, :uuid, allow_nil?: false
+      change set_attribute(:superseded_by_id, arg(:superseded_by_id))
     end
 
     read :by_event do
