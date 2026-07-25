@@ -1,0 +1,122 @@
+{
+  "attributes": [
+    {
+      "default": "nil",
+      "size": null,
+      "type": "uuid",
+      "source": "id",
+      "references": null,
+      "primary_key?": true,
+      "allow_nil?": false,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "utc_datetime_usec",
+      "source": "inserted_at",
+      "references": null,
+      "primary_key?": false,
+      "allow_nil?": false,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "utc_datetime_usec",
+      "source": "updated_at",
+      "references": null,
+      "primary_key?": false,
+      "allow_nil?": false,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "uuid",
+      "source": "claim_id",
+      "references": {
+        "name": "claim_citations_claim_id_fkey",
+        "table": "claims",
+        "multitenancy": {
+          "global": null,
+          "attribute": null,
+          "strategy": null
+        },
+        "on_delete": "restrict",
+        "on_update": null,
+        "deferrable": false,
+        "destination_attribute": "id",
+        "primary_key?": true,
+        "destination_attribute_generated": null,
+        "destination_attribute_default": null
+      },
+      "primary_key?": false,
+      "allow_nil?": false,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "uuid",
+      "source": "post_id",
+      "references": {
+        "name": "claim_citations_post_id_fkey",
+        "table": "posts",
+        "multitenancy": {
+          "global": null,
+          "attribute": null,
+          "strategy": null
+        },
+        "on_delete": "restrict",
+        "on_update": null,
+        "deferrable": false,
+        "destination_attribute": "id",
+        "primary_key?": true,
+        "destination_attribute_generated": null,
+        "destination_attribute_default": null
+      },
+      "primary_key?": false,
+      "allow_nil?": false,
+      "generated?": false
+    }
+  ],
+  "table": "claim_citations",
+  "hash": "7B74DB967FA83043F0ED792440FC75577D1EF722DD29216C07942B3E70E595DC",
+  "multitenancy": {
+    "global": null,
+    "attribute": null,
+    "strategy": null
+  },
+  "identities": [
+    {
+      "name": "unique_post_per_claim",
+      "keys": [
+        "claim_id",
+        "post_id"
+      ],
+      "base_filter": null,
+      "index_name": "claim_citations_unique_post_per_claim_index",
+      "nils_distinct?": true
+    }
+  ],
+  "repo": "Elixir.Wekui.Repo",
+  "strict?": false,
+  "custom_indexes": [
+    {
+      "message": null,
+      "name": null,
+      "table": null,
+      "include": null,
+      "where": null,
+      "fields": [
+        "post_id"
+      ],
+      "unique": false,
+      "using": null
+    }
+  ],
+  "custom_statements": [],
+  "base_filter": null,
+  "has_create_action": true
+}
