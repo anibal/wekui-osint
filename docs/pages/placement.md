@@ -6,7 +6,7 @@ type:: concept
 - The slot is the **Post**: a Post is about one where at a time, so it has at most one current placement. Re-judging supersedes the earlier one.
 - The Place judged must be a [[place]] of the same [[event]] as the Post.
 - A Post does not store where it is about; its where is always read from its current placement, following one chain:
-  - a current placement whose Place is **active** → that Place;
+  - a current placement whose Place is **proposed or active** → that Place;
   - a current placement whose Place has been **deprecated** → the Place's replacement, followed onwards if that Place was itself deprecated — see [[settling-a-collected-place]];
   - a current placement whose Place has been **discarded** with no replacement → **Unplaced**;
   - no current placement but a current **No place** answer → [[no-place]];
