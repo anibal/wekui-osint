@@ -47,6 +47,11 @@ defmodule Wekui.MixProject do
       {:igniter, "~> 0.6", only: [:dev, :test]},
       {:sourceror, "~> 1.8", only: [:dev, :test]},
       {:ash, "~> 3.0"},
+      # Already installed — Ash requires it — but the read-path pipeline `use`s it
+      # directly, so it is declared rather than borrowed through Ash's tree. No new
+      # package enters the build; this only makes the existing one honest (and lets
+      # usage_rules build its skill, which only sees top-level deps).
+      {:reactor, "~> 1.0"},
       {:usage_rules, "~> 1.0", only: [:dev]},
       {:phoenix, "~> 1.8.1"},
       {:phoenix_ecto, "~> 4.5"},
@@ -142,6 +147,11 @@ defmodule Wekui.MixProject do
             description:
               "Use when creating or changing Ash resources, domains, actions, relationships, policies, calculations, or running codegen/migrations — any domain change under lib/wekui/.",
             usage_rules: [:ash, ~r/^ash_/]
+          ],
+          reactor: [
+            description:
+              "Use when writing or changing a pipeline under lib/wekui/pipelines/ — Reactor's step graph, arguments, retries, guards and composition. The read path runs on it.",
+            usage_rules: [:reactor]
           ]
           # The fine-grained phoenix-* skills are hand-written pointers to
           # deps/phoenix/usage-rules/*.md (usage_rules can only build whole
