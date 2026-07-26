@@ -4,10 +4,13 @@
 it was proven, and — separately — how we will judge whether the *record itself* is good.
 Written to be argued with; the ratings are mine, change them.
 
-**State in one line:** the spine of the "agent as product" — public posts → structured,
-dignity-safe, evidence-cited **claims** — is built and **proven on real data with the real
-model**. What's missing is the layers *around* it: mapping, the honesty backstop, the reader
-output, the orchestration, and live collection.
+**State in one line (revised 2026-07-26):** the whole read path — public posts → structured,
+dignity-safe, evidence-cited **claims** → gazetteer places → a support verdict → the Spanish a
+reader meets — is built, orchestrated into **one auditable run**, and **proven end to end on real
+data with the real model**: 9 posts → 8 claims → 7 of 8 mentions linked → 8/8 supported → a cited
+5-clause Caraballeda beat, in one receipt (`7bb0dcc3`, 23 seconds, pennies). What's missing is
+what services it: the review console, the merge-judge, the LLM polish, a reader UI, and live
+collection.
 
 Legend — Status: ✅ built · ◐ partial · ○ planned. Proven: **live** (real DeepSeek + real
 posts) · **unit** (test suite) · — (not yet). Confidence: H / M / L.
@@ -24,12 +27,13 @@ posts) · **unit** (test suite) · — (not yet). Confidence: H / M / L.
 | **Person red line / gate** | ✅ | **live** + unit | H | subject now **strict** — no name ever, not even a public figure (the Montero hole, closed); nuance lenient | — |
 | Claim **merge** (dedup, deterministic) | ◐ | unit | M | the *merge-judge* (WHICH two are the same) is NOT built → cross-batch dup recurs at scale | build the merge-judge (specificity rule) |
 | **Extraction prompt** (v5) | ✅ | **live** | M–H | MoE non-determinism; low-confidence noise leaks (self-labeled) | multi-pass; keep in the loop |
-| **Extraction pipeline** (posts → claims) | ✅ | **live** | H | best-effort per claim (not transactional); no Run receipt | Run receipt later |
+| **Extraction pipeline** (posts → claims) | ✅ | **live** | H | best-effort per claim (not transactional) — a crash leaves partial claims, now visible as a `:running` receipt | — |
 | DeepSeek worker client | ✅ | unit | H | single-shot, no retry (caller owns) | retry/backoff when at scale |
-| **Place mapping** (place_mention → gazetteer) | ○ | — | — | claims hold place *text*, not place_id → tree rollup / place filter don't work on extracted claims yet | Tavily + Nominatim + human-gated propose-place |
+| **Place mapping** (place_mention → gazetteer) | ✅ | **live** | M–H | deterministic only: a mention matching nothing at any level stays honestly UNRESOLVED (1 of 8 on the live run) — the web lookup that would place it is unbuilt | Tavily + Nominatim for the leftovers |
 | **Support gate** (entailment: do the posts bear the claim?) | ✅ | **live** | M | flag-only (records a verdict, withholds nothing); judge prompt is an un-iterated v1 (answers in English); no console services verdicts | iterate the judge prompt; wire into the review flow |
-| **Beat rendering** (claims → the story a reader reads) | ○ | — | — | no reader-facing output yet | render from claims, anaphora, no LLM-over-LLM |
-| **Sage agent** (orchestration, HITL, tools) | ○ | — | — | deps installed, nothing wired; the "product" surface | wrap pipeline steps as tools + HITL gates |
+| **Beat rendering** (claims → the story a reader reads) | ✅ | **live** | M–H | deterministic templates on an open `kind` — wording is serviceable, not polished; one ordering defect found and fixed by orchestrating it | the LLM polish rung over the structured clauses |
+| **Orchestration** (the read-path run + its receipt) | ✅ | **live** + unit | H | records the gates, pauses at none; no re-extract until the merge-judge lands | pause points arrive with the review console and the spend gate |
+| **Talking agent** (conversational driving, tools, HITL) | ○ | — | — | runtime deliberately undecided; the read path needed none, having no agentic decisions | decide the runtime at that rung |
 | Live acquisition (X collection, spend-gated) | ○ | — | — | pilot runs on a seeded corpus; no live spend yet | the runner + X client, gated |
 | Human-review workflow / UI | ○ | — | — | the gate is a *status* (`pending_review`), not yet an operable interface | a LiveView review console |
 | Read / timeline UI | ○ | — | — | nothing to look at but the DB | port feed/timeline after Beats |
@@ -92,15 +96,19 @@ these three into numbers against Cronista's hand-verified record is itself a tas
 
 Roughly in order, what stands between here and a shippable, donation-facing Caraballeda story:
 
-1. **Human-review console** — the support gate is now built (flag-only) and the person gate
-   makes `pending_review` rows; both are queues nothing services. The console makes them
-   operable (approve people, confirm handles, adjudicate support verdicts), and the publish
-   path keys off `support == :supported` + person `approved`.
-2. **Place mapping** — so claims live in the gazetteer tree and filter to Caraballeda.
-3. **Merge-judge** — so one happening is one claim across the whole corpus.
-4. **Beat rendering** — claims → the multi-granularity story a reader meets.
-5. **Read UI** — the timeline, place-filterable.
-6. **(then) Sage agent + live acquisition** — orchestrate it end-to-end, and grow the record.
+1. **Human-review console** — the support gate is built (flag-only), the person gate makes
+   `pending_review` rows, and a run now *hands you those queues* in its receipt (5 persons on
+   the live run). Nothing services them. The console makes them operable (approve people,
+   confirm handles, adjudicate support verdicts), and the publish path keys off
+   `support == :supported` + person `approved`. **This is now the top of the path.**
+2. ~~**Place mapping**~~ — built: deterministic resolver + ClaimPlace, live on the real tree.
+3. **Merge-judge** — so one happening is one claim across the whole corpus. Also what would let
+   a run re-extract safely rather than skipping.
+4. ~~**Beat rendering**~~ — built and orchestrated; the **LLM polish** over its structured
+   clauses is the remaining half.
+5. **Read UI** — the timeline, place-filterable. The run receipt is the other thing worth a
+   screen: it is the product's audit surface.
+6. **(then) live acquisition** — grow the record, behind the spend gate.
 
 A measurement pass against Cronista's hand-verified Caraballeda set should run *alongside* 1–3
 to turn the qualitative reads in §B into numbers (§C.7).

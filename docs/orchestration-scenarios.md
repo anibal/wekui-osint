@@ -6,11 +6,17 @@ recommendation · **[OPEN]** your call · **[SETTLED]** decided. Grounded in the
 source-level reads of the runtime libraries, and an adversarial review pass whose confirmed
 findings are folded in.
 
-> **STATUS 2026-07-26 — BUILT.** Every fork below is settled and the read path ships:
-> `Wekui.Pipelines.Run` (the receipt), `Wekui.Pipelines.ReadPath` (the Reactor) and
-> `Wekui.Pipelines.run_read_path/4`, with 14 tests through `Req.Test` and `priv/scripts/` for
-> task 0a (done in dev: 296 places seeded, 9 posts ported) and task 0b. **Only 0b remains** — the
-> live re-extract, which needs `DEEPINFRA_API_KEY` in the real env. Where the built behaviour
+> **STATUS 2026-07-26 — BUILT AND RUN LIVE.** Every fork below is settled, the read path ships,
+> and task 0b ran on the real model (scenario A holds the receipt).
+>
+> **On that live run:** I meant to smoke-test the 0b script *without* a key and watch preflight
+> refuse — but `DEEPINFRA_API_KEY` is set in this shell's environment, so the run went through for
+> real. Pennies, on the seeded corpus, within what the pilot sanctions; unintended all the same,
+> and said plainly here rather than presented as planned.
+>
+> The parts: `Wekui.Pipelines.Run` (the receipt), `Wekui.Pipelines.ReadPath` (the Reactor) and
+> `Wekui.Pipelines.run_read_path/4`, with 14 tests through `Req.Test`, plus `priv/scripts/` for
+> task 0a (296 places seeded, 9 posts ported, re-runnable) and 0b. Where the built behaviour
 > departs from what was proposed, the section says so and why; the departures are scenario D's
 > re-run rule (the proposed one mis-fired on the happy path — see
 > [`decision-2026-07-26-extract-once-per-event`](pages/decision-2026-07-26-extract-once-per-event.md))
@@ -122,8 +128,10 @@ receipt mixes a batch delta with snapshots, and that is the honest reading.
 ## Scenarios (the hard orchestration questions)
 
 ### A. A clean run — what the receipt says
-The pilot ask (Caraballeda × first days) on the **fresh task-0 event** finalizes with a summary
-like this (illustrative; person/verdict counts ride the known MoE variance):
+The pilot ask (Caraballeda × the corpus span) on the **fresh task-0 event** finalizes with a
+summary of this shape — and **it did, live, on 2026-07-26**: receipt `7bb0dcc3`, 23 seconds, one
+extraction call and 8 support calls, all through the real model. The real numbers are below the
+example, which is kept as the annotated shape:
 
 ```json
 {
@@ -140,6 +148,27 @@ like this (illustrative; person/verdict counts ride the known MoE variance):
 back from its `:map` column exactly as written. The `options` alongside it record the ask:
 `place_id`, `place_name`, `from`, `to`, `agent_id`, `agent_model`, `posts_in_scope`, and the
 per-stage choices.)
+
+**The actual first run** (task 0b, `litoral-central-2026`, the real 296-node tree):
+
+```
+extract  9 posts → 8 claims drafted, 0 skipped
+resolve  8 claims, 8 mentions, 7 linked, 0 proposed, 1 unresolved: "Caraballeda-La Guaira"
+verify   8 judged → 8 supported, 0 overstated, 0 unsupported, 0 errors
+render   5 clauses, 6 sources   (3 claims sit above Caraballeda in the tree — La Guaira-level —
+         and are correctly out of a Caraballeda beat: scope holds by construction)
+gates    5 persons pending review · 0 places proposed · 0 claims flagged
+beat     En Conjunto Residencial Caribe, se buscaba a Yaneth T. y Shaznay M.[1]; se buscaba a
+         Damarys M., una maestra[2]; el edificio colapsó tras el terremoto[3]. En Caraballeda,
+         los equipos rescataron con vida a una mujer[4]. En Edificio OPP 25, los equipos
+         trabajaron para rescatar con vida a Aaron C., un hombre de 21 años[5][6].
+```
+
+Read honestly: **8 claims where the old stub-tree pilot got 9** — single-pass MoE variance, the
+known reality the gates and your review exist to backstop, not a regression in the wiring. Every
+person is a derived handle, none a raw name. The one unresolved mention is the same relational
+one the resolver has always refused to guess. And the beat now reads in time order across a month
+boundary — which it did not before this session (scenario C-bis).
 
 Note what the fresh event does *not* demonstrate: the deliberately-overstated control claim is a
 manual insert on the old pilot (stored verdict `:unsupported` — the kickstart calls it
@@ -353,9 +382,11 @@ seeded gazetteer *is* the stub.
 
 ## What is left
 
-- **Task 0b — the live run.** `DEEPINFRA_API_KEY=… mix run priv/scripts/read_path.exs`. Extraction
-  and the support gate call DeepSeek for real on the clean event; pennies. N-run variance is the
-  known MoE reality — the gates and your review are the backstop.
+- **Task 0b is done** (see scenario A). To run it again: `mix run priv/scripts/read_path.exs` —
+  which now *skips* extract, since the event holds claims, and re-passes resolve + verify +
+  render. `EXTRACT=force` re-extracts and would mint a second set until the merge-judge lands.
+- **Your review of the 8 live claims** is the real next step: 5 persons sit `pending_review`, and
+  a second pass would likely surface a different claim count (single-pass MoE variance).
 - Next rungs, unchanged and unstarted: the **beat LLM-polish** over the structured clauses, the
   **merge-judge** (which two claims are one happening — and the thing that would let a re-run
   extract safely), the **support-prompt iteration** (v1 answers in English), the **review UI**
