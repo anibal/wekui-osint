@@ -28,6 +28,7 @@ type:: hub
   - [[placement]] — the answer to *where a Post is about*: a Post points at a Place, or at No place, or waits Unplaced.
   - [[claim]] — an Actor's account that something happened in the Event; one happening is one claim, drawn from many Posts and citing them. #planned
   - [[beat]] — the derived prose a reader reads, written from the Claims that hold for a Place and a stretch of time. #planned
+  - [[person]] — a human the Event's story is about (victim, rescuer, official, public figure…), whom Claims are about; a private person is protected by a gated handle, a public one is named; links their Claims into an arc. #planned
 - Policies
   - [[settling-a-collected-place]] — what becomes of the Posts collected under a Place that is later settled.
 - The rest of the documentation — principles, strategy, architecture, the decision log, open questions, research — is mapped from [[index]].
