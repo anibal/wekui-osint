@@ -17,4 +17,5 @@ type:: hub
   - [[decision-2026-07-24-merge-is-deprecation]] — a merge is a deprecation, not a judgment of its own.
 - 2026-07-26
   - [[decision-2026-07-26-gazetteer-from-osm]] — the gazetteer is seeded from OpenStreetMap by bounding box.
+  - [[decision-2026-07-26-reactor-not-sagents]] — the pipeline runs on Reactor; the sagents "saga" premise was a misread.
 - Dates say when a decision was recorded in this log; the measurements behind the earliest entries predate it.

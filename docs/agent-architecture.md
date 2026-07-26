@@ -1,5 +1,16 @@
 # The In-App Agent — architecture (runtime, tools, gates)
 
+> **⚠ CORRECTION (2026-07-26).** This doc's premise that sagents ("Sage") provides saga-style
+> orchestration was a misread: a source read of `deps/sagents` 0.9.0 found an LLM-agent loop on
+> LangChain — the model sequences tool calls; pause/resume approves tool calls; there is no step
+> graph, compensation, or rollback. The **deterministic pipeline** is orchestrated with
+> **Reactor** instead (already an Ash dep) — see
+> [`decision-2026-07-26-reactor-not-sagents`](pages/decision-2026-07-26-reactor-not-sagents.md).
+> The §1 runtime fork below (Sage-vs-ash_ai) is now historical: ash_ai stays out, and the
+> **talking-agent layer's** runtime (where this doc's HITL/subagent/streaming research would
+> apply) is an open decision for that later rung. The tool-bridge, spend-gate, and
+> location-assist research below remains valid input to that future decision.
+
 **Companion to `narrative-teardown.md`.** That doc redesigns the *narrative*
 (Claim/Beat); this one is *how the agent runs*: the runtime, the tools it calls, and
 where a human gates it. **Design only — no code until the vocabulary and this shape are

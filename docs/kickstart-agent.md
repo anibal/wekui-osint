@@ -1,5 +1,14 @@
 # Kickstart: the in-app agent — orchestrate the proven spine into a *run*
 
+> **⚠ CORRECTION (2026-07-26, the session this brief kicked off).** This brief's runtime framing
+> — "Sage (sagents) + Elixir LangChain", "saga", "wire the pipeline as a Sage saga" — rests on a
+> misread: sagents is an LLM-agent loop, **not** a saga engine (no steps, no compensation, no
+> rollback). The pipeline orchestration decision landed on **Reactor** (already an Ash dep) —
+> see [`decision-2026-07-26-reactor-not-sagents`](pages/decision-2026-07-26-reactor-not-sagents.md)
+> and [`orchestration-scenarios.md`](orchestration-scenarios.md). The talking-agent layer's
+> runtime is deliberately undecided until that rung. Read the sagents/"Sage saga" references
+> below as history, not instruction.
+
 The deterministic spine of the "agent as product" is **built and proven end-to-end** on the 9
 real Caraballeda claims: **posts → extract (claims) → resolve places (gazetteer) → verify
 (support) → render (beats)**. Each stage is its own module; nothing yet *ties them together*.
