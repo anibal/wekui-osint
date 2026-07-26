@@ -1,0 +1,6825 @@
+{
+  "nodes": [
+    {
+      "canonical": "Caraballeda",
+      "cross_check": {
+        "confidence": "trusted",
+        "gz": "trusted",
+        "gz_type": "parish",
+        "trusted": true
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Caraballeda"
+        }
+      ],
+      "old_id": 5,
+      "parent_old_id": 4,
+      "type": "parroquia"
+    },
+    {
+      "canonical": "El Zapatero",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "El Zapatero"
+        }
+      ],
+      "old_id": 6,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Filadelfia",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Filadelfia"
+        }
+      ],
+      "old_id": 7,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Llano de la Cruz",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Llano de la Cruz"
+        }
+      ],
+      "old_id": 8,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Los Aguacates",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Los Aguacates"
+        }
+      ],
+      "old_id": 9,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Palo de Agua",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Palo de Agua"
+        }
+      ],
+      "old_id": 10,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Plan de Los Indios",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Plan de Los Indios"
+        }
+      ],
+      "old_id": 11,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Quebrada Seca",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Quebrada Seca"
+        }
+      ],
+      "old_id": 12,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Salto de Uria",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Salto de Uria"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "Salto de Uría"
+        }
+      ],
+      "old_id": 13,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "San José",
+      "cross_check": {
+        "confidence": "trusted",
+        "gz": "trusted",
+        "gz_type": "parish",
+        "trusted": true
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "official",
+          "name": "San José"
+        }
+      ],
+      "old_id": 14,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "San Julián",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "San Julián"
+        }
+      ],
+      "old_id": 15,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Antiguo Carmen de Uría",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Antiguo Carmen de Uría"
+        }
+      ],
+      "old_id": 16,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Caraballeda",
+      "cross_check": {
+        "confidence": "trusted",
+        "gz": "trusted",
+        "gz_type": "parish",
+        "trusted": true
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Caraballeda"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Urbanización Caraballeda"
+        }
+      ],
+      "old_id": 17,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Carmen de Uria",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Carmen de Uria"
+        }
+      ],
+      "old_id": 18,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Cueva de Urie",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "error",
+          "name": "Cueva de Urie"
+        }
+      ],
+      "old_id": 19,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "El Corozo",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "El Corozo"
+        }
+      ],
+      "old_id": 20,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Juan Díaz",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Juan Díaz"
+        }
+      ],
+      "old_id": 21,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "La California",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "La California"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "alias",
+          "name": "Oficina la California"
+        }
+      ],
+      "old_id": 22,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Loma Redonda",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Loma Redonda"
+        }
+      ],
+      "old_id": 23,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Punta Tanaguarena",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Punta Tanaguarena"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "alias",
+          "name": "Tanaguarena"
+        }
+      ],
+      "old_id": 24,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Caribe",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "barrio",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Caribe"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "urbanización Caribe"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Caribe (los cocos)"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "urb. caribe"
+        }
+      ],
+      "old_id": 25,
+      "parent_old_id": 5,
+      "type": "barrio"
+    },
+    {
+      "canonical": "El Caimito",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "barrio",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "El Caimito"
+        }
+      ],
+      "old_id": 26,
+      "parent_old_id": 5,
+      "type": "barrio"
+    },
+    {
+      "canonical": "El Caribe",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "barrio",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "El Caribe"
+        }
+      ],
+      "old_id": 27,
+      "parent_old_id": 5,
+      "type": "barrio"
+    },
+    {
+      "canonical": "El Palmar Este",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "barrio",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "El Palmar Este"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Urbanización Palmar Este"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Urbanización Palmar del Este"
+        }
+      ],
+      "old_id": 28,
+      "parent_old_id": 5,
+      "type": "barrio"
+    },
+    {
+      "canonical": "Los Corales",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "barrio",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Los Corales"
+        }
+      ],
+      "old_id": 29,
+      "parent_old_id": 5,
+      "type": "barrio"
+    },
+    {
+      "canonical": "Tanaguarena",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "barrio",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Tanaguarena"
+        },
+        {
+          "emission": "anchored",
+          "kind": "error",
+          "name": "Taraguarena"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Urb Tanaguarenas"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Tanaguarenas"
+        }
+      ],
+      "old_id": 30,
+      "parent_old_id": 5,
+      "type": "barrio"
+    },
+    {
+      "canonical": "Carmen Arriba",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Carmen Arriba"
+        }
+      ],
+      "old_id": 31,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Cueva de Uría",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Cueva de Uría"
+        }
+      ],
+      "old_id": 32,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "El Corozo Norte",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "El Corozo Norte"
+        }
+      ],
+      "old_id": 33,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "El Corozo Sur",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "El Corozo Sur"
+        }
+      ],
+      "old_id": 34,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Falla de Uría",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Falla de Uría"
+        }
+      ],
+      "old_id": 35,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "La Clemencia",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "La Clemencia"
+        }
+      ],
+      "old_id": 36,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "La Montañita",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "La Montañita"
+        }
+      ],
+      "old_id": 37,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "La Virgen",
+      "cross_check": {
+        "confidence": "trusted",
+        "gz": "trusted",
+        "gz_type": "parish",
+        "trusted": true
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "official",
+          "name": "La Virgen"
+        }
+      ],
+      "old_id": 38,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Las Cicatrices",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Las Cicatrices"
+        }
+      ],
+      "old_id": 39,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Loma del Medio",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Loma del Medio"
+        }
+      ],
+      "old_id": 40,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Los Desgarros",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Los Desgarros"
+        }
+      ],
+      "old_id": 41,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Los Desmontes",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Los Desmontes"
+        }
+      ],
+      "old_id": 42,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Rosario",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "official",
+          "name": "Rosario"
+        }
+      ],
+      "old_id": 43,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "San Juilán",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "error",
+          "name": "San Juilán"
+        }
+      ],
+      "old_id": 44,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Steelband",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Steelband"
+        }
+      ],
+      "old_id": 45,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Tanaguarenita",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Tanaguarenita"
+        }
+      ],
+      "old_id": 46,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Edificio Barrioba Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Barrioba Caraballeda"
+        }
+      ],
+      "old_id": 72,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Las Perlas",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Las Perlas"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Conjunto residencial las Perlas"
+        }
+      ],
+      "old_id": 83,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "clínica Camuribe",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "clínica Camuribe"
+        }
+      ],
+      "old_id": 84,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Costa Azul",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Costa Azul"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio Costa Azul"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Residencia costa azul"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res. costa azul"
+        }
+      ],
+      "old_id": 86,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Calle Real de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Calle Real de Caraballeda"
+        }
+      ],
+      "old_id": 88,
+      "parent_old_id": 5,
+      "type": "calle"
+    },
+    {
+      "canonical": "Centro Comercial Costa del Sol",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Centro Comercial Costa del Sol"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio Costa del Sol"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "CC Costa del Sol"
+        }
+      ],
+      "old_id": 89,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Caraballeda Humboldt",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Caraballeda Humboldt"
+        }
+      ],
+      "old_id": 93,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Avenida la Playa",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Avenida la Playa"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Av La Playa"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Av. La Playa"
+        }
+      ],
+      "old_id": 97,
+      "parent_old_id": 5,
+      "type": "calle"
+    },
+    {
+      "canonical": "Edificio Club 32",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Club 32"
+        }
+      ],
+      "old_id": 100,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Vistamar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Vistamar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Vistamar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio Vistamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia vistamar caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia vistamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res vistamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias vista mar"
+        }
+      ],
+      "old_id": 101,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Avenida Guaicaipuro",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Avenida Guaicaipuro"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Av. Guaicaipuro"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "calle guaicaipuro"
+        }
+      ],
+      "old_id": 102,
+      "parent_old_id": 5,
+      "type": "calle"
+    },
+    {
+      "canonical": "Edificio Hipocampo",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Hipocampo"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "hipocampo"
+        }
+      ],
+      "old_id": 105,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Avila Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Avila Mar"
+        }
+      ],
+      "old_id": 108,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Breña Luna",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Breña Luna"
+        }
+      ],
+      "old_id": 110,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "La Costanera",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "La Costanera"
+        }
+      ],
+      "old_id": 116,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Caraballeda Arriba",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Caraballeda Arriba"
+        }
+      ],
+      "old_id": 117,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Edificio El Palmar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio El Palmar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias el palmar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias palmar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res palmar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencial el palmar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio palmar"
+        }
+      ],
+      "old_id": 121,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Auro",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Auro"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Auro"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edif. Auro"
+        }
+      ],
+      "old_id": 122,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Salón del Reino de los Testigos de Jehová de Tanaguarenas y los Corales",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Salón del Reino de los Testigos de Jehová de Tanaguarenas y los Corales"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Salón del Reino de los Testigos de Jehová en Caraballeda"
+        }
+      ],
+      "old_id": 123,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Bahía de los Niños",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Bahía de los Niños"
+        }
+      ],
+      "old_id": 124,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "edificio Costa Brava",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "edificio Costa Brava"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio Costabrava"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Costa Brava"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edif. costa brava"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edif costa brava"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edif. costa brava los corales"
+        }
+      ],
+      "old_id": 126,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Mansión Club Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Mansión Club Caraballeda"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Mansión Club Caraballeda"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Mansión Club Caraballeda"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Mansion Club"
+        }
+      ],
+      "old_id": 128,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Costamar II",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Costamar II"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencia Costamar II"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio costamar"
+        }
+      ],
+      "old_id": 129,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencia Los Molinos",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencia Los Molinos"
+        }
+      ],
+      "old_id": 131,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Res Mirador del Caribe",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Res Mirador del Caribe"
+        }
+      ],
+      "old_id": 132,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias El Molino",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias El Molino"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio El Molino"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio El Molino (Caraballeda)"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Residencia El Molino"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "el molino"
+        }
+      ],
+      "old_id": 138,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Mini Centro comercial K-rol",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Mini Centro comercial K-rol"
+        }
+      ],
+      "old_id": 140,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Bajada Boca del Tanque",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Bajada Boca del Tanque"
+        }
+      ],
+      "old_id": 143,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Residencias Coral Park",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Coral Park"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "coral park"
+        }
+      ],
+      "old_id": 144,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Franco Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Franco Mar"
+        }
+      ],
+      "old_id": 145,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Urimare",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Urimare"
+        }
+      ],
+      "old_id": 146,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Roca Azul",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Edificio Roca Azul"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "supermercado roca azul"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "supermercado rosa azul"
+        }
+      ],
+      "old_id": 147,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Torre Celta Mar 1",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Torre Celta Mar 1"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Torre Celtamar 1"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Celta 1"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio celtamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "celtamar i"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias celtamar i"
+        }
+      ],
+      "old_id": 148,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Miramar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Miramar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Res. Miramar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio Miramar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Miramar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio Miramar Caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edif. miramar"
+        }
+      ],
+      "old_id": 149,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Breogan",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Breogan"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Breogan"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Breogán"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Red Breogan"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "resid breogan"
+        }
+      ],
+      "old_id": 155,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Playa Los Cocos",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Playa Los Cocos"
+        }
+      ],
+      "old_id": 172,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "edificio Anabella Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "edificio Anabella Mar"
+        }
+      ],
+      "old_id": 178,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Salón del Reino",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Salón del Reino"
+        }
+      ],
+      "old_id": 181,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Mariola y Maribel",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Mariola y Maribel"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio Maribel"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Mariola (macuto)"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Residencias Maribel"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Mariola"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Residencias Mariola"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia maribel"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res. maribel"
+        }
+      ],
+      "old_id": 200,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Gran Terraza",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Gran Terraza"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Gran Terraza"
+        }
+      ],
+      "old_id": 201,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias La Trinidad",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias La Trinidad"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "La Trinidad"
+        }
+      ],
+      "old_id": 202,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencia Llona",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencia Llona"
+        },
+        {
+          "emission": "raw",
+          "kind": "error",
+          "name": "Residencia Liona"
+        }
+      ],
+      "old_id": 204,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Mariana grande",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Mariana grande"
+        },
+        {
+          "emission": "anchored",
+          "kind": "error",
+          "name": "Marina Grande"
+        }
+      ],
+      "old_id": 208,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Bloque 3 de La Páez",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Bloque 3 de La Páez"
+        }
+      ],
+      "old_id": 213,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Los delfines",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Los delfines"
+        }
+      ],
+      "old_id": 216,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Las palmas",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Las palmas"
+        }
+      ],
+      "old_id": 222,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Bucanero",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Bucanero"
+        }
+      ],
+      "old_id": 223,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "La estrella",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "La estrella"
+        }
+      ],
+      "old_id": 224,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencia Mariana Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencia Mariana Mar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Mariana mar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio mariana mar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "gedung mariana mar"
+        }
+      ],
+      "old_id": 227,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Arrayanes",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Arrayanes"
+        }
+      ],
+      "old_id": 230,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Caribbean Golf I",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Caribbean Golf I"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio caribbean gold"
+        }
+      ],
+      "old_id": 231,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Av Circunvalación de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Av Circunvalación de Caraballeda"
+        }
+      ],
+      "old_id": 232,
+      "parent_old_id": 5,
+      "type": "vialidad"
+    },
+    {
+      "canonical": "Residencias Auromar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Auromar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "auromar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia auromar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio auromar"
+        }
+      ],
+      "old_id": 233,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Bello Horizonte",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Bello Horizonte"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Bello Horizonte (playa grande)"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias bello horizonte"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res belo horizonte catia la mar"
+        }
+      ],
+      "old_id": 248,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "La Llovizna",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "La Llovizna"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "La llovizna (playa grande)"
+        }
+      ],
+      "old_id": 249,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Country Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Country Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencias Caraballeda Country Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Caraballeda Country Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Res. Country Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Res Country Mar Caraballeda"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Country Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Res Country Mar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio countrymar"
+        }
+      ],
+      "old_id": 254,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Breña Sol",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Breña Sol"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Breñasol"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias brena sol"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res. brena sol"
+        }
+      ],
+      "old_id": 256,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Hotel Eduard's Suites",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Hotel Eduard's Suites"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Hotel Eduard’s"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Hotel Eduard's"
+        },
+        {
+          "emission": "raw",
+          "kind": "error",
+          "name": "Hotel edwars"
+        }
+      ],
+      "old_id": 257,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Cimarrón",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Cimarrón"
+        }
+      ],
+      "old_id": 273,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Urbanización La Llanada",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Urbanización La Llanada"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Sector La Llanada"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "La Llanada"
+        }
+      ],
+      "old_id": 276,
+      "parent_old_id": 5,
+      "type": "urbanizacion"
+    },
+    {
+      "canonical": "Gran Misión Vivienda Venezuela (los cocos)",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Gran Misión Vivienda Venezuela (los cocos)"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Misión Vivienda de Caraballeda"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Misión vivienda los cocos"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "mision vivienda (entrada de playa los cocos)"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "gran mision vivienda vzla. av. la playa hacia centro urb. caribe. los cocos"
+        }
+      ],
+      "old_id": 277,
+      "parent_old_id": 5,
+      "type": "urbanizacion"
+    },
+    {
+      "canonical": "Opp 26 torre H",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Opp 26 torre H"
+        }
+      ],
+      "old_id": 278,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Res Abejita II",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Res Abejita II"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edif. abejeras 2"
+        }
+      ],
+      "old_id": 279,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Nautilus",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Nautilus"
+        }
+      ],
+      "old_id": 284,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Hoyo 4",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Hoyo 4"
+        }
+      ],
+      "old_id": 292,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Remanso II",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Remanso II"
+        }
+      ],
+      "old_id": 298,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Mar de Leva",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Mar de Leva"
+        }
+      ],
+      "old_id": 300,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Refugio Campo de Golf",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Refugio Campo de Golf"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "campo de golf de caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "campo de golf"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "campo de golfe de caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "campamento caraballeda golf & yatch"
+        }
+      ],
+      "old_id": 308,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Rompemar II",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Rompemar II"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Rompemar II"
+        }
+      ],
+      "old_id": 309,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Conjunto Residencial Las Américas",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Conjunto Residencial Las Américas"
+        }
+      ],
+      "old_id": 310,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Urbanización de Misión Vivienda Hugo Chávez",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Urbanización de Misión Vivienda Hugo Chávez"
+        },
+        {
+          "emission": "anchored",
+          "kind": "error",
+          "name": "UrbHugo chavez"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Urb. Hugo Chávez"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "urbanizacion hugo chavez"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "complejo hugo chavez"
+        }
+      ],
+      "old_id": 312,
+      "parent_old_id": 5,
+      "type": "urbanizacion"
+    },
+    {
+      "canonical": "Edificio Distribuidora Rosanday",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Distribuidora Rosanday"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Dist. Rosanday"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Rosanday"
+        }
+      ],
+      "old_id": 314,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Punta Piedra (Macuto)",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Punta Piedra (Macuto)"
+        }
+      ],
+      "old_id": 317,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Club de Playa (Macuto)",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Club de Playa (Macuto)"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Res Club de playa (macuto)"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Residencias Club de Playa"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Res Club de Playa"
+        }
+      ],
+      "old_id": 319,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Coral Bella",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Coral Bella"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Coral Bella"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio coral bella"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia coral bella"
+        }
+      ],
+      "old_id": 320,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencia Las Villas",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencia Las Villas"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias las villas"
+        }
+      ],
+      "old_id": 321,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Caraballeda Sol",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Caraballeda Sol"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Caraballeda Sol"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio caraballeda so"
+        }
+      ],
+      "old_id": 323,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Yurre Beach",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Yurre Beach"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia yurre beach"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias yurre beach"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias yure beach"
+        }
+      ],
+      "old_id": 324,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Res. Agua Marina",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Res. Agua Marina"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias agua marina"
+        }
+      ],
+      "old_id": 325,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Tahiti",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Tahiti"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio Tahití"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Tahiti (caraballeda)"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Tahití"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Residencias Tahiti Caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio tahiti caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio tahili"
+        }
+      ],
+      "old_id": 326,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Camurí Park",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Camurí Park"
+        }
+      ],
+      "old_id": 327,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Bravamar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Bravamar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Bravamar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Bravamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio brava mar"
+        }
+      ],
+      "old_id": 328,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Arrecife",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Arrecife"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencial Arrecife"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia arrecife"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias arrecife"
+        }
+      ],
+      "old_id": 331,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Ritamar Palace",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Ritamar Palace"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Ritamar Palace"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "ritamar palace"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio ritamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "rita mar palace"
+        }
+      ],
+      "old_id": 333,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Avenida Charama",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Avenida Charama"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Calle Charaima"
+        }
+      ],
+      "old_id": 335,
+      "parent_old_id": 5,
+      "type": "calle"
+    },
+    {
+      "canonical": "Edificio Bahía de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Bahía de Caraballeda"
+        }
+      ],
+      "old_id": 337,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Laguna",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Edificio Laguna"
+        }
+      ],
+      "old_id": 338,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Puente Osorio",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Puente Osorio"
+        }
+      ],
+      "old_id": 339,
+      "parent_old_id": 5,
+      "type": "vialidad y puentes"
+    },
+    {
+      "canonical": "Edificio Hoyo 2",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Hoyo 2"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencias Hoyo 2"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Hoyo 2"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Hoyo Dos"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "rws. hoyo 2"
+        }
+      ],
+      "old_id": 340,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Golf Club",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Golf Club"
+        }
+      ],
+      "old_id": 347,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "5 de Julio",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "sector",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "official",
+          "name": "5 de Julio"
+        }
+      ],
+      "old_id": 350,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Residencias RioMar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias RioMar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Riomar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencia Riomar"
+        }
+      ],
+      "old_id": 355,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Mansión Charaima",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Mansión Charaima"
+        }
+      ],
+      "old_id": 356,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Club de Golf de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Club de Golf de Caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "caraballeda golf club"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "caraballeda gold club"
+        }
+      ],
+      "old_id": 359,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Laguna Beach",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Laguna Beach"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio Laguna Beach"
+        }
+      ],
+      "old_id": 361,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Fundación Planchart",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Fundación Planchart"
+        }
+      ],
+      "old_id": 362,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "edificio Santa Clara",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "edificio Santa Clara"
+        }
+      ],
+      "old_id": 363,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "edificio Borrasca",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "edificio Borrasca"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio la borrasca"
+        }
+      ],
+      "old_id": 364,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Maratea",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Maratea"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Maratea"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencia Maratea"
+        }
+      ],
+      "old_id": 365,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Caraballeda"
+        }
+      ],
+      "old_id": 366,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Zona del Sheraton",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Zona del Sheraton"
+        }
+      ],
+      "old_id": 367,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Quince Letras",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Quince Letras"
+        }
+      ],
+      "old_id": 368,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Edificio Tanamar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Tanamar"
+        }
+      ],
+      "old_id": 372,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio La Joya",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Edificio La Joya"
+        }
+      ],
+      "old_id": 374,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Caraballeda Beach",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Caraballeda Beach"
+        }
+      ],
+      "old_id": 381,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "El Almendrón",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "El Almendrón"
+        }
+      ],
+      "old_id": 384,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Residencia Frente al Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencia Frente al Mar"
+        }
+      ],
+      "old_id": 385,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Caraballeda Suite",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Caraballeda Suite"
+        }
+      ],
+      "old_id": 386,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Karina",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Karina"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia karina"
+        }
+      ],
+      "old_id": 389,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Carsus",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Carsus"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Carsus"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Carsus"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res. carsus"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res carsus"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edif. carsus"
+        }
+      ],
+      "old_id": 396,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Bellevue",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Bellevue"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Bellevue"
+        },
+        {
+          "emission": "raw",
+          "kind": "error",
+          "name": "Edificio Beleviu"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencia Bellevue"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias bellevue"
+        }
+      ],
+      "old_id": 403,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Urbanización Sant Her II",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Urbanización Sant Her II"
+        }
+      ],
+      "old_id": 407,
+      "parent_old_id": 5,
+      "type": "urbanizacion"
+    },
+    {
+      "canonical": "Playa El Yate",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Playa El Yate"
+        },
+        {
+          "emission": "raw",
+          "kind": "error",
+          "name": "playa el Yare"
+        },
+        {
+          "emission": "raw",
+          "kind": "error",
+          "name": "Playa El Yaque"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "praia el yate"
+        }
+      ],
+      "old_id": 408,
+      "parent_old_id": 5,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Edificio OPPE26 Playa Los Cocos",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio OPPE26 Playa Los Cocos"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "edificio OPP 26"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio OPPE26"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "torre opp 26"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "opp 26"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "oppe26"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio oppe 26"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "opp26"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio opppe 26"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "mision vivienda caribe, opp 26"
+        }
+      ],
+      "old_id": 409,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Hotel Santuario La Llanada",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Hotel Santuario La Llanada"
+        }
+      ],
+      "old_id": 412,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Los Cocos de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Los Cocos de Caraballeda"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "sector Los Cocos"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Los Cocos"
+        }
+      ],
+      "old_id": 413,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Los tambores de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Los tambores de Caraballeda"
+        }
+      ],
+      "old_id": 414,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Residencias Molina",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Molina"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio Molina"
+        }
+      ],
+      "old_id": 416,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias RocaPark",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias RocaPark"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Rocapark"
+        }
+      ],
+      "old_id": 417,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Cami",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Cami"
+        }
+      ],
+      "old_id": 418,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias El Ancla",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias El Ancla"
+        }
+      ],
+      "old_id": 419,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Villamar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Residencias Villamar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Residencias Villamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "villamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio villamar"
+        }
+      ],
+      "old_id": 450,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "El Palmar Oeste",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "barrio",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "El Palmar Oeste"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "El Palmar Oeste"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "palmar oeste"
+        }
+      ],
+      "old_id": 478,
+      "parent_old_id": 5,
+      "type": "sector"
+    },
+    {
+      "canonical": "Torre B de la OPP26",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Torre B de la OPP26"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Torre B de la OPP26"
+        }
+      ],
+      "old_id": 500,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio La Jolla",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio La Jolla"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio La Jolla"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia la jolla"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias la jolla"
+        }
+      ],
+      "old_id": 505,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Calle Costa del Sol",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Calle Costa del Sol"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Calle Costa del Sol"
+        }
+      ],
+      "old_id": 546,
+      "parent_old_id": 5,
+      "type": "calle"
+    },
+    {
+      "canonical": "polideportivo de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "polideportivo de Caraballeda"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "polideportivo de Caraballeda"
+        }
+      ],
+      "old_id": 573,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Hotel Marriott",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Hotel Marriott"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Hotel Marriott"
+        }
+      ],
+      "old_id": 660,
+      "parent_old_id": 5,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Arenal",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Arenal"
+        }
+      ],
+      "old_id": 95,
+      "parent_old_id": 15,
+      "type": "edificio"
+    },
+    {
+      "canonical": "edificio botánico",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "edificio botánico"
+        }
+      ],
+      "old_id": 139,
+      "parent_old_id": 15,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Tamiami",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Tamiami"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Tamiami"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res. tamiami"
+        }
+      ],
+      "old_id": 255,
+      "parent_old_id": 15,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Caribe Mar Suites",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Caribe Mar Suites"
+        }
+      ],
+      "old_id": 377,
+      "parent_old_id": 15,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Res. La Villa",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Res. La Villa"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "la villa"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia la villa"
+        }
+      ],
+      "old_id": 153,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Puerta al Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Puerta al Mar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias puerta al mar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias puerta al mar"
+        }
+      ],
+      "old_id": 154,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Celtimar I",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Celtimar I"
+        }
+      ],
+      "old_id": 157,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Golf Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Golf Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Golf Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "GOLF MAR"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia golf mar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edif golf mar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia golf mar caraballeda"
+        }
+      ],
+      "old_id": 158,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias La Mar Suites",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias La Mar Suites"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "La Mar Suites"
+        }
+      ],
+      "old_id": 159,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Oasis Beach",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Edificio Oasis Beach"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Oasis Beach"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias oasis beach"
+        }
+      ],
+      "old_id": 160,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Coral Beach",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Coral Beach"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio Coral Beach"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Coral Beach"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "urbanismo coral beach"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "urbanismo coral beach"
+        }
+      ],
+      "old_id": 162,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Punta Brisas",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Punta Brisas"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Punta Brisas"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res punta brisas"
+        }
+      ],
+      "old_id": 166,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio La Gabarra",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio La Gabarra"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "La Gabarra"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencia la Gabarra"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "hotel la gabarra"
+        }
+      ],
+      "old_id": 168,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Pez Vela",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Pez Vela"
+        }
+      ],
+      "old_id": 169,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Palafito",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Palafito"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edf PALAFITO"
+        }
+      ],
+      "old_id": 170,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Green 8 suites",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Green 8 suites"
+        }
+      ],
+      "old_id": 189,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Torres OPPP33",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Torres OPPP33"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "opp 33"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias opp 33"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio opp33"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "urbanismo opp33"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "opp33"
+        }
+      ],
+      "old_id": 263,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Av. El Palmar Este",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Av. El Palmar Este"
+        }
+      ],
+      "old_id": 264,
+      "parent_old_id": 17,
+      "type": "calle"
+    },
+    {
+      "canonical": "Av. Monte Carlo",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Av. Monte Carlo"
+        }
+      ],
+      "old_id": 265,
+      "parent_old_id": 17,
+      "type": "calle"
+    },
+    {
+      "canonical": "Res. RIO DE ORO",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Res. RIO DE ORO"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio rio de oro"
+        }
+      ],
+      "old_id": 266,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio El Terral",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio El Terral"
+        }
+      ],
+      "old_id": 267,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Punta Playa Suites",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Punta Playa Suites"
+        }
+      ],
+      "old_id": 268,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Avenida La Costanera",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Avenida La Costanera"
+        }
+      ],
+      "old_id": 269,
+      "parent_old_id": 17,
+      "type": "calle"
+    },
+    {
+      "canonical": "Edificio Golf Suites",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Golf Suites"
+        },
+        {
+          "emission": "raw",
+          "kind": "error",
+          "name": "Edificio Golf Suits"
+        }
+      ],
+      "old_id": 307,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Misión Vivienda (Oppo26, Torres F)",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Misión Vivienda (Oppo26, Torres F)"
+        }
+      ],
+      "old_id": 351,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Marycielo",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio Marycielo"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia marycielo"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias marycielo"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio mar y cielo"
+        }
+      ],
+      "old_id": 380,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Green 7 Suites",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Green 7 Suites"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio green 7"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res green 7"
+        }
+      ],
+      "old_id": 398,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Playa Escondida",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Playa Escondida"
+        }
+      ],
+      "old_id": 402,
+      "parent_old_id": 17,
+      "type": "sector"
+    },
+    {
+      "canonical": "Altamar I Residences",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Altamar I Residences"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Altamar I Residences"
+        }
+      ],
+      "old_id": 426,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Karting",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Karting"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Karting"
+        }
+      ],
+      "old_id": 429,
+      "parent_old_id": 17,
+      "type": "sector"
+    },
+    {
+      "canonical": "Mar de Plata",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Mar de Plata"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Mar de Plata"
+        }
+      ],
+      "old_id": 439,
+      "parent_old_id": 17,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Playa Lido",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Playa Lido"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Playa Lido"
+        }
+      ],
+      "old_id": 444,
+      "parent_old_id": 17,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Edificio Lagunamar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Lagunamar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Lagunamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res. lagunamar"
+        }
+      ],
+      "old_id": 445,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Perlamar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Perlamar"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Edificio Perlamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias perlamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "res perlamar"
+        }
+      ],
+      "old_id": 466,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Hotel Catimar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Hotel Catimar"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Hotel Catimar"
+        }
+      ],
+      "old_id": 472,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Puente Los Osorios",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Puente Los Osorios"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Puente Los Osorios"
+        }
+      ],
+      "old_id": 475,
+      "parent_old_id": 17,
+      "type": "vialidad y puentes"
+    },
+    {
+      "canonical": "Ancianato de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Ancianato de Caraballeda"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Ancianato de Caraballeda"
+        }
+      ],
+      "old_id": 480,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Albornoz",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Residencias Albornoz"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Residencias Albornoz"
+        }
+      ],
+      "old_id": 491,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Caraballeda 1",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Caraballeda 1"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Caraballeda 1"
+        }
+      ],
+      "old_id": 498,
+      "parent_old_id": 17,
+      "type": "sector"
+    },
+    {
+      "canonical": "Residencias Marianamar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Residencias Marianamar"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Residencias Marianamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio marianamar"
+        }
+      ],
+      "old_id": 503,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Opp27",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Opp27"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Opp27"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "opp 27 | oppe 27 | edifopp 27 | residencia op 27 — same buil"
+        }
+      ],
+      "old_id": 531,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "opp 27",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "opp 27"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "opp 27"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio opp 27"
+        }
+      ],
+      "old_id": 543,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Los Corsarios",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Los Corsarios"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Los Corsarios"
+        }
+      ],
+      "old_id": 552,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "bowling de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "bowling de Caraballeda"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "bowling de Caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "el bowling de caraballeda"
+        }
+      ],
+      "old_id": 557,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Portofino Beach",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Portofino Beach"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Portofino Beach"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "portofino (prop 583, other slice) likely same building - mer"
+        }
+      ],
+      "old_id": 559,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "antigua bomba Texaco",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "antigua bomba Texaco"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "antigua bomba Texaco"
+        }
+      ],
+      "old_id": 563,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Avenida Cariaco Oeste",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Avenida Cariaco Oeste"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Avenida Cariaco Oeste"
+        }
+      ],
+      "old_id": 568,
+      "parent_old_id": 17,
+      "type": "calle"
+    },
+    {
+      "canonical": "Portofino",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Portofino"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Portofino"
+        }
+      ],
+      "old_id": 583,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Puente de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Puente de Caraballeda"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Puente de Caraballeda"
+        }
+      ],
+      "old_id": 587,
+      "parent_old_id": 17,
+      "type": "vialidad y puentes"
+    },
+    {
+      "canonical": "Los Hilos",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Los Hilos"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Los Hilos"
+        }
+      ],
+      "old_id": 598,
+      "parent_old_id": 17,
+      "type": "sector"
+    },
+    {
+      "canonical": "Residencia Aurora",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Residencia Aurora"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Residencia Aurora"
+        }
+      ],
+      "old_id": 621,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Malibu",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Malibu"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Malibu"
+        }
+      ],
+      "old_id": 627,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Malibu Suites",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Malibu Suites"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Malibu Suites"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "malibu (prop 627 other slice, corpus 11, likely same buildin"
+        }
+      ],
+      "old_id": 632,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "asilo de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "asilo de Caraballeda"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "asilo de Caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "ancianato de caraballeda (proposal 480, other slice) is the "
+        }
+      ],
+      "old_id": 640,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio THATHI CARABALLEDA",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio THATHI CARABALLEDA"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio THATHI CARABALLEDA"
+        }
+      ],
+      "old_id": 642,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Bowling Park",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Bowling Park"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Bowling Park"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "bowling de la guaira (prop 542)|el bowling"
+        }
+      ],
+      "old_id": 643,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Hotel Sheraton",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Hotel Sheraton"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Hotel Sheraton"
+        }
+      ],
+      "old_id": 644,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "McDonald's de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "McDonald's de Caraballeda"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "McDonald's de Caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "mcdonald's"
+        }
+      ],
+      "old_id": 661,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Avenida José María Vargas",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Avenida José María Vargas"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Avenida José María Vargas"
+        }
+      ],
+      "old_id": 663,
+      "parent_old_id": 17,
+      "type": "calle"
+    },
+    {
+      "canonical": "Ferretería IP5",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Ferretería IP5"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Ferretería IP5"
+        }
+      ],
+      "old_id": 664,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Plaza Tanaguarenas",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Plaza Tanaguarenas"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Plaza Tanaguarenas"
+        }
+      ],
+      "old_id": 668,
+      "parent_old_id": 17,
+      "type": "plaza"
+    },
+    {
+      "canonical": "Avenida José María España",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Avenida José María España"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Avenida José María España"
+        }
+      ],
+      "old_id": 669,
+      "parent_old_id": 17,
+      "type": "calle"
+    },
+    {
+      "canonical": "Edi Los Cocos",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edi Los Cocos"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edi Los Cocos"
+        }
+      ],
+      "old_id": 679,
+      "parent_old_id": 17,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Albatros",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Albatros"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Edificio albatros"
+        },
+        {
+          "emission": "anchored",
+          "kind": "error",
+          "name": "Albatroz"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Albatros"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Residencia Albatros Caribe"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio albatros caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio albatroz"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias albertros"
+        }
+      ],
+      "old_id": 112,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio OPPPE 25 G",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edificio OPPPE 25 G"
+        }
+      ],
+      "old_id": 120,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Laguna Suites",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Laguna Suites"
+        }
+      ],
+      "old_id": 127,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "edificio Palafito del Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "edificio Palafito del Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Palafito del Mar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias palafito mar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias palafito del mar"
+        }
+      ],
+      "old_id": 141,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Conjunto Residencial Caribe",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Conjunto Residencial Caribe"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Residencias Caribe"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Club Residencial Caribe"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "conjunto residencias caribe"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias club caribe"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "club residencial caribe palmar este"
+        }
+      ],
+      "old_id": 177,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Marina de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Marina de Caraballeda"
+        }
+      ],
+      "old_id": 194,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "El Tanquesito",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "El Tanquesito"
+        }
+      ],
+      "old_id": 195,
+      "parent_old_id": 25,
+      "type": "sector"
+    },
+    {
+      "canonical": "Opppe 22 Caribe",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Opppe 22 Caribe"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "opppe 22"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio opp 22"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "opp 22"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias opp 22"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio oppe 22"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edf. opp22"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "opp22"
+        }
+      ],
+      "old_id": 275,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Carabamar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Carabamar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Carabamar"
+        }
+      ],
+      "old_id": 290,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Palma Real",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Palma Real"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Palma Real"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencia palma Real"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Res. Palma Real"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "palma real de caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "palma real"
+        }
+      ],
+      "old_id": 294,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Calle Terepaima",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Calle Terepaima"
+        }
+      ],
+      "old_id": 336,
+      "parent_old_id": 25,
+      "type": "calle"
+    },
+    {
+      "canonical": "edificio Caribe 18",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "edificio Caribe 18"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencia Club 18"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Club 18"
+        }
+      ],
+      "old_id": 354,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Av Sur de la Bahía",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Av Sur de la Bahía"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio sur de la bahia"
+        }
+      ],
+      "old_id": 357,
+      "parent_old_id": 25,
+      "type": "vialidad"
+    },
+    {
+      "canonical": "Residencias Parque Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Parque Caraballeda"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Parque Caraballeda"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Parque Caraballeda"
+        }
+      ],
+      "old_id": 375,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencia Caribes",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencia Caribes"
+        }
+      ],
+      "old_id": 390,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Conjunto residencial Caribe Torre B",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Conjunto residencial Caribe Torre B"
+        }
+      ],
+      "old_id": 395,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Playa Caribe",
+      "cross_check": {
+        "confidence": "guess_low",
+        "gz": "guess_low",
+        "gz_type": "populated_place",
+        "trusted": false
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Playa Caribe"
+        }
+      ],
+      "old_id": 410,
+      "parent_old_id": 25,
+      "type": "populated_place"
+    },
+    {
+      "canonical": "Calle Comercio",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Calle Comercio"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Calle Comercio"
+        }
+      ],
+      "old_id": 430,
+      "parent_old_id": 25,
+      "type": "calle"
+    },
+    {
+      "canonical": "bulevar La Laguna",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "bulevar La Laguna"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "bulevar La Laguna"
+        }
+      ],
+      "old_id": 431,
+      "parent_old_id": 25,
+      "type": "calle"
+    },
+    {
+      "canonical": "bulevar Naiguata",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "bulevar Naiguata"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "bulevar Naiguata"
+        }
+      ],
+      "old_id": 432,
+      "parent_old_id": 25,
+      "type": "calle"
+    },
+    {
+      "canonical": "Torre G",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Torre G"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Torre G"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "torre g de la opppe 26"
+        }
+      ],
+      "old_id": 433,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edif. OPPPE 26, Torre G",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edif. OPPPE 26, Torre G"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edif. OPPPE 26, Torre G"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio opppe 26, torre g"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio opppe 26 torre g"
+        }
+      ],
+      "old_id": 455,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Tamarindo Dos",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Tamarindo Dos"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Edificio Tamarindo Dos"
+        }
+      ],
+      "old_id": 460,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Grañamar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Grañamar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Grañamar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio granamar"
+        }
+      ],
+      "old_id": 485,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencia Puerta del Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Residencia Puerta del Mar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Residencia Puerta del Mar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias puerta del mar"
+        }
+      ],
+      "old_id": 513,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Caribe, Torre C",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Residencias Caribe, Torre C"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Residencias Caribe, Torre C"
+        }
+      ],
+      "old_id": 514,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencia Caribe Villa Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Residencia Caribe Villa Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Residencia Caribe Villa Mar"
+        }
+      ],
+      "old_id": 520,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Farmatodo de la Av. La Playa",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Farmatodo de la Av. La Playa"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Farmatodo de la Av. La Playa"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "farmatodo de caraballeda"
+        }
+      ],
+      "old_id": 566,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Elite Beach",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Elite Beach"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Elite Beach"
+        }
+      ],
+      "old_id": 601,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Mc Donalds de Caraballeda",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Mc Donalds de Caraballeda"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Mc Donalds de Caraballeda"
+        }
+      ],
+      "old_id": 658,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edif. Caraballeda Suites",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edif. Caraballeda Suites"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Edif. Caraballeda Suites"
+        }
+      ],
+      "old_id": 678,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencia Le Club",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Residencia Le Club"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Residencia Le Club"
+        }
+      ],
+      "old_id": 682,
+      "parent_old_id": 25,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Opp 33 torre B",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Opp 33 torre B"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Opp 33 torre B"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "opp 33 torre b"
+        }
+      ],
+      "old_id": 425,
+      "parent_old_id": 27,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio El Caribe",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio El Caribe"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio El Caribe"
+        }
+      ],
+      "old_id": 528,
+      "parent_old_id": 27,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Palmar Este",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Edificio Palmar Este"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Residencias Palmar Este"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Res Palmar Este"
+        }
+      ],
+      "old_id": 293,
+      "parent_old_id": 28,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Blvr. Niza",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Blvr. Niza"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Blvr. Niza"
+        }
+      ],
+      "old_id": 636,
+      "parent_old_id": 28,
+      "type": "calle"
+    },
+    {
+      "canonical": "Residencias Rita Sol Palace",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Rita Sol Palace"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Rita Sol Palace"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencias Ritasol Palace"
+        },
+        {
+          "emission": "raw",
+          "kind": "error",
+          "name": "Ritasol Palace"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Rita Sol Palace"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edif. ritasol palace"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "ritasol palace apartamentos"
+        }
+      ],
+      "old_id": 182,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Bahía del Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Bahía del Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Bahía Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Aptos Bahía Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Bahía del Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencia Bahía Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Res Bahía de Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edf Bahía Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencias Bahía de Mar"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Bahía Mar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "edificio bahia del mar"
+        }
+      ],
+      "old_id": 186,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Los Corales",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencias Los Corales"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Residencia Los Corales"
+        },
+        {
+          "emission": "anchored",
+          "kind": "spelling_variant",
+          "name": "Res. Los Corales"
+        }
+      ],
+      "old_id": 318,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edif. Arichuna",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Edif. Arichuna"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencias ARICHUNA"
+        }
+      ],
+      "old_id": 405,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias La Jota",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Residencias La Jota"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Residencias La Jota"
+        }
+      ],
+      "old_id": 452,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Coral Mar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Coral Mar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Coral Mar"
+        }
+      ],
+      "old_id": 457,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Coralbella",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Residencias Coralbella"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Residencias Coralbella"
+        }
+      ],
+      "old_id": 463,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Solymar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Solymar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Solymar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencias solymar"
+        }
+      ],
+      "old_id": 470,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Coral",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Coral"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Coral"
+        }
+      ],
+      "old_id": 553,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Av 18 de Los Corales",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Av 18 de Los Corales"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Av 18 de Los Corales"
+        }
+      ],
+      "old_id": 554,
+      "parent_old_id": 29,
+      "type": "calle"
+    },
+    {
+      "canonical": "Residencias Corralito",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Residencias Corralito"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Residencias Corralito"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "residencia corralito"
+        }
+      ],
+      "old_id": 603,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Bar Restaurant Canary Island",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Bar Restaurant Canary Island"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Bar Restaurant Canary Island"
+        }
+      ],
+      "old_id": 671,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Los Corales Garden",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Los Corales Garden"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Corales Garden"
+        }
+      ],
+      "old_id": 932,
+      "parent_old_id": 29,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Belair",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Belair"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edf Belair"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Edificio Belair"
+        },
+        {
+          "emission": "raw",
+          "kind": "spelling_variant",
+          "name": "Residencia BelAir"
+        }
+      ],
+      "old_id": 302,
+      "parent_old_id": 30,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencia Caraballeda I",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Residencia Caraballeda I"
+        }
+      ],
+      "old_id": 346,
+      "parent_old_id": 30,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Club Taraguarena",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Club Taraguarena"
+        }
+      ],
+      "old_id": 383,
+      "parent_old_id": 30,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Sayemar",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Sayemar"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Sayemar"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "sayemar 1 y 2 (prop 512)"
+        }
+      ],
+      "old_id": 527,
+      "parent_old_id": 30,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio OPP 25",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio OPP 25"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio OPP 25"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "opp 25"
+        }
+      ],
+      "old_id": 530,
+      "parent_old_id": 30,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Caribean Golf 2",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Caribean Golf 2"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Caribean Golf 2"
+        }
+      ],
+      "old_id": 535,
+      "parent_old_id": 30,
+      "type": "edificio"
+    },
+    {
+      "canonical": "OPPE 27",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "OPPE 27"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "OPPE 27"
+        },
+        {
+          "emission": "recognition_only",
+          "kind": "spelling_variant",
+          "name": "opp 27|edificio opp27|edifopp 27"
+        }
+      ],
+      "old_id": 551,
+      "parent_old_id": 30,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio La Botánica",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio La Botánica"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio La Botánica"
+        }
+      ],
+      "old_id": 608,
+      "parent_old_id": 46,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Caraballeda Humboldt",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Caraballeda Humboldt"
+        }
+      ],
+      "old_id": 87,
+      "parent_old_id": 93,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Residencias Playa Humboldt III",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Residencias Playa Humboldt III"
+        },
+        {
+          "emission": "raw",
+          "kind": "colloquial",
+          "name": "Playa Humboldt"
+        }
+      ],
+      "old_id": 420,
+      "parent_old_id": 93,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Edificio Los Cocos",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "recognition_only",
+          "kind": "colloquial",
+          "name": "Edificio Los Cocos"
+        },
+        {
+          "emission": "anchored",
+          "kind": "colloquial",
+          "name": "Edificio Los Cocos"
+        }
+      ],
+      "old_id": 674,
+      "parent_old_id": 413,
+      "type": "edificio"
+    },
+    {
+      "canonical": "Vargas",
+      "cross_check": {
+        "confidence": "trusted",
+        "gz": "trusted",
+        "gz_type": "municipality",
+        "trusted": true
+      },
+      "names": [
+        {
+          "emission": "anchored",
+          "kind": "official",
+          "name": "Vargas"
+        }
+      ],
+      "old_id": 4,
+      "parent_old_id": 3,
+      "type": "municipio"
+    },
+    {
+      "canonical": "La Guaira",
+      "cross_check": {
+        "confidence": "trusted",
+        "gz": "trusted",
+        "gz_type": "state",
+        "trusted": true
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "La Guaira"
+        },
+        {
+          "emission": "raw",
+          "kind": "historical",
+          "name": "Vargas"
+        }
+      ],
+      "old_id": 3,
+      "parent_old_id": 2,
+      "type": "estado"
+    },
+    {
+      "canonical": "Venezuela",
+      "cross_check": {
+        "gz": "not_found"
+      },
+      "names": [
+        {
+          "emission": "raw",
+          "kind": "official",
+          "name": "Venezuela"
+        }
+      ],
+      "old_id": 2,
+      "parent_old_id": null,
+      "type": "pais"
+    }
+  ]
+}

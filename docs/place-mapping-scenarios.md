@@ -142,3 +142,30 @@ last resort** — but it stays *secondary* (the gazetteer answers first; search 
 
 **Status:** the query *shape* is validated on 5 buildings; the *parse-the-chain-and-propose* code
 is not built or measured yet. Marked accordingly on the build.
+
+---
+
+## Gazetteer seed — three sources, cross-checked (built 2026-07-26)
+
+The pilot gazetteer is reconciled from three sources (see the [[gazetteer-sources]] memory):
+
+- **the old Ecto app** (`wekui_dev.db`) — the building-level Caraballeda tree: **202 edificios**
+  with the full parent chain (OPP 25 → Tanaguarena → Caraballeda → Vargas → La Guaira → Venezuela)
+  and their surface names;
+- **`gazetteer.db`** — the trusted admin skeleton (state→parish, multi-source) and the
+  **Vargas↔La Guaira rename** authority, used to *cross-check* each admin node;
+- **Tavily** — the live third check on the buildings.
+
+The reconciliation runs ONCE (an export step reading both DBs) into a committed data file,
+`priv/gazetteer/caraballeda.json` — **296 nodes, 683 surface names**, each carrying its
+`cross_check` provenance (which sources agreed) so the merge is auditable in git, not re-run at
+seed time. The cross-check confirmed the trusted spine (La Guaira/Vargas/Caraballeda all
+`trusted`) and **flagged the discrepancy** it exists to catch — Tanaguarena is `guess_low` in the
+admin skeleton but operational in the old app and confirmed by Tavily, so three sources upgrade it.
+
+`Wekui.Gazetteer.Seed.caraballeda/1` reads the file into an event's Place tree — top-down,
+idempotent, every node born `:active` (curated, not a machine guess). Live: seeding a fresh event
+(296 places) then resolving the real claim mentions places `edificio OPP 25` on the actual
+`Edificio OPP 25`, `La Guaira`/`estado La Guaira` on the estado, and honestly returns **low
+confidence** where the tree is genuinely ambiguous (a bare "Caraballeda" matches both the parroquia
+and a populated_place) rather than guessing.

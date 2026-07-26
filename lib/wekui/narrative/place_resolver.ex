@@ -159,23 +159,28 @@ defmodule Wekui.Narrative.PlaceResolver do
     end
   end
 
+  # Forms are tried most-specific-first (full text before type-stripped), so
+  # "Residencias Caribe" reaches the building before the bare "Caribe" barrio.
   defp exact(mention, index) do
-    mention.forms |> Enum.flat_map(&Map.get(index.by_name, &1, [])) |> Enum.uniq()
+    Enum.find_value(mention.forms, [], &Map.get(index.by_name, &1))
   end
 
   defp fuzzy(mention, index) do
-    matches =
-      index.by_name
-      |> Enum.filter(fn {folded, _pids} ->
-        Enum.any?(mention.forms, &(String.jaro_distance(folded, &1) >= @jaro_threshold))
-      end)
-      |> Enum.flat_map(fn {_folded, pids} -> pids end)
-      |> Enum.uniq()
+    Enum.find_value(mention.forms, :no_match, fn form ->
+      case fuzzy_form(form, index) do
+        [] -> nil
+        candidates -> disambiguate(candidates, mention, index, :mention_fuzzy)
+      end
+    end)
+  end
 
-    case matches do
-      [] -> :no_match
-      candidates -> disambiguate(candidates, mention, index, :mention_fuzzy)
-    end
+  defp fuzzy_form(form, index) do
+    index.by_name
+    |> Enum.filter(fn {folded, _pids} ->
+      String.jaro_distance(folded, form) >= @jaro_threshold
+    end)
+    |> Enum.flat_map(fn {_folded, pids} -> pids end)
+    |> Enum.uniq()
   end
 
   # One candidate wins outright; several are decided by how many of the mention's
