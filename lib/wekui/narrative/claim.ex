@@ -97,9 +97,11 @@ defmodule Wekui.Narrative.Claim do
       validate {Reference, resource: Wekui.Core.Actor, attribute: :actor_id}
       validate Provenance
 
-      # The persons red line, on the write path (F54): subject and nuance name no
-      # private individual — only roles, places, and public figures.
-      validate {NoPrivateName, fields: [:subject, :nuance]}
+      # The persons red line, on the write path (F54). The subject is STRICT — no
+      # person name at all, not even an allowlisted public figure (a public figure used
+      # to point at a private relative is the leak). The nuance is lenient — a public
+      # official acting publicly may be named there.
+      validate {NoPrivateName, strict: [:subject], lenient: [:nuance]}
     end
 
     update :retract do

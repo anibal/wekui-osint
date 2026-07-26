@@ -1,14 +1,18 @@
 defmodule Wekui.Narrative.Validations.NoPrivateName do
   @moduledoc """
-  The persons red line on the write path (F54): a Claim's text fields name no
-  private individual. Each configured field is checked against the event's name
-  vocabulary — gazetteer geography plus the public-figure allowlist — via
-  `Wekui.Narrative.PrivateNames`; any unexplained name-like sequence fails the
-  write. See `docs/pages/claim.md`.
+  The persons red line on the write path (F54): a Claim's text fields name no private
+  individual. Two strictnesses, because a subject and a nuance differ:
 
-  Options — `:fields`, a non-empty list of text attributes to check
-  (e.g. `[:subject, :nuance]`). A missing Event is the Event reference's error to
-  raise, not this one's, so an absent `event_id` passes.
+    * `:strict` fields — the subject — allow NO person name at all: not a private one,
+      not even an allowlisted public figure. A subject is a role; a public figure
+      invoked to point at a private person ("el padre de la pianista Gabriela Montero")
+      is the exact leak this closes. Only places and institutions (a rescue brigade, a
+      ministry) may appear there.
+    * `:lenient` fields — a nuance — additionally allow the public-figure allowlist, so
+      a public official acting publicly may be named.
+
+  Checked against the event's gazetteer (plus the allowlist, for lenient fields) via
+  `Wekui.Narrative.PrivateNames`; any unexplained name-like sequence fails the write.
   """
 
   use Ash.Resource.Validation
@@ -17,14 +21,12 @@ defmodule Wekui.Narrative.Validations.NoPrivateName do
 
   @impl true
   def init(opts) do
-    case opts[:fields] do
-      [_ | _] = fields ->
-        if Enum.all?(fields, &is_atom/1),
-          do: {:ok, opts},
-          else: {:error, ":fields must be a list of attribute atoms"}
+    fields = List.wrap(opts[:strict]) ++ List.wrap(opts[:lenient])
 
-      _not_a_list ->
-        {:error, "expects a non-empty :fields list"}
+    cond do
+      fields == [] -> {:error, "expects a non-empty :strict and/or :lenient field list"}
+      not Enum.all?(fields, &is_atom/1) -> {:error, ":strict/:lenient entries must be atoms"}
+      true -> {:ok, opts}
     end
   end
 
@@ -35,9 +37,14 @@ defmodule Wekui.Narrative.Validations.NoPrivateName do
         :ok
 
       event_id ->
-        vocabulary = PrivateNames.vocabulary(event_id)
+        gazetteer = PrivateNames.gazetteer_names(event_id)
+        lenient = gazetteer ++ PrivateNames.public_figures()
 
-        Enum.find_value(opts[:fields], :ok, fn field ->
+        checks =
+          Enum.map(List.wrap(opts[:strict]), &{&1, gazetteer}) ++
+            Enum.map(List.wrap(opts[:lenient]), &{&1, lenient})
+
+        Enum.find_value(checks, :ok, fn {field, vocabulary} ->
           case PrivateNames.unexplained(Ash.Changeset.get_attribute(changeset, field), vocabulary) do
             [] ->
               nil

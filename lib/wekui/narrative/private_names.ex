@@ -85,7 +85,7 @@ defmodule Wekui.Narrative.PrivateNames do
   allowlist. All folded. Loaded fresh per check — a small local read that a
   curation just before may have grown.
   """
-  def vocabulary(event_id), do: known_names(event_id) ++ public_figures()
+  def vocabulary(event_id), do: gazetteer_names(event_id) ++ public_figures()
 
   @doc "The operator-owned allowlist of people who may be named (`config :wekui, :public_figures`), folded."
   def public_figures do
@@ -127,10 +127,13 @@ defmodule Wekui.Narrative.PrivateNames do
       end)
   end
 
-  # Every name the gazetteer knows is geography, not a person — canonical names
-  # AND every surface form in place_names (reading only canonicals blinds the
-  # gate to the alias vocabulary the posts actually use).
-  defp known_names(event_id) do
+  @doc """
+  Every name the gazetteer knows for an event — canonical names AND every surface
+  form in place_names — folded. A subject may name these (a building is a place, not a
+  person); reading only canonicals would blind the gate to the alias vocabulary the
+  posts actually use.
+  """
+  def gazetteer_names(event_id) do
     canonical =
       Place
       |> Ash.Query.filter(event_id == ^event_id)

@@ -159,12 +159,19 @@ defmodule Wekui.Narrative.ClaimTest do
       assert %{} = draft!(ctx, %{subject: "una mujer de 60 años y sus dos hijos"})
     end
 
-    test "accepts a public figure from the allowlist", ctx do
-      assert %{} = draft!(ctx, %{subject: "Nicolás Maduro"})
+    test "a public figure may be named in a nuance but never in a subject", ctx do
+      assert %{} = draft!(ctx, %{subject: nil, nuance: "según el presidente Nicolás Maduro"})
+      assert {:error, %Ash.Error.Invalid{}} = draft(ctx, %{subject: "Nicolás Maduro"})
     end
 
-    test "accepts an institution acting publicly", ctx do
-      assert %{} = draft!(ctx, %{subject: nil, nuance: "arribó USAR de El Salvador"})
+    test "the Montero hole is closed — a public figure used to place a private person is refused",
+         ctx do
+      assert {:error, %Ash.Error.Invalid{}} =
+               draft(ctx, %{subject: "el padre de la pianista Gabriela Montero"})
+    end
+
+    test "an institution passes even the strict subject", ctx do
+      assert %{} = draft!(ctx, %{subject: "USAR El Salvador"})
     end
   end
 end

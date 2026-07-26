@@ -21,7 +21,7 @@ posts) · **unit** (test suite) · — (not yet). Confidence: H / M / L.
 | Domain records (Event, Place, Post, Author, judgments) | ✅ | unit | H | — | — |
 | **Claim** (structured account) | ✅ | **live** | H | prose-vs-fields boundary settled; kind is an open string (by design) | — |
 | **Person** write-path (identity, handle, gate, arcs) | ✅ | **live** | H | handle heuristic fallible on 3-token / particle names (escape hatch covers) | — |
-| **Person red line / gate** | ✅ | **live** | H | gate allows an allowlisted public name in a subject (v5 avoids it; backstop has this hole) | tighten to "no name in subject, ever" |
+| **Person red line / gate** | ✅ | **live** + unit | H | subject now **strict** — no name ever, not even a public figure (the Montero hole, closed); nuance lenient | — |
 | Claim **merge** (dedup, deterministic) | ◐ | unit | M | the *merge-judge* (WHICH two are the same) is NOT built → cross-batch dup recurs at scale | build the merge-judge (specificity rule) |
 | **Extraction prompt** (v5) | ✅ | **live** | M–H | MoE non-determinism; low-confidence noise leaks (self-labeled) | multi-pass; keep in the loop |
 | **Extraction pipeline** (posts → claims) | ✅ | **live** | H | best-effort per claim (not transactional); no Run receipt | Run receipt later |
@@ -45,7 +45,7 @@ today, and the metric or gate that will measure it going forward.
 
 | Dimension | Measures | Evidence today | The measure / gate | Conf |
 |---|---|---|---|---|
-| **Dignity & safety** | no private name shown; minors; public figures; human gate | live: 0 leaks, minors held, all pending-review — but 0 leaks because **v5 behaved**, not because the gate fired | `NoPrivateName` (backstop — has the public-name hole, §C.1) + `names[]==[]` for minors | **M** |
+| **Dignity & safety** | no private name shown; minors; public figures; human gate | live: 0 leaks, minors held, all pending-review — and the subject is now **mechanically** name-free (strict gate), not reliant on v5 | strict `NoPrivateName` on subject + `names[]==[]` for minors | **H** |
 | **Honesty (support)** | the claim's assertion is *entailed* by its cited posts | grounded + subset-gated, but entailment **unverified** | the **support gate** (LLM-judge) — not built | **L** |
 | **Recall** | the real happenings are captured | live: caught deaths + a hidden collapse; noise dropped | precision/recall vs Cronista's hand-verified set | **n/m** |
 | **Precision** | no fabricated or noise "happenings" | live: real-estate dropped; analysis self-labels low-conf | confidence filter + human review; false-claim rate | **n/m** |
@@ -67,12 +67,11 @@ these three into numbers against Cronista's hand-verified record is itself a tas
    them — the exact failure the teardown was about, one layer up. **The support gate is the
    single most important missing piece.** Until it ships, a confident-but-unsupported claim
    can pass.
-2. **The dignity gate has a hole — dignity currently rests on prompt behavior (F54).** The
-   write-path gate rejects an *unallowlisted* private name in a subject, but *allows* an
-   allowlisted public figure's name there — the Montero shape. Live, 0 leaks happened only
-   because v5 keeps names out of `subject_role` at all. That is the pattern this project
-   exists to reject: the mechanical backstop must be tightened to **no name in a subject,
-   ever**, so dignity does not depend on the model behaving.
+2. **The dignity gate hole — CLOSED (2026-07-26).** The subject field is now **strict**:
+   `NoPrivateName` rejects any person name there, including an allowlisted public figure (the
+   Montero shape), so dignity is mechanically gated rather than resting on the model behaving.
+   The nuance stays lenient (a public official may be named). Dignity is now the one solidly
+   gated property.
 3. **Dedup does not scale yet.** The deterministic merge exists; the *judge* that decides what
    to merge does not — so across many batches/scopes the OPP-25-style duplication returns.
 4. **The human gate is a flag, not a workflow.** `pending_review` protects nothing until there
