@@ -28,5 +28,15 @@ defmodule Wekui.Narrative do
       define :cite_post, action: :cite
       define :list_claim_citations, action: :by_claim, args: [:claim_id]
     end
+
+    resource Wekui.Narrative.Person do
+      define :identify_person, action: :identify
+      define :get_person, action: :read, get_by: [:id]
+      define :list_persons, action: :by_event, args: [:event_id]
+      define :set_person_handle, action: :set_handle
+      define :set_person_kind, action: :set_kind
+      define :approve_person, action: :approve
+      define :withhold_person, action: :withhold
+    end
   end
 end

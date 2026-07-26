@@ -1,0 +1,147 @@
+{
+  "attributes": [
+    {
+      "default": "nil",
+      "size": null,
+      "type": "uuid",
+      "source": "id",
+      "references": null,
+      "allow_nil?": false,
+      "primary_key?": true,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "text",
+      "source": "full_name",
+      "references": null,
+      "allow_nil?": false,
+      "primary_key?": false,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "text",
+      "source": "normalized_name",
+      "references": null,
+      "allow_nil?": false,
+      "primary_key?": false,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "text",
+      "source": "display_handle",
+      "references": null,
+      "allow_nil?": true,
+      "primary_key?": false,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "text",
+      "source": "kind",
+      "references": null,
+      "allow_nil?": false,
+      "primary_key?": false,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "text",
+      "source": "status",
+      "references": null,
+      "allow_nil?": false,
+      "primary_key?": false,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "utc_datetime_usec",
+      "source": "inserted_at",
+      "references": null,
+      "allow_nil?": false,
+      "primary_key?": false,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "utc_datetime_usec",
+      "source": "updated_at",
+      "references": null,
+      "allow_nil?": false,
+      "primary_key?": false,
+      "generated?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "uuid",
+      "source": "event_id",
+      "references": {
+        "name": "persons_event_id_fkey",
+        "table": "events",
+        "multitenancy": {
+          "global": null,
+          "attribute": null,
+          "strategy": null
+        },
+        "deferrable": false,
+        "on_delete": "restrict",
+        "on_update": null,
+        "destination_attribute": "id",
+        "primary_key?": true,
+        "destination_attribute_generated": null,
+        "destination_attribute_default": null
+      },
+      "allow_nil?": false,
+      "primary_key?": false,
+      "generated?": false
+    }
+  ],
+  "table": "persons",
+  "hash": "34AACFEC852A177C18F2BB0A475E4EE286A9ECD2165078523CD803568A9C8B08",
+  "multitenancy": {
+    "global": null,
+    "attribute": null,
+    "strategy": null
+  },
+  "identities": [
+    {
+      "name": "unique_name_per_event",
+      "keys": [
+        "event_id",
+        "normalized_name"
+      ],
+      "base_filter": null,
+      "index_name": "persons_unique_name_per_event_index",
+      "nils_distinct?": true
+    }
+  ],
+  "repo": "Elixir.Wekui.Repo",
+  "strict?": false,
+  "custom_indexes": [
+    {
+      "message": null,
+      "name": null,
+      "table": null,
+      "include": null,
+      "fields": [
+        "normalized_name"
+      ],
+      "where": null,
+      "unique": false,
+      "using": null
+    }
+  ],
+  "custom_statements": [],
+  "base_filter": null,
+  "has_create_action": true
+}
