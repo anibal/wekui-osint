@@ -85,9 +85,15 @@ defmodule Wekui.Narrative.BeatRenderer do
     claims
     |> Enum.map(fn c -> {c, anchor_place(c, subtree_set)} end)
     |> Enum.group_by(fn {_c, anchor} -> anchor && anchor.id end)
-    |> Enum.sort_by(fn {_id, pairs} ->
-      pairs |> Enum.map(fn {c, _} -> c.first_seen_at end) |> Enum.min(DateTime)
-    end)
+    # DateTime needs its own sorter here too: default term ordering compares the
+    # structs field by field in key order — day before month before year — so
+    # groups would read out in an order that is not chronological at all.
+    |> Enum.sort_by(
+      fn {_id, pairs} ->
+        pairs |> Enum.map(fn {c, _} -> c.first_seen_at end) |> Enum.min(DateTime)
+      end,
+      DateTime
+    )
     |> Enum.flat_map(fn {_id, pairs} ->
       pairs
       |> Enum.sort_by(fn {c, _} -> c.first_seen_at end, DateTime)

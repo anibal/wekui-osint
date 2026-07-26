@@ -132,4 +132,25 @@ defmodule Wekui.Narrative.BeatRendererTest do
     # The OPP 25 claim (a descendant of Caraballeda) is placed under its building.
     assert prose =~ "En OPP 25, el edificio colapsó tras el terremoto"
   end
+
+  test "place groups read in chronological order, across a month boundary", ctx do
+    # Default term ordering compares DateTime structs field by field in key order
+    # — day before month before year — so June 29 would sort AFTER July 1 unless
+    # the group sort names DateTime as its sorter.
+    claim!(
+      ctx,
+      %{kind: "colapso de edificio", first_seen_at: ~U[2026-06-29 07:27:00.000000Z]},
+      ctx.opp
+    )
+
+    claim!(
+      ctx,
+      %{kind: "cifra oficial", first_seen_at: ~U[2026-07-01 10:00:00.000000Z]},
+      ctx.caraballeda
+    )
+
+    clauses = beat(ctx, ctx.caraballeda).clauses
+    assert Enum.map(clauses, & &1.place_name) == ["OPP 25", "Caraballeda"]
+    assert Enum.map(clauses, & &1.cite_ns) == [[1], [2]]
+  end
 end
