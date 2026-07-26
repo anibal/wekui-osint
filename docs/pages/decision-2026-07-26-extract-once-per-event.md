@@ -1,0 +1,11 @@
+decided:: 2026-07-26
+status:: settled
+title:: Decision — a re-run extracts only onto an event with no claims
+type:: decision
+
+- The orchestrated read path ([[run]]) decides whether to extract by one binary rule: an [[event]] holding **no current [[claim]]** extracts; an event that already holds one **skips extract** and re-passes resolve, verify and render, unless it is asked with `extract: :force`. Everything else on the path is safe to repeat — ClaimPlace upserts, verify overwrites its verdict, the seed reuses — so extract is the only stage a re-run must decide about.
+- The hazard it guards: `Claim.:draft` has no identity, so re-extracting the same [[post]]s mints duplicate claims. Until the merge-judge exists, nothing downstream would fold them back together.
+- **The rule this replaces, and the measurement that killed it.** The proposal was a three-way rule keyed on citation coverage: no post in scope cited → extract; every post cited → skip; **partially** cited → refuse loudly. Counting the pilot event on 2026-07-26 showed **8 of its 9 posts are cited** — v5 correctly drops a post that evidences no happening, and a dropped post is never cited by anything. So "partially cited" is the *happy path*, not the danger sign, and the loud refusal would have fired on every honest re-run.
+- Rejected with it, and for the same reason: **per-post skipping**. Re-feeding the no-claim posts on every run is a ratchet — a non-deterministic model eventually mints a claim from noise that earlier passes correctly dropped — it turns the prompt's material block into partial batches it was never proven on, and it resurrects deliberately retracted accounts.
+- The cost of the binary rule is that a crash which drafted only part of a batch is not repaired automatically: the event now holds claims, so extract skips, and the receipt says so. Recovery is deliberate — retract the partials, then force. That is the intended posture while the record is append-only and the merge-judge is unbuilt ([[principle-never-rewrite-the-record]]).
+- Evidence: the citation count on the pilot event (8/9), recorded in `docs/orchestration-scenarios.md` (scenario D); the rule and its recovery path are tested in `test/wekui/pipelines/read_path_test.exs`.

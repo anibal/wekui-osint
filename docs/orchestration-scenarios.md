@@ -1,10 +1,20 @@
 # Orchestration — scenarios for validation (the pipeline run)
 
 **The job:** tie the built, proven capabilities — extract → resolve → verify → render — into **one
-auditable pipeline run** on the seeded Caraballeda corpus. Proposed for your feedback before any
-code. Markers: **[PROPOSAL]** my recommendation · **[OPEN]** your call · **[SETTLED]** decided.
-Grounded in the real pilot data, source-level reads of the runtime libraries, and an adversarial
-review pass whose confirmed findings are folded in.
+auditable pipeline run** on the seeded Caraballeda corpus. Markers: **[PROPOSAL]** my
+recommendation · **[OPEN]** your call · **[SETTLED]** decided. Grounded in the real pilot data,
+source-level reads of the runtime libraries, and an adversarial review pass whose confirmed
+findings are folded in.
+
+> **STATUS 2026-07-26 — BUILT.** Every fork below is settled and the read path ships:
+> `Wekui.Pipelines.Run` (the receipt), `Wekui.Pipelines.ReadPath` (the Reactor) and
+> `Wekui.Pipelines.run_read_path/4`, with 14 tests through `Req.Test` and `priv/scripts/` for
+> task 0a (done in dev: 296 places seeded, 9 posts ported) and task 0b. **Only 0b remains** — the
+> live re-extract, which needs `DEEPINFRA_API_KEY` in the real env. Where the built behaviour
+> departs from what was proposed, the section says so and why; the departures are scenario D's
+> re-run rule (the proposed one mis-fired on the happy path — see
+> [`decision-2026-07-26-extract-once-per-event`](pages/decision-2026-07-26-extract-once-per-event.md))
+> and the per-step retries (dropped: a stage records its errors instead).
 
 ## The runtime — [SETTLED 2026-07-26]: Reactor
 
@@ -29,12 +39,14 @@ no decisions in it. Reactor is the thing the kickstart was actually describing. 
   spend gate) no longer has a settled runtime. sagents + LangChain remains *a* candidate there —
   decide when that rung arrives, not before. `docs/agent-architecture.md` and
   `docs/kickstart-agent.md` carry correction banners so their sagents framing reads as history.
-- **[OPEN]** the `sagents` dependency is installed and unused — remove it from `mix.exs` now, or
-  leave it until the talking-layer decision? (`langchain` earns its keep either way: its
-  `ChatOpenAI` takes a full-URL `endpoint`, verified against DeepInfra's shape, and any future
-  agent loop needs a model client.)
-- When Reactor code lands, widen the `usage_rules` sync pattern in `mix.exs` so Reactor's shipped
-  usage rules become a synced skill like the Ash ones.
+- **[SETTLED — operator: remove]** `sagents` is gone from `mix.exs`; nothing in `lib/`, `test/` or
+  `config/` referenced it. `langchain` stays: its `ChatOpenAI` takes a full-URL `endpoint`,
+  verified against DeepInfra's shape, and any future agent loop needs a model client.
+- **[SETTLED]** Reactor's usage rules are now a synced skill (`.claude/skills/reactor`). That
+  needed `{:reactor, "~> 1.0"}` declared in `mix.exs`: `usage_rules` only discovers **top-level**
+  deps, so a transitive one is silently skipped. No new package enters the build — `mix.lock` is
+  untouched, Ash already required reactor 1.0.2 — and the read path `use`s Reactor directly, so
+  declaring it also stops being a latent break if Ash ever drops it.
 
 ## First principles (inherited, made concrete)
 
@@ -65,7 +77,8 @@ ambiguous — the ask must name it).
 ```
 inputs      event · agent · place_id · from · to · opts
     ▼
-PREFLIGHT   Worker.ready?  ·  event has ≥1 :active place  ·  posts in scope
+PREFLIGHT   Worker.ready?  ·  place belongs to the event  ·  event has a gazetteer
+    │            ·  posts in scope
     │            (fails → the run never opens a receipt; steps below depend on it)
     ▼
 START RUN   Run receipt born :running — records the exact options asked
@@ -73,27 +86,34 @@ START RUN   Run receipt born :running — records the exact options asked
 EXTRACT     posts → Extract.run(event, agent, posts, opts)   [one batch on the pilot]
     │            writes Claims + Citations + Persons (born pending_review)
     │            PlaceResolver already runs inline per claim
-    │            max_retries 0 — a repeat would draft duplicate claims
+    │            skipped outright when the event already holds claims (scenario D)
     ▼
 RESOLVE     each current claim → PlaceResolver.resolve(claim, actor_id:, post_id:)
     │            safe-to-repeat re-pass (ClaimPlace upserts, proposals reuse); this is
     │            where the run CAPTURES the resolver counts Extract discards
     ▼
-VERIFY      each current claim → Verify.run(claim)     [a `map` step; retries allowed —
-    │            a repeat only overwrites the same claim's verdict]
+VERIFY      each current claim → Verify.run(claim)
     │            records the support verdict — flag-only, withholds nothing
     ▼
 RENDER      BeatRenderer.render(place_id, from, to) → %{prose, clauses, sources}
-    │            read-only; retries allowed
+    │            read-only
     ▼
 FINALIZE    Run receipt → :completed — summary: per-stage counts + gate queues + the beat
 ```
 
-Reactor gives the order (each step consumes the previous step's result), per-step retry limits
-declared where repeating is safe, and full serial determinism (`async?: false` — also required
-under test, where the task path lacks the DB sandbox). We define **no undo callbacks**: the
-record is append-only by doctrine, so a failed run must never quietly unmake what earlier steps
-honestly wrote.
+Reactor gives the order (each step consumes an earlier step's result, or declares `wait_for`) and
+full serial determinism (`async?: false`, set once by the wrapper — also required under test,
+where the task path lacks the DB sandbox). We define **no undo callbacks**: the record is
+append-only by doctrine, so a failed run must never quietly unmake what earlier steps honestly
+wrote.
+
+**Departure from the proposal: no retries anywhere** (`max_retries 0` on every step). Reactor only
+retries a step whose `compensate/4` returns `:retry`, so declaring retry limits without writing
+compensate callbacks would have been a claim the code did not keep. And a stage that *records* its
+error in the summary is strictly more honest than one that silently repeats the call — the receipt
+says what went wrong. Two preflight checks were added while building: the target place must belong
+to the event, and the event's **Unplaced Place does not count** as a gazetteer (every event is born
+with one, active, which would have made the gazetteer guard always pass).
 
 Count scopes, stated plainly: **extract counts the batch it fed; resolve and verify are event-wide
 snapshots** of the current claims at run time (labeled so in the summary) — on a second run the
@@ -107,29 +127,43 @@ like this (illustrative; person/verdict counts ride the known MoE variance):
 
 ```json
 {
-  "extract": {"posts": 9, "claims": 9, "drafted": 9, "skipped": 0, "skips": []},
+  "extract": {"ran": true, "posts": 9, "claims": 9, "drafted": 9, "skipped": 0, "skips": []},
   "resolve": {"claims": 9, "mentions": 9, "linked": 8, "proposed": 0, "unresolved": ["cerca de Caraballeda-La Guaira"]},
-  "verify":  {"claims": 9, "supported": 9, "overstated": 0, "unsupported": 0, "errors": 0},
-  "render":  {"clauses": 6, "sources": 7},
-  "gates":   {"persons_pending_review": 5, "places_proposed": 0, "claims_not_supported": 0},
-  "beat":    {"prose": "En Edificio OPP 25, …", "sources": ["…"]}
+  "verify":  {"claims": 9, "judged": 9, "skipped": 0, "supported": 9, "overstated": 0, "unsupported": 0, "unverified": 0, "errors": 0, "error_reasons": []},
+  "render":  {"place_id": "…", "place_name": "Caraballeda", "clauses": 6, "sources": 7},
+  "gates":   {"persons_pending_review": {"count": 5, "ids": ["…"]}, "places_proposed": {"count": 0, "ids": []}, "claims_not_supported": {"count": 0, "ids": []}},
+  "beat":    {"prose": "En Edificio OPP 25, …", "sources": [{"n": 1, "x_id": "3923", "post_id": "…"}]}
 }
 ```
+
+(That is the shape the code writes — string keys, scalars and lists only, so the receipt reads
+back from its `:map` column exactly as written. The `options` alongside it record the ask:
+`place_id`, `place_name`, `from`, `to`, `agent_id`, `agent_model`, `posts_in_scope`, and the
+per-stage choices.)
 
 Note what the fresh event does *not* demonstrate: the deliberately-overstated control claim is a
 manual insert on the old pilot (stored verdict `:unsupported` — the kickstart calls it
 "overstated" loosely) and posts-only porting does not re-create it, so `claims_not_supported` is
-honestly 0 here. Verify's catch was already live-proven. **[OPEN]** re-create the control on the
-fresh event in task 0a, or let that path stay proven-but-undemonstrated?
+honestly 0 here. Verify's catch was already live-proven.
 
-**[PROPOSAL]** the summary embeds the rendered beat (prose + sources) as a *receipt of output* —
-the beat stays derived and re-derivable from the claims; the run's copy is provenance, never the
-canonical story. **[OPEN]** or counts only, and the beat is always re-rendered on demand?
+**[SETTLED — my call, per your "you take the decision"]: no control claim on the fresh event.**
+Planting a knowingly false record in a corpus that is append-only, has no destroy action, and
+exists to be a memorial is the wrong price for a demonstration. The path is instead proven where
+proof belongs — in the suite: a test drives an `unsupported` verdict end to end and asserts it
+reaches *both* the `claims_not_supported` gate queue and the beat's "según un reporte sin
+confirmar" attribution. That is deterministic and repeats on every run, which a one-off manual
+insert never was.
+
+**[SETTLED — the summary embeds the beat, and nothing is final]:** the receipt keeps the rendered
+prose + sources as a *receipt of output*, and the beat stays derived and re-derivable from the
+claims — a test asserts a fresh `BeatRenderer.render/3` reproduces exactly what the receipt kept.
+Your read is the operative one: there are no final products, so the run's copy is provenance and a
+re-render is always available; the claims remain the substance.
 
 ### B. Preflight fails — no key, no gazetteer
 `Worker.ready?` false (no `DEEPINFRA_API_KEY`), or the event has no `:active` place (the
 forgot-to-seed guard — stub-vs-real cannot be told apart from the data and is task 0's
-responsibility, not preflight's). **[PROPOSAL]** the preflight step fails the run before the
+responsibility, not preflight's). **[SETTLED]** the preflight step fails the run before the
 receipt step ever runs: the caller gets `{:error, {:preflight, reason}}` and **no** receipt
 exists — a run that never ran is not a record of the system acting. The seed is not auto-run:
 seeding is an explicit, separate act (already idempotent), not a side effect of asking for a
@@ -139,27 +173,50 @@ preflight leaves no receipt — the caller's own record is then the only trace o
 ### C. A crash mid-run — the `:running` crash artifact
 Extract raises after drafting 4 of 9 claims (its writes are best-effort, not transactional — a
 known reality). The Reactor unwinds — and because no step defines undo, unwinding just stops the
-run; nothing is unmade. The receipt stays `:running` forever. **[PROPOSAL]** keep the two-state
+run; nothing is unmade. The receipt stays `:running` forever. **[SETTLED]** keep the two-state
 receipt (kickstart-runs' shape): a `:running` row found later IS the crash signal; no `:failed`
 state, no state machine. Stage errors the steps *can* catch (`{:error, …}` tuples from
 Extract/Verify/Worker) are carried in step results as data and recorded in the summary — the run
 still finalizes `:completed`, and a completed run with errors in its summary is an honest
 receipt. Only a raise leaves `:running`.
 
+One mechanical detail the build pinned down: **Reactor rescues a raising step**, so the raise does
+not propagate to the caller — `run_read_path/4` returns `{:error, exception}` (unwrapped from
+Reactor's error classes) and the receipt is left `:running`. Both halves are tested: the claims an
+earlier stage wrote survive, and the stranded receipt is there to be found.
+
+### C-bis. What a defect looked like — the beat read out of order
+Wiring the run surfaced a real bug in code that was already "proven": `BeatRenderer` sorted its
+place groups with `Enum.sort_by` over `DateTime` structs and no sorter, so Erlang's term ordering
+compared the maps key by key — `day` before `month` before `year`. The pilot's July 1 official toll
+therefore sorted *ahead* of the June 29 rescue it follows, silently. Fixed (name `DateTime` as the
+sorter, as the within-group sort already did) with a regression test that crosses a month
+boundary. Worth recording as the argument for orchestration itself: composing proven parts is what
+exposed the seam between them.
+
 ### D. Re-running — the one duplicate hazard
 `Claim.:draft` has no identity: re-extracting the same posts mints duplicate claims (everything
 else on the path is safe to repeat — resolve upserts, verify overwrites its verdict, seed
-reuses). Until the merge-judge lands, the orchestrator must not blindly re-extract. **[PROPOSAL]**
-an all-or-nothing scope rule, one citations query: **no** post in scope cited by a current claim →
-extract runs; **every** post cited → skip extract (a pure re-pass run: resolve + verify + render);
-**partially** cited → the extract step refuses, recorded as an error in the summary, unless
-`extract: :force`. Partial coverage is precisely the dangerous state (a crashed extract, a
-retracted claim's posts falling back out of citation) and should be loud, not silently patched;
-recovery is manual — retract the partials, then force — until the merge-judge lands. Per-post
-skipping was considered and rejected: it re-feeds no-claim posts on every run (a
-non-deterministic-model ratchet toward minting claims from noise v5 correctly dropped), it turns
-`{{material}}` into partial batches the v5 prompt was never proven on, and it resurrects
-deliberately retracted accounts. This is also why the extract step declares `max_retries 0`.
+reuses). Until the merge-judge lands, the orchestrator must not blindly re-extract.
+
+**The proposed rule was wrong, and the pilot said so.** The proposal keyed on citation coverage:
+no post in scope cited → extract; every post cited → skip; **partially** cited → refuse loudly.
+Counting the pilot before building found **8 of its 9 posts cited** — v5 correctly drops a post
+that evidences no happening, and a dropped post is cited by nothing. So "partially cited" is the
+*happy path*, and the loud refusal would have fired on every honest re-run.
+
+**[SETTLED]** the rule is binary: an event with **no current claim** extracts; an event that
+**already holds one** skips extract and re-passes resolve + verify + render, unless asked with
+`extract: :force`. The skip is stated in the receipt (`"ran": false, "reason": "claims_exist"`),
+so it is loud where loudness belongs — in the record, not as a refusal. A crash that drafted part
+of a batch is therefore never silently patched; recovery stays deliberate: retract the partials,
+then force. Recorded as
+[`decision-2026-07-26-extract-once-per-event`](pages/decision-2026-07-26-extract-once-per-event.md).
+
+Per-post skipping was considered and rejected for the reasons that still hold: it re-feeds
+no-claim posts on every run (a non-deterministic-model ratchet toward minting claims from noise v5
+correctly dropped), it turns `{{material}}` into partial batches the v5 prompt was never proven
+on, and it resurrects deliberately retracted accounts.
 
 ### E. The gates — record, not pause
 The run finalizes with `persons_pending_review`, `places_proposed`, `claims_not_supported` queues
@@ -167,18 +224,23 @@ The run finalizes with `persons_pending_review`, `places_proposed`, `claims_not_
 statuses off the resources themselves — the run's queues are a snapshot for the operator's
 inspection, not the source of truth. Re-verification is a snapshot too: the MoE judge can flip a
 verdict between runs, so an old receipt may honestly disagree with current claim state.
-**[PROPOSAL]** a `verify: :skip_verdicted` option for cost/churn control; default re-verifies all
+**[SETTLED]** a `verify: :skip_verdicted` option for cost/churn control; default re-verifies all
 current claims. The one *blocking* gate remains future spend, designed with the acquisition rung.
+The verdict tally in the summary is taken over *all* current claims after the pass — the state as
+it now stands — while `judged` and `skipped` say what this particular run did.
 
 ### F. Post selection — what the extract stage feeds the model
-**[PROPOSAL]** posts of the event whose `posted_at` falls in `[from, to]`, in one batch at pilot
-scale (9 posts); windowed batching is a later rung when the corpus grows. An explicit `posts:`
-override exists for scripted runs. (The beat's own interval then filters on claim
-`first_seen_at` — consistent, since a claim's `first_seen_at` is its first-listed citation's
-`posted_at`.) **[OPEN]** should the window filter on `posted_at` at all, or should a pilot run
-always feed the event's whole corpus and let the beat's own interval do the scoping?
+**[SETTLED — my call]: the extract stage feeds the event's whole corpus; `from`/`to` scope the
+beat only.** A `posted_at` window on extraction would mean a claim is never *drafted* because it
+fell outside a render window — the read window would silently decide what the record contains,
+which is backwards: extraction is what the record knows, the beat is one reading of it. Feeding
+the whole corpus also makes scenario D's re-run rule crisp (one fixed scope, not a moving one) and
+costs nothing at pilot scale — 9 posts, one batch. Windowed batching arrives when the corpus
+outgrows one prompt, as its own rung. The `posts:` override remains for scripted runs, and the
+prompt's `{{t_start}}`/`{{t_end}}` are filled from the corpus's own span (half-open, so the last
+post falls inside).
 
-## The Run receipt (draft shape — Ash, per fork 2/5)
+## The Run receipt (shipped as drafted — Ash, per fork 2/5)
 
 ```
 Wekui.Pipelines.Run  (table "runs")
@@ -198,14 +260,18 @@ Wekui.Pipelines.Run  (table "runs")
 Two states, no `AshStateMachine`, no identities/partial indexes needed (nothing is
 one-current-per-slot). All single-row writes — the ash_sqlite no-transactions reality doesn't
 bite. `options`' DateTimes round-trip out of the `:map` column as ISO strings — fine for a
-display receipt. `Wekui.Pipelines` becomes the Ash domain holding Run (fork 5), added to
-`ash_domains` in config; the `ReadPath` Reactor and its step modules are plain infra beside the
-existing `Wekui.Pipelines.Extract`/`Verify`.
+display receipt. `Wekui.Pipelines` is the Ash domain holding Run (fork 5), added to `ash_domains`
+in config; the `ReadPath` Reactor and its steps are plain infra beside the existing
+`Wekui.Pipelines.Extract`/`Verify`. One thing the build made stricter: **the whole summary is
+string-keyed JSON scalars**, never structs or atoms — `BeatRenderer.render/3` returns a full
+`Place` struct, which a `:map` column cannot hold, so the render step projects the fields it keeps
+and a test asserts the summary reads back from the database byte-identical.
 
-## Proposed vocabulary — the `run` concept page (draft, pending fork 2)
+## The `run` concept page — [SETTLED: vocabulary; shipped]
 
-To be created as `docs/pages/run.md` (status `planned`) + its hub line, **only if fork 2 lands on
-"vocabulary"**:
+Created as [`docs/pages/run.md`](pages/run.md) (`status:: built`) with its
+[[ubiquitous-language]] hub line, in the same commit as the resource. The draft below is what it
+says:
 
 > - A **run** is the receipt of one execution of the system's own pipeline over an [[event]]:
 >   which stages ran (extract, resolve, verify, render), over what scope, what each produced, and
@@ -223,13 +289,14 @@ To be created as `docs/pages/run.md` (status `planned`) + its hub line, **only i
 >   stays derived and re-derivable from the claims — the run's copy is provenance, never the
 >   canonical story.
 
-## Task 0 — the clean pilot event (blocks everything above)
+## Task 0 — the clean pilot event ([SETTLED; 0a DONE, 0b awaiting the key])
 
 Confirmed in the dev DB: pilot `eb8ec55b` has the 9 real posts + 10 claims (9 real + the control)
 on a 6-place stub tree; demo `a38c70f0` has the 297-place real tree with junk claims
-(`kind: "x"`). No event holds both.
+(`kind: "x"`). No event held both.
 
-**[PROPOSAL] Path (ii), split in two:**
+**Path (ii), split in two — 0a ran in dev on 2026-07-26** (`priv/scripts/pilot_event.exs`: 296
+places seeded, 1 author + 9 posts ported, second run a no-op):
 - **0a — deterministic setup (no key needed):** a small committed script creates a fresh event,
   seeds the real 296-node gazetteer (`Gazetteer.Seed.caraballeda/1`, born `:active`), registers
   the extraction agent (Actor with the `prompts/extraction.v5.txt` text + DeepSeek model — Extract
@@ -246,34 +313,50 @@ on a 6-place stub tree; demo `a38c70f0` has the 297-place real tree with junk cl
 Path (i) (re-seed onto `eb8ec55b`) stays rejected: `Seed` keys idempotency on
 `{folded name, type, parent}`, so the stub `Tanaguarena (sector)` ≠ real `barrio` and
 `OPP 25` ≠ `Edificio OPP 25` → duplicate nodes + wrong ClaimPlace links, and `Place` has no
-destroy action by design. **[OPEN]** the fresh event's name (reuse `litoral-central-2026` and
-retire the old event as backlog cleanup, or a distinct name?).
+destroy action by design.
 
-## The forks — one settled, the rest batched with a recommendation each
+**[SETTLED — my call]: the canonical name goes to the canonical event.** The fresh event is
+`litoral-central-2026`; the stub was renamed `litoral-central-2026-stub` and keeps its 9 posts and
+10 claims intact as the source to port from and as the history of how the spine was proven. Two
+events named for one earthquake would have been the worse outcome — the name describes the
+happening, and it belongs to the event that holds the real gazetteer. The script does the rename
+itself, once, on a rule it can explain: an event under the target name carrying posts but no
+seeded gazetteer *is* the stub.
+
+## The forks — all six settled
 
 1. **How much runtime, now — [SETTLED 2026-07-26]: the pipeline is a Reactor.** The kickstart's
    fork (a) rested on the saga misread and dissolved with it; the corrected choice was
    hand-written module vs Reactor, and Reactor won: already installed, made for fixed step
-   graphs, declared retries, step events for the receipt, serial mode for determinism. Recorded
+   graphs, step ordering derived from declared needs, serial mode for determinism. Recorded
    in [`decision-2026-07-26-reactor-not-sagents`](pages/decision-2026-07-26-reactor-not-sagents.md).
    The talking-agent layer's runtime is a *later* decision, made at that rung.
-2. **Run — vocabulary or machinery? Recommend vocabulary** (a `run` concept page, draft above).
-   It is operator-facing persisted state with a lifecycle, and under the agent-as-product pivot
-   the run receipt is the product's audit surface — the thing you inspect. The op-log precedent
-   (machinery) fit a projection artifact; a run is a first-class thing you list, open, and reason
-   about. kickstart-runs deferred this fork and the concept resurfaced on its own — evidence it's
-   vocabulary.
-3. **Gate points — recommend record now, pause later** (scenario E). Pausing arrives with the
+2. **Run — vocabulary or machinery? [SETTLED: vocabulary]** — [`run`](pages/run.md) is a concept
+   page, shipped with the resource. It is operator-facing persisted state with a lifecycle, and
+   under the agent-as-product pivot the run receipt is the product's audit surface — the thing you
+   inspect. The op-log precedent (machinery) fit a projection artifact; a run is a first-class
+   thing you list, open, and reason about. kickstart-runs deferred this fork and the concept
+   resurfaced on its own — evidence it's vocabulary.
+3. **Gate points — [SETTLED: record now, pause later]** (scenario E). Pausing arrives with the
    review UI (content gates) and with acquisition (the spend gate).
-4. **Model call path — recommend: the pipeline keeps the Worker behaviour** (settled,
-   `Req.Test`-proven, `retry: false` caller-owned — with retry limits now declared per Reactor
-   step where repeating is safe). The future talking layer's model path is decided with its
-   runtime; `langchain`'s DeepInfra-compatible `ChatOpenAI` is the noted candidate there.
-5. **Domain placement — recommend `Wekui.Pipelines` as the new Ash domain** holding `Run`, with
-   the `ReadPath` Reactor and step modules as plain infra beside the existing
-   `Wekui.Pipelines.Extract`/`Verify` (no `lib/wekui/pipelines.ex` exists today; Extract/Verify
-   are plain modules, so no collision — the namespace already says pipeline; one home for stages,
-   orchestrator, and receipt). Alternative: `Wekui.Runs`.
-6. **Scope of the first run — recommend read-path only** (extract → resolve → verify → render on
+4. **Model call path — [SETTLED: the pipeline keeps the Worker behaviour]** (`Req.Test`-proven,
+   `retry: false` caller-owned — and the orchestrator adds no retries of its own; see the step
+   graph). The future talking layer's model path is decided with its runtime; `langchain`'s
+   DeepInfra-compatible `ChatOpenAI` is the noted candidate there.
+5. **Domain placement — [SETTLED: `Wekui.Pipelines`]**, the Ash domain holding `Run` and the
+   `run_read_path/4` entry point, with the `ReadPath` Reactor and its steps as plain infra beside
+   the existing `Wekui.Pipelines.Extract`/`Verify` — one home for stages, orchestrator and
+   receipt. (`Wekui.Runs` was the alternative; the namespace already said pipeline.)
+6. **Scope of the first run — [SETTLED: read-path only]** (extract → resolve → verify → render on
    the seeded corpus). The beat LLM-polish stays the next rung, as an explicit separate step over
    the structured `clauses` — never an LLM over the renderer.
+
+## What is left
+
+- **Task 0b — the live run.** `DEEPINFRA_API_KEY=… mix run priv/scripts/read_path.exs`. Extraction
+  and the support gate call DeepSeek for real on the clean event; pennies. N-run variance is the
+  known MoE reality — the gates and your review are the backstop.
+- Next rungs, unchanged and unstarted: the **beat LLM-polish** over the structured clauses, the
+  **merge-judge** (which two claims are one happening — and the thing that would let a re-run
+  extract safely), the **support-prompt iteration** (v1 answers in English), the **review UI**
+  that services the gate queues, and **live acquisition** behind the spend gate.
