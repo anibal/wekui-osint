@@ -84,6 +84,16 @@ config :wekui, :public_figures, [
   "Luiz Inácio Lula da Silva"
 ]
 
+# The inference worker: DeepSeek via DeepInfra's OpenAI-compatible endpoint. The
+# api_key comes from the environment (runtime.exs); tests swap Req for a Req.Test plug
+# so the network never enters the suite.
+config :wekui, :worker_client, Wekui.Clients.Worker.Live
+
+config :wekui, :deepinfra,
+  base_url: "https://api.deepinfra.com/v1/openai",
+  model: "deepseek-ai/DeepSeek-V4-Flash",
+  receive_timeout: 180_000
+
 # SQLite pragmas shared across all environments (dev/test/runtime.exs only add
 # :database and :pool_size). WAL allows concurrent readers during a write,
 # NORMAL synchronous relies on WAL for durability instead of fsync-per-commit,

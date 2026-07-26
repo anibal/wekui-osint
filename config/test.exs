@@ -33,3 +33,8 @@ config :phoenix, :plug_init_mode, :runtime
 # Enable helpful, but potentially expensive runtime checks
 config :phoenix_live_view,
   enable_expensive_runtime_checks: true
+
+# The inference worker never touches the network in the suite — Req.Test intercepts.
+config :wekui, :deepinfra,
+  api_key: "test-key",
+  req_options: [plug: {Req.Test, Wekui.Clients.Worker.Live}]

@@ -20,6 +20,12 @@ if System.get_env("PHX_SERVER") do
   config :wekui, WekuiWeb.Endpoint, server: true
 end
 
+# The inference worker's key, in every environment. Absent key = the worker reports
+# a state gate rather than touching the network.
+if deepinfra_key = System.get_env("DEEPINFRA_API_KEY") do
+  config :wekui, :deepinfra, api_key: deepinfra_key
+end
+
 if config_env() == :prod do
   database_path =
     System.get_env("DATABASE_PATH") ||
