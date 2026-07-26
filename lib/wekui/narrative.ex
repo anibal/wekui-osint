@@ -38,5 +38,11 @@ defmodule Wekui.Narrative do
       define :approve_person, action: :approve
       define :withhold_person, action: :withhold
     end
+
+    resource Wekui.Narrative.ClaimPerson do
+      define :link_person, action: :link
+      define :list_claim_persons, action: :by_claim, args: [:claim_id]
+      define :person_arc, action: :by_person, args: [:person_id]
+    end
   end
 end

@@ -81,6 +81,7 @@ defmodule Wekui.Narrative.Claim do
         :kind,
         :subject,
         :magnitude,
+        :place_mention,
         :status,
         :nuance,
         :first_seen_at,
@@ -149,6 +150,11 @@ defmodule Wekui.Narrative.Claim do
 
     attribute :magnitude, :map do
       description "How much, when the evidence carries a number — hours trapped, a death toll. Absent otherwise."
+      public? true
+    end
+
+    attribute :place_mention, :string do
+      description "The place as a post named it, before it is matched to the gazetteer — a holding value until a Place is resolved and set on place_id."
       public? true
     end
 
