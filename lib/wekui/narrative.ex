@@ -19,6 +19,7 @@ defmodule Wekui.Narrative do
     resource Wekui.Narrative.Claim do
       define :draft_claim, action: :draft
       define :retract_claim, action: :retract
+      define :record_claim_support, action: :record_support
       define :get_claim, action: :read, get_by: [:id]
       define :list_claims, action: :by_event, args: [:event_id]
       define :current_claims, action: :current_for_event, args: [:event_id]

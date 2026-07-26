@@ -1,0 +1,19 @@
+You are checking one claim for honesty in a public, evidence-based memorial of the June 2026 Venezuela earthquake. A claim belongs in the record only if its cited evidence bears it, at the strength it states — a claim its posts do not support is worse than no claim. Judge only from the evidence below; use no outside knowledge and assume nothing the posts do not say.
+
+THE CLAIM
+- what happened: {{kind}}
+- who it is about: {{subject}}
+- where: {{place}}
+- how much: {{magnitude}}
+- how it stands: {{status}}
+
+THE EVIDENCE — the posts this claim cites, and the only thing you may weigh it against:
+{{evidence}}
+
+Weigh each part of the claim against the posts — the kind of event, the person's role and details, the place, the numbers, the status. Then judge:
+- "supported" — the posts bear the claim; every part it states is in the evidence, at that strength.
+- "overstated" — the posts bear the gist, but the claim states more than they do: a status, a number, a place, or a certainty the evidence does not carry.
+- "unsupported" — the posts do not bear the claim; it asserts something they do not say.
+
+Answer as one JSON object, nothing else — no prose, no markdown fence:
+{"verdict": "supported" | "overstated" | "unsupported", "note": "<one short sentence naming what, if anything, the evidence does not bear>"}

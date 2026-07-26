@@ -27,7 +27,7 @@ posts) · **unit** (test suite) · — (not yet). Confidence: H / M / L.
 | **Extraction pipeline** (posts → claims) | ✅ | **live** | H | best-effort per claim (not transactional); no Run receipt | Run receipt later |
 | DeepSeek worker client | ✅ | unit | H | single-shot, no retry (caller owns) | retry/backoff when at scale |
 | **Place mapping** (place_mention → gazetteer) | ○ | — | — | claims hold place *text*, not place_id → tree rollup / place filter don't work on extracted claims yet | Tavily + Nominatim + human-gated propose-place |
-| **Support gate** (entailment: do the posts bear the claim?) | ○ | — | — | **the biggest honesty gap** — citation *presence* is checked, *entailment* is not | LLM-judge per claim + human confirm |
+| **Support gate** (entailment: do the posts bear the claim?) | ✅ | **live** | M | flag-only (records a verdict, withholds nothing); judge prompt is an un-iterated v1 (answers in English); no console services verdicts | iterate the judge prompt; wire into the review flow |
 | **Beat rendering** (claims → the story a reader reads) | ○ | — | — | no reader-facing output yet | render from claims, anaphora, no LLM-over-LLM |
 | **Sage agent** (orchestration, HITL, tools) | ○ | — | — | deps installed, nothing wired; the "product" surface | wrap pipeline steps as tools + HITL gates |
 | Live acquisition (X collection, spend-gated) | ○ | — | — | pilot runs on a seeded corpus; no live spend yet | the runner + X client, gated |
@@ -46,7 +46,7 @@ today, and the metric or gate that will measure it going forward.
 | Dimension | Measures | Evidence today | The measure / gate | Conf |
 |---|---|---|---|---|
 | **Dignity & safety** | no private name shown; minors; public figures; human gate | live: 0 leaks, minors held, all pending-review — and the subject is now **mechanically** name-free (strict gate), not reliant on v5 | strict `NoPrivateName` on subject + `names[]==[]` for minors | **H** |
-| **Honesty (support)** | the claim's assertion is *entailed* by its cited posts | grounded + subset-gated, but entailment **unverified** | the **support gate** (LLM-judge) — not built | **L** |
+| **Honesty (support)** | the claim's assertion is *entailed* by its cited posts | **live: verify passed all 9 real claims and caught a deliberately-overstated control** | the **support gate** (LLM-judge) — built, flag-only; v1 prompt un-iterated | **M** |
 | **Recall** | the real happenings are captured | live: caught deaths + a hidden collapse; noise dropped | precision/recall vs Cronista's hand-verified set | **n/m** |
 | **Precision** | no fabricated or noise "happenings" | live: real-estate dropped; analysis self-labels low-conf | confidence filter + human review; false-claim rate | **n/m** |
 | **One claim per happening** | no duplication across posts/batches/scopes | live: within-batch dedup works (Aaron 2→1) | merge-judge eval: OPP-25→1, 981 missing-women→distinct, Hotel Eduard's→guard over-merge | **n/m** |
@@ -62,11 +62,11 @@ these three into numbers against Cronista's hand-verified record is itself a tas
 
 ## C. Top risks & unknowns
 
-1. **Honesty is not yet gated at the claim level.** Extraction is evidence-*grounded* (cites
-   real posts, subset-checked) but nothing verifies the claim's assertion is *entailed* by
-   them — the exact failure the teardown was about, one layer up. **The support gate is the
-   single most important missing piece.** Until it ships, a confident-but-unsupported claim
-   can pass.
+1. **Honesty is now checked, not yet enforced.** The support gate is **built and live-proven**
+   — it verified all 9 real claims and caught a deliberately-overstated control. But it is
+   **flag-only** (records a verdict, withholds nothing), its judge prompt is a first draft
+   (un-iterated, and it answers in English), and nothing services the flags yet. Enforcement
+   needs the review console + a publish path that keys off `support == :supported`.
 2. **The dignity gate hole — CLOSED (2026-07-26).** The subject field is now **strict**:
    `NoPrivateName` rejects any person name there, including an allowlisted public figure (the
    Montero shape), so dignity is mechanically gated rather than resting on the model behaving.
@@ -92,10 +92,10 @@ these three into numbers against Cronista's hand-verified record is itself a tas
 
 Roughly in order, what stands between here and a shippable, donation-facing Caraballeda story:
 
-1. **Support gate + human-review console, together.** The gate produces *flags a human must
-   adjudicate*, and the person gate already makes `pending_review` rows nobody can act on. Two
-   gates with nothing to service them is a queue, not a safeguard — so the support gate ships
-   **flag-only (nothing publishes)** and the review console lands beside it.
+1. **Human-review console** — the support gate is now built (flag-only) and the person gate
+   makes `pending_review` rows; both are queues nothing services. The console makes them
+   operable (approve people, confirm handles, adjudicate support verdicts), and the publish
+   path keys off `support == :supported` + person `approved`.
 2. **Place mapping** — so claims live in the gazetteer tree and filter to Caraballeda.
 3. **Merge-judge** — so one happening is one claim across the whole corpus.
 4. **Beat rendering** — claims → the multi-granularity story a reader meets.

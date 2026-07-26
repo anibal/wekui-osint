@@ -111,6 +111,11 @@ defmodule Wekui.Narrative.Claim do
       change Retract
     end
 
+    update :record_support do
+      description "Records the support pass's verdict on whether the cited evidence bears the claim."
+      accept [:support, :support_note]
+    end
+
     update :link_successor do
       description "Internal: points a just-closed claim at the canonical it was folded into (merge)."
       accept []
@@ -180,6 +185,19 @@ defmodule Wekui.Narrative.Claim do
       description "How sure an agent is, 0 to 1. Absent for a person's claim."
       public? true
       constraints min: 0.0, max: 1.0
+    end
+
+    attribute :support, :atom do
+      description "Whether the cited evidence bears the claim: unverified until a support pass judges it, then supported, overstated, or unsupported. Citation presence is not support."
+      allow_nil? false
+      public? true
+      default :unverified
+      constraints one_of: [:unverified, :supported, :overstated, :unsupported]
+    end
+
+    attribute :support_note, :string do
+      description "The support pass's one-line reason — what, if anything, the evidence does not bear."
+      public? true
     end
 
     attribute :superseded_at, :utc_datetime_usec do
