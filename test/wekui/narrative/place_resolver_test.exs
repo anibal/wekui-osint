@@ -1,0 +1,158 @@
+defmodule Wekui.Narrative.PlaceResolverTest do
+  use Wekui.DataCase, async: false
+
+  import Wekui.Fixtures
+
+  alias Wekui.Core
+  alias Wekui.Narrative
+  alias Wekui.Narrative.PlaceResolver
+  alias Wekui.Normalize
+
+  require Ash.Query
+
+  # A small Caraballeda tree, plus a second "Los Cocos" in another parroquia so the
+  # generic name has to be disambiguated by its ancestors.
+  setup do
+    event = event!()
+    agent = agent!(event)
+    post = post!(event)
+
+    caraballeda = place!(event, %{canonical_name: "Caraballeda", type: "parroquia"})
+
+    tanaguarena =
+      place!(event, %{canonical_name: "Tanaguarena", type: "sector", parent_id: caraballeda.id})
+
+    opp25 =
+      place!(event, %{canonical_name: "OPP 25", type: "edificio", parent_id: tanaguarena.id})
+
+    caribe =
+      place!(event, %{
+        canonical_name: "Residencias Caribe",
+        type: "edificio",
+        parent_id: caraballeda.id
+      })
+
+    los_cocos =
+      place!(event, %{canonical_name: "Los Cocos", type: "sector", parent_id: caraballeda.id})
+
+    maiquetia = place!(event, %{canonical_name: "Maiquetía", type: "parroquia"})
+
+    _other_cocos =
+      place!(event, %{canonical_name: "Los Cocos", type: "sector", parent_id: maiquetia.id})
+
+    %{
+      event: event,
+      agent: agent,
+      post: post,
+      caraballeda: caraballeda,
+      tanaguarena: tanaguarena,
+      opp25: opp25,
+      caribe: caribe,
+      los_cocos: los_cocos
+    }
+  end
+
+  defp resolve!(ctx, mention) do
+    claim =
+      Narrative.draft_claim!(%{
+        event_id: ctx.event.id,
+        kind: "colapso",
+        first_seen_at: ~U[2026-06-25 04:00:00.000000Z],
+        place_mention: mention,
+        actor_id: ctx.agent.id,
+        confidence: 0.8
+      })
+
+    {:ok, summary} = PlaceResolver.resolve(claim, actor_id: ctx.agent.id, post_id: ctx.post.id)
+    {claim, summary}
+  end
+
+  defp links(claim), do: Narrative.list_claim_places!(claim.id)
+
+  describe "matching against the gazetteer" do
+    test "a full hierarchy resolves to the finest existing place — the building", ctx do
+      {claim, summary} =
+        resolve!(ctx, "edificio OPP 25, sector Tanaguarena, parroquia Caraballeda")
+
+      assert summary.linked == 1
+      assert [link] = links(claim)
+      assert link.place_id == ctx.opp25.id
+      assert link.how_resolved == :mention_exact
+    end
+
+    test "a coarse mention resolves to the parroquia", ctx do
+      {claim, _} = resolve!(ctx, "Caraballeda")
+      assert [link] = links(claim)
+      assert link.place_id == ctx.caraballeda.id
+    end
+
+    test "a fuzzy mention still reaches its place", ctx do
+      {claim, _} = resolve!(ctx, "Residencia Caribe, Caraballeda")
+      assert [link] = links(claim)
+      assert link.place_id == ctx.caribe.id
+      assert link.how_resolved == :mention_fuzzy
+    end
+
+    test "a generic name is disambiguated by its ancestors", ctx do
+      {claim, _} = resolve!(ctx, "Los Cocos, Caraballeda")
+      assert [link] = links(claim)
+      assert link.place_id == ctx.los_cocos.id
+      assert link.how_resolved == :mention_exact
+    end
+
+    test "a claim can resolve to several sibling places at once", ctx do
+      {claim, summary} = resolve!(ctx, "Tanaguarena y Los Cocos, Caraballeda")
+
+      assert summary.linked == 2
+
+      assert claim |> links() |> Enum.map(& &1.place_id) |> Enum.sort() ==
+               Enum.sort([ctx.tanaguarena.id, ctx.los_cocos.id])
+    end
+  end
+
+  describe "proposing what the tree does not yet have" do
+    test "a finer place absent from the tree is proposed under its matched ancestor", ctx do
+      {claim, summary} = resolve!(ctx, "edificio Roca Park, Tanaguarena")
+
+      assert summary.proposed == 1
+      assert [link] = links(claim)
+      assert link.how_resolved == :mention_ancestor
+
+      proposed = Ash.get!(Core.Place, link.place_id, authorize?: false)
+      assert Normalize.fold(proposed.canonical_name) == "roca park"
+      assert proposed.type == "edificio"
+      assert proposed.parent_id == ctx.tanaguarena.id
+      # Born :proposed — it must NOT be active (so it cannot widen the F54 gate).
+      assert proposed.lifecycle == :proposed
+      assert proposed.proposed_from_post_id == ctx.post.id
+    end
+
+    test "the same not-yet-in-tree building is proposed once, not duplicated", ctx do
+      {_c1, _} = resolve!(ctx, "edificio Roca Park, Tanaguarena")
+      {_c2, _} = resolve!(ctx, "edificio Roca Park, Tanaguarena")
+
+      roca =
+        Core.Place
+        |> Ash.Query.filter(event_id == ^ctx.event.id)
+        |> Ash.read!(authorize?: false)
+        |> Enum.filter(&(Normalize.fold(&1.canonical_name) == "roca park"))
+
+      assert length(roca) == 1
+    end
+  end
+
+  describe "when nothing resolves" do
+    test "a name that matches nothing at any level is left unresolved — no link, no guess", ctx do
+      {claim, summary} = resolve!(ctx, "Edificio Fantasma")
+
+      assert links(claim) == []
+      assert summary.unresolved == ["Edificio Fantasma"]
+    end
+
+    test "a blank mention resolves to nothing — the claim is event-wide", ctx do
+      {claim, summary} = resolve!(ctx, nil)
+      assert links(claim) == []
+      assert summary == %{mentions: 0, linked: 0, proposed: 0, unresolved: []}
+    end
+  end
+end

@@ -132,17 +132,24 @@ defmodule Wekui.Narrative.PrivateNames do
   form in place_names — folded. A subject may name these (a building is a place, not a
   person); reading only canonicals would blind the gate to the alias vocabulary the
   posts actually use.
+
+  Only `:active` Places count. A Place is born `:proposed` — including the ones the
+  place resolver reads out of post text — and a proposal must never widen the gate
+  before a human promotes it: otherwise the extractor could explain away a private
+  name simply by inventing a Place for it (a building colloquially named for a family
+  is the exact shape). Promotion to `:active` is the human step that lets a name
+  through. Same posture as the F54 subject strictness — over-flag until a human clears.
   """
   def gazetteer_names(event_id) do
     canonical =
       Place
-      |> Ash.Query.filter(event_id == ^event_id)
+      |> Ash.Query.filter(event_id == ^event_id and lifecycle == :active)
       |> Ash.read!(authorize?: false)
       |> Enum.map(& &1.canonical_name)
 
     surface =
       PlaceName
-      |> Ash.Query.filter(place.event_id == ^event_id)
+      |> Ash.Query.filter(place.event_id == ^event_id and place.lifecycle == :active)
       |> Ash.read!(authorize?: false)
       |> Enum.map(& &1.name)
 

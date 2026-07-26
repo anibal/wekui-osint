@@ -8,9 +8,10 @@ defmodule Wekui.Narrative do
 
   Claim sits a layer above the Judgment cluster and reuses its spine — append-only,
   superseding, provenance, the agent's confidence — so it is not a new kind of
-  judgment. This module holds the Claim record and its evidence (ClaimCitation).
-  Beat, the merge that keeps one claim per happening, the person gate, and the
-  support gate arrive as their own sub-concepts.
+  judgment. This module holds the Claim record, its evidence (ClaimCitation), the
+  people it is about (Person, ClaimPerson) and the gazetteer places it resolved to
+  (ClaimPlace) — a claim may span several posts, people and places at once. Beat and
+  the merge that keeps one claim per happening arrive as their own sub-concepts.
   """
 
   use Ash.Domain, otp_app: :wekui
@@ -44,6 +45,12 @@ defmodule Wekui.Narrative do
       define :link_person, action: :link
       define :list_claim_persons, action: :by_claim, args: [:claim_id]
       define :person_arc, action: :by_person, args: [:person_id]
+    end
+
+    resource Wekui.Narrative.ClaimPlace do
+      define :link_place, action: :link
+      define :list_claim_places, action: :by_claim, args: [:claim_id]
+      define :claims_at_place, action: :by_place, args: [:place_id]
     end
   end
 end

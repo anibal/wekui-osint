@@ -3,8 +3,9 @@ defmodule Wekui.Pipelines.Extract do
   The claim-extraction pipeline: a batch of accepted [[post]]s (a place × window) in,
   structured [[claim]]s out. It renders the extractor Actor(agent)'s pinned prompt for
   the batch, calls the inference `Wekui.Clients.Worker`, parses the claims JSON, and
-  writes each claim with its evidence and the [[person]]s it names — the agent authors
-  every claim, and the person red line gates every write.
+  writes each claim with its evidence, the [[person]]s it names, and the gazetteer
+  [[place]]s its `place_mention` resolves to (`Wekui.Narrative.PlaceResolver`) — the
+  agent authors every claim, and the person red line gates every write.
 
   Posts are cited by their `x_id` (the id shown to the model); a claim that cites
   nothing in the batch, or whose subject slips a private name past the gate, is skipped
@@ -13,6 +14,7 @@ defmodule Wekui.Pipelines.Extract do
 
   alias Wekui.Clients.Worker
   alias Wekui.Narrative
+  alias Wekui.Narrative.PlaceResolver
 
   @doc """
   Extracts claims from `posts` (a batch of Posts) using `agent` (the extractor,
@@ -98,6 +100,7 @@ defmodule Wekui.Pipelines.Extract do
           {:ok, drafted} ->
             Enum.each(posts, &Narrative.cite_post!(%{claim_id: drafted.id, post_id: &1.id}))
             link_persons(event, drafted, claim["names"] || [])
+            PlaceResolver.resolve(drafted, actor_id: agent.id, post_id: first.id)
             {:ok, drafted}
 
           {:error, error} ->

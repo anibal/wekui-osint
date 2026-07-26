@@ -8,7 +8,6 @@ defmodule Wekui.Narrative.ClaimPersonTest do
   setup do
     event = event!()
     agent = agent!(event)
-    place = place!(event)
 
     draft = fn attrs ->
       Narrative.draft_claim!(
@@ -18,7 +17,6 @@ defmodule Wekui.Narrative.ClaimPersonTest do
             kind: "rescate",
             subject: "un hombre",
             first_seen_at: ~U[2026-06-25 04:00:00.000000Z],
-            place_id: place.id,
             actor_id: agent.id,
             confidence: 0.9
           },
@@ -81,9 +79,8 @@ defmodule Wekui.Narrative.ClaimPersonTest do
              Narrative.link_person(%{claim_id: c.id, person_id: stranger.id})
   end
 
-  test "place_mention is held on the claim until the gazetteer resolves it", %{draft: draft} do
+  test "place_mention is held on the claim as the raw text the resolver reads", %{draft: draft} do
     c = draft.(%{place_mention: "edificio OPP 25, Tanaguarena"})
     assert c.place_mention == "edificio OPP 25, Tanaguarena"
-    assert c.place_id != nil
   end
 end

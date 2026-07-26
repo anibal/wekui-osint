@@ -26,7 +26,6 @@ defmodule Wekui.Narrative.MergeTest do
           kind: "rescate",
           subject: "un hombre de 21 años",
           first_seen_at: first_seen_at,
-          place_id: ctx.place.id,
           actor_id: ctx.agent.id,
           confidence: 0.9
         },
@@ -74,6 +73,48 @@ defmodule Wekui.Narrative.MergeTest do
         |> Enum.sort()
 
       assert post_ids == Enum.sort([ctx.p1.id, ctx.p2.id])
+    end
+
+    test "the canonical absorbs the duplicate's place links, deduped, canonical winning ties",
+         ctx do
+      early = claim!(ctx, ~U[2026-06-25 02:00:00.000000Z])
+      late = claim!(ctx, ~U[2026-06-25 04:00:00.000000Z])
+      other = place!(ctx.event, %{canonical_name: "Tanaguarena", type: "sector"})
+
+      # Both name place A; only the duplicate also names place B. The canonical
+      # resolved A exactly; the duplicate resolved A weakly.
+      Narrative.link_place!(%{
+        claim_id: early.id,
+        place_id: ctx.place.id,
+        how_resolved: :mention_exact,
+        confidence: 0.9
+      })
+
+      Narrative.link_place!(%{
+        claim_id: late.id,
+        place_id: ctx.place.id,
+        how_resolved: :mention_fuzzy,
+        confidence: 0.4
+      })
+
+      Narrative.link_place!(%{
+        claim_id: late.id,
+        place_id: other.id,
+        how_resolved: :mention_exact,
+        confidence: 0.9
+      })
+
+      {:ok, canonical} = Merge.merge(early, late)
+      links = Narrative.list_claim_places!(canonical.id)
+
+      assert links |> Enum.map(& &1.place_id) |> Enum.sort() ==
+               Enum.sort([ctx.place.id, other.id])
+
+      # The canonical kept its own exact resolution of the shared place, not the
+      # duplicate's weaker one.
+      shared = Enum.find(links, &(&1.place_id == ctx.place.id))
+      assert shared.how_resolved == :mention_exact
+      assert shared.confidence == 0.9
     end
   end
 

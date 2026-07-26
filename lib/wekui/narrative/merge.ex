@@ -3,8 +3,8 @@ defmodule Wekui.Narrative.Merge do
   Folding two accounts of one happening into a single Claim (`docs/pages/claim.md`).
   When a merge finds that two claims describe the same state-change, this keeps
   ONE: the CANONICAL — the earliest occurrence, since a happening lives at its
-  first evidence — survives and absorbs the other's citations; the duplicate is
-  closed and linked to it. "First occurrence owns the fact."
+  first evidence — survives and absorbs the other's citations and place links; the
+  duplicate is closed and linked to it. "First occurrence owns the fact."
 
   WHICH two claims are the same happening is the merge judge's call — it turns on
   the specificity rule (a specific subject/magnitude carries identity across noisy
@@ -76,6 +76,24 @@ defmodule Wekui.Narrative.Merge do
       |> Narrative.list_claim_citations!()
       |> Enum.each(fn citation ->
         Narrative.cite_post!(%{claim_id: canonical.id, post_id: citation.post_id})
+      end)
+
+      # Absorb the duplicate's place links too — a merged happening keeps every place
+      # either account placed it at. Keep the canonical's own resolution for a place
+      # both named (a ClaimPlace upsert would otherwise overwrite it); add only the
+      # places the canonical lacks. The union, canonical winning ties.
+      held = canonical.id |> Narrative.list_claim_places!() |> MapSet.new(& &1.place_id)
+
+      duplicate.id
+      |> Narrative.list_claim_places!()
+      |> Enum.reject(&MapSet.member?(held, &1.place_id))
+      |> Enum.each(fn link ->
+        Narrative.link_place!(%{
+          claim_id: canonical.id,
+          place_id: link.place_id,
+          how_resolved: link.how_resolved,
+          confidence: link.confidence
+        })
       end)
 
       Narrative.get_claim!(canonical.id)

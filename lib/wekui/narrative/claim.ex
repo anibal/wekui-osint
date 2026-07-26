@@ -17,9 +17,10 @@ defmodule Wekui.Narrative.Claim do
 
   A Claim is structured: `kind` (the state-change type — vocabulary still to
   settle, so a plain string for now), `subject` (whom it concerns, by role and
-  attribute — never a private name), `place` (the most specific Place, or nil =
-  event-wide), `first_seen_at` (when first evidenced), `magnitude`, `status`. The
-  Spanish a reader sees is a Beat rendered from these, never stored here.
+  attribute — never a private name), `first_seen_at` (when first evidenced),
+  `magnitude`, `status`. Its Places are `ClaimPlace` links resolved from
+  `place_mention` (a claim can span several — adjacent buildings or zones); no place
+  is event-wide. The Spanish a reader sees is a Beat rendered from these, never stored here.
 
   The person red line is gated on the write path (F54): `draft` refuses a
   `subject` or `nuance` that names a private individual, checked mechanically by
@@ -46,7 +47,6 @@ defmodule Wekui.Narrative.Claim do
     repo Wekui.Repo
 
     custom_indexes do
-      index [:place_id]
       index [:actor_id]
 
       # A Claim has NO partial-unique slot: its identity is the happening, decided
@@ -57,7 +57,6 @@ defmodule Wekui.Narrative.Claim do
 
     references do
       reference :event, on_delete: :restrict
-      reference :place, on_delete: :restrict
       reference :actor, on_delete: :restrict
       reference :superseded_by, on_delete: :restrict
     end
@@ -85,15 +84,14 @@ defmodule Wekui.Narrative.Claim do
         :status,
         :nuance,
         :first_seen_at,
-        :place_id,
         :actor_id,
         :confidence
       ]
 
-      # Place (when given) and Actor must belong to the Claim's Event; a nil Place
-      # is event-wide and passes. Confidence is required for an agent, absent for a
-      # person.
-      validate {Reference, resource: Wekui.Core.Place, attribute: :place_id}
+      # Actor must belong to the Claim's Event. The claim's Places are resolved
+      # separately into ClaimPlace links (a claim can span several), not set here;
+      # `place_mention` holds the raw text until then. Confidence is required for an
+      # agent, absent for a person.
       validate {Reference, resource: Wekui.Core.Actor, attribute: :actor_id}
       validate Provenance
 
@@ -161,7 +159,7 @@ defmodule Wekui.Narrative.Claim do
     end
 
     attribute :place_mention, :string do
-      description "The place as a post named it, before it is matched to the gazetteer — a holding value until a Place is resolved and set on place_id."
+      description "The place(s) as the posts named them, before matching to the gazetteer — the raw text the resolver reads. The matched Places are ClaimPlace links, not this field."
       public? true
     end
 
@@ -211,11 +209,6 @@ defmodule Wekui.Narrative.Claim do
   relationships do
     belongs_to :event, Wekui.Core.Event do
       allow_nil? false
-      public? true
-    end
-
-    belongs_to :place, Wekui.Core.Place do
-      description "The most specific Place the evidence supports, or nil = event-wide. A coarser Place's claims are read by asking the Place tree."
       public? true
     end
 

@@ -10,7 +10,6 @@ defmodule Wekui.Narrative.ClaimTest do
 
     %{
       event: event,
-      place: place!(event),
       agent: agent!(event),
       post: post!(event)
     }
@@ -23,7 +22,6 @@ defmodule Wekui.Narrative.ClaimTest do
         kind: "rescate",
         subject: "un hombre de 21 años",
         first_seen_at: ~U[2026-06-25 04:00:00.000000Z],
-        place_id: ctx.place.id,
         actor_id: ctx.agent.id,
         confidence: 0.9
       },
@@ -43,7 +41,6 @@ defmodule Wekui.Narrative.ClaimTest do
       assert c.subject == "un hombre de 21 años"
       assert c.magnitude == %{"hours" => 106}
       assert c.status == "rescatado"
-      assert c.place_id == ctx.place.id
       assert c.actor_id == ctx.agent.id
       assert c.confidence == 0.9
       assert c.first_seen_at == ~U[2026-06-25 04:00:00.000000Z]
@@ -62,25 +59,13 @@ defmodule Wekui.Narrative.ClaimTest do
                Narrative.draft_claim(Map.delete(claim_attrs(ctx), :confidence))
     end
 
-    test "a nil Place is accepted — the claim is event-wide", ctx do
-      c = draft!(ctx, %{place_id: nil})
-      assert c.place_id == nil
-    end
-
-    test "any-lifecycle Place is a valid target (a proposed Place is allowed)", ctx do
-      proposed = place!(ctx.event, %{lifecycle: :proposed})
-      assert %{place_id: id} = draft!(ctx, %{place_id: proposed.id})
-      assert id == proposed.id
-    end
+    # A claim's Places are ClaimPlace links resolved from place_mention, not an
+    # attribute set at draft time — see Wekui.Narrative.ClaimPlaceTest.
   end
 
   describe "a claim's references must belong to its Event" do
     setup do
       %{other: event!()}
-    end
-
-    test "rejects a Place from another Event", ctx do
-      assert {:error, %Ash.Error.Invalid{}} = draft(ctx, %{place_id: place!(ctx.other).id})
     end
 
     test "rejects an Actor from another Event", ctx do
