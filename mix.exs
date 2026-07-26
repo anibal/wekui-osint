@@ -67,10 +67,10 @@ defmodule Wekui.MixProject do
        depth: 1},
       {:swoosh, "~> 1.16"},
       {:req, "~> 0.5"},
-      # The in-app research agent runtime (Sage over Elixir LangChain). Sage
-      # provides the interactive agent loop, HITL approval gates, subagents and
-      # LiveView streaming; LangChain the model calls and structured output.
-      {:sagents, "~> 0.9"},
+      # The pipeline runs on Reactor (an Ash dependency, already present) — see
+      # docs/pages/decision-2026-07-26-reactor-not-sagents.md. LangChain is kept
+      # for the later talking-agent rung: its OpenAI-compatible ChatModel takes a
+      # full-URL endpoint, which is what a DeepInfra-backed agent loop needs.
       {:langchain, "~> 0.9"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
