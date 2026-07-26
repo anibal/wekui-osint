@@ -53,6 +53,7 @@ config :wekui,
   ecto_repos: [Wekui.Repo],
   generators: [timestamp_type: :utc_datetime],
   ash_domains: [
+    Wekui.Pipelines,
     Wekui.Narrative,
     Wekui.Judgment,
     Wekui.Acquisition,
