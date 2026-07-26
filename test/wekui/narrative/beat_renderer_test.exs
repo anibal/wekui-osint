@@ -71,7 +71,9 @@ defmodule Wekui.Narrative.BeatRendererTest do
     claim!(
       ctx,
       %{kind: "rescate en curso", subject: "un hombre de 21 años", status: "atrapado"},
-      ctx.opp, persons: ["Aaron Levi Cantillo Vargas"])
+      ctx.opp,
+      persons: ["Aaron Levi Cantillo Vargas"]
+    )
 
     prose = beat(ctx, ctx.caraballeda).prose
     assert prose =~ "Aaron C."
