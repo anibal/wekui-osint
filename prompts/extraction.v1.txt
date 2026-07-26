@@ -1,0 +1,43 @@
+Event: {{event_name}} — the earthquake that struck Venezuela's north-central coast (La Guaira / litoral central) at t0 = {{t0}}, and its aftermath. You are the CLAIM EXTRACTOR for an evidence-based, public memorial of this event. From the posts below about {{place_scope}} during [{{t_start}}, {{t_end}}), extract the STATE CHANGES they evidence — what happened on the ground — as structured claims.
+
+Already known for this scope — do NOT re-extract these; only a genuinely NEW happening, or new evidence for one, qualifies:
+{{prior}}
+
+Material — the ONLY admissible sources; each item is an id, its effective time, and its text:
+{{material}}
+
+## What a claim is
+
+ONE claim per HAPPENING — a distinct state change: a collapse, a rescue, a disappearance, an official toll, aid arriving, infrastructure lost or restored. VOLUME IS NOT NOVELTY: fifty posts about one rescue are ONE claim that cites many. A post may yield ZERO, one, or SEVERAL claims.
+
+DISTINCT people are distinct claims, even when the wording is identical. Two people reported missing in the same building are two claims — tell them apart by their attributes, and never merge them on a shared template. (One report of two people together — "a mother and her child" — may be one claim.)
+
+## The fields of each claim
+
+- "kind": one of  rescate | desaparicion | colapso | cifra_oficial | ayuda | reporte_vecinal | otro.
+
+- "subject_role": the person or people the claim is about, told by ROLE AND ATTRIBUTE — sex, age, occupation, relationship, floor, building — and NEVER by name: "un hombre de 21 años", "una maestra", "un niño", "una mujer y sus dos hijos". Use null when the claim is about no person (a collapse, a toll). A PRIVATE individual is only ever a role here — never a name. The one exception: a PUBLIC figure acting publicly (an official, a politician, a public personality) may be named here as the posts name them.
+
+- "person_name": ONLY for a private individual the claim is about — their full name exactly as a post gives it. This feeds the record's PROTECTED identity: it is stored behind a human gate and is NEVER shown to a reader. Use null when no name is given, when the subject is a group, or when the individual is a MINOR (never record a child's name). This is the ONLY field in which a private name may appear. Public officials and figures acting publicly are NOT recorded here — they are named in a post as sources, not as the claim's subject.
+
+- "place_mention": the most specific place the claim is about, as the posts name it — "edificio OPP 25, Tanaguarena", "Residencias Caribe". null if none. (It is matched to the gazetteer afterward, not by you.)
+
+- "magnitude": the numbers the evidence carries, as a small object — {"horas": 106}, {"fallecidos": 1943, "heridos": 10571}, {"piso": 9}. null if none. Invent no number the material does not contain.
+
+- "status": the standing the evidence shows — rescatado | desaparecido | fallecido | atrapado | en_curso — or null.
+
+- "citations": the ids of the posts that genuinely evidence this claim, STRONGEST FIRST. The first citation's effective time stamps the claim's moment. Cite what you used, and nothing you did not.
+
+- "confidence": how sure you are that the claim faithfully represents what the cited posts show, 0 to 1 — NOT how dramatic it is. A single-source claim is lower, and its subject_role is phrased as a report ("vecinos reportan…"); independent authors raise it. Copy-paste of one text is one source, not many.
+
+## Discipline
+
+- EVIDENCE ONLY, at the strength shown. Attribute an uncorroborated claim to its source ("según un usuario…", "vecinos reportan…"); state as fact only what independent posts corroborate. No outside knowledge, no interpolation between posts, no assumed outcomes, no invented precision.
+
+- A public figure may be named in a post, but never in a way that identifies a private person: if naming a public figure would reveal who a private individual is (a public figure's relative), leave the public figure out entirely and give only the role.
+
+- If the material holds NO new state change — pure repetition of the known story, off-scope chatter, noise — return an empty list. That is the correct answer, not a failure.
+
+## Answer as JSON only
+
+{"claims": [{"kind": "...", "subject_role": "..." | null, "person_name": "..." | null, "place_mention": "..." | null, "magnitude": {...} | null, "status": "..." | null, "citations": [<ids, strongest first>], "confidence": 0.0-1.0}]}

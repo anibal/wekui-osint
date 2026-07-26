@@ -1,0 +1,30 @@
+You are helping build a public, evidence-based memorial of the June 2026 earthquake that struck Venezuela's north-central coast (La Guaira / litoral central) at t0 = {{t0}}. Its worth is that people can connect with what truly happened. Read these public X posts about {{place_scope}} during [{{t_start}}, {{t_end}}) and record the real happenings they evidence — the changes on the ground — as claims. Use your judgment; what follows are guiding principles, not a checklist.
+
+Already recorded for this scope — do not repeat these:
+{{prior}}
+
+The posts below are the ONLY thing you may draw on. Each is an id, its effective time, and its text. Every claim must come from them, and cite only their ids — never invent a post, a name, a place, a number, or an id:
+{{material}}
+
+WHAT IS A HAPPENING. A claim is one real change on the ground: someone trapped, rescued, missing, or found dead; a building or a bridge down; an official toll; aid arriving; a neighbour's plea for help. Weigh the material:
+- Many posts about the same happening are ONE claim that cites them all — volume is not novelty.
+- Different people or different events are different claims, even when the words are nearly identical — tell them apart by their specifics, and never merge them on a shared template.
+- A single post may carry several happenings, or none — a missing-person post that also says their building fell holds two.
+- Commentary, opinion, analysis, an appeal for prayers, a promotion — anything where nothing actually changed on the ground — is not a happening, and yields no claim. Silence is the honest answer.
+
+THE PEOPLE. This memorial is drawn from public posts and exists to connect people with real human stories, so we honour the people in them and protect their dignity. Describe the person a claim is about by their role and human detail — a man of 21, a teacher, a child, a mother and her two children — and record any name they are given SEPARATELY, in "names", which is held privately behind a human's decision and never shown as it stands. In the description a reader sees, there is no name: not the person's, not a relative's, and not a public figure invoked to point at them — "the father of pianist Gabriela Montero" identifies a private man, so write "a man". A child is only ever a role, never a name, even when a post names them. Public officials and organizations acting publicly — a president, a rescue brigade, a ministry — are the source that reports a happening, not the private person it is about, so they do not belong in the description or in "names".
+
+THE CLAIM. For each happening, give:
+- "kind" — what kind of change it is, named plainly in Spanish as it fits: un rescate, un colapso, un fallecimiento, una cifra oficial, ayuda que llega, una búsqueda, un saqueo… Say what it is; there is no fixed list.
+- "subject_role" — who it is about, by role and human detail, never a name; null when no person is involved (a collapse, a toll).
+- "names" — the full name(s) the posts give for the person the claim is about (not the sources who report it), as an array; empty when unnamed, a group without names, or a minor.
+- "place_mention" — the most specific place the post itself names for this happening, even if it is broader or narrower than {{place_scope}}; null if none.
+- "magnitude" — the numbers the evidence carries, as a small object (a toll, a floor). Hours someone has been trapped are the whole hours since t0. Invent no number the material does not contain.
+- "status" — how it stands now, in a word the text actually supports: atrapado, rescatado, desaparecido, fallecido, en curso, or null. Read it honestly — "labores de rescate… permanece atrapado" is atrapado; "rescate" names the effort, not the outcome.
+- "citations" — the ids that evidence it, the strongest and most direct first; the first stamps the claim's moment.
+- "confidence" — your honest sense (0 to 1) that the claim faithfully reflects what the evidence shows: higher when independent, direct, or official sources agree; low, and with the subject phrased as a report ("vecinos reportan…"), for a single uncertain plea. Reposts of one text are one source.
+
+Record only what the evidence shows, at its strength — no outside knowledge, no assumed outcomes, no invented detail. Cite only ids present in the material.
+
+Answer as one JSON object, nothing else — no prose, no markdown fence — with the Spanish values kept as written:
+{"claims": [{"kind": "...", "subject_role": "..."|null, "names": [...], "place_mention": "..."|null, "magnitude": {...}|null, "status": "..."|null, "citations": [...], "confidence": 0.0-1.0}]}
