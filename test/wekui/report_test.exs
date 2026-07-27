@@ -101,12 +101,51 @@ defmodule Wekui.ReportTest do
     place!(ctx.event, %{
       canonical_name: "Caribe Mar",
       type: "edificio",
-      parent_id: ctx.caribe.id
+      parent_id: ctx.caraballeda.id
     })
 
     claim!(ctx, %{place_mention: "Caribe"}, place: ctx.caribe, confidence: 0.5)
 
     assert Report.render(ctx.event) =~ "only 0.5 sure"
+  end
+
+  test "a look-alike BENEATH the linked place is no rival — the tree settles it", ctx do
+    # Linking the community when the posts named no tower is the correct coarser
+    # answer, and the tower is reachable the moment a post names it. Putting the
+    # tower where it belongs is what makes the question go away.
+    place!(ctx.event, %{
+      canonical_name: "Caribe Torre C",
+      type: "edificio",
+      parent_id: ctx.caribe.id
+    })
+
+    claim!(ctx, %{place_mention: "Caribe"}, place: ctx.caribe)
+
+    assert Report.render(ctx.event) =~ "Nothing. Every mention resolved"
+  end
+
+  test "asks the sharper question when two places carry the same name outright", ctx do
+    # The parroquia and the town inside it are both called Caraballeda: nothing in
+    # a bare mention can choose, so the look-alikes are noise beside this.
+    place!(ctx.event, %{
+      canonical_name: "Caraballeda",
+      type: "populated_place",
+      parent_id: ctx.caraballeda.id
+    })
+
+    place!(ctx.event, %{
+      canonical_name: "Caraballeda Humboldt",
+      type: "sector",
+      parent_id: ctx.caraballeda.id
+    })
+
+    claim!(ctx, %{place_mention: "Caraballeda"}, place: ctx.caraballeda, confidence: 0.5)
+
+    report = Report.render(ctx.event)
+
+    assert report =~ "Two places are called “caraballeda” — which one?"
+    assert report =~ "whether these are one place recorded twice"
+    refute report =~ "Caraballeda Humboldt"
   end
 
   test "asks about a mention that matched nothing — invisible to every beat", ctx do

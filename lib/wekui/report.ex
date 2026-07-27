@@ -34,6 +34,7 @@ defmodule Wekui.Report do
   alias Wekui.Narrative.PlaceResolver
   alias Wekui.Normalize
   alias Wekui.Pipelines
+  alias Wekui.Tree
 
   @low_confidence 0.7
 
@@ -145,9 +146,15 @@ defmodule Wekui.Report do
     |> Enum.flat_map(&mention_links/1)
     |> Enum.group_by(& &1.form, & &1)
     |> Enum.flat_map(fn {form, matches} ->
-      case others_beginning_with(form, world, hd(matches).place) do
-        [] -> []
-        others -> [ambiguity(form, matches, others)]
+      linked = hd(matches).place
+
+      # A true tie first — two places answering to the SAME name is a sharper
+      # question than a name that merely starts alike, and when one exists the
+      # look-alikes are noise beside it.
+      case rivals(form, world, linked) do
+        {:same_name, rivals} -> [same_name(form, matches, rivals)]
+        {:begins_alike, []} -> []
+        {:begins_alike, rivals} -> [ambiguity(form, matches, rivals)]
       end
     end)
     |> Enum.sort_by(&(-length(&1.claim_ids)))
@@ -168,13 +175,65 @@ defmodule Wekui.Report do
     end)
   end
 
-  defp others_beginning_with(form, world, linked) do
-    world.name_index
+  # Everything else in the gazetteer the posts could have meant. A place that
+  # lives BENEATH the one we linked to is not a rival: linking the community
+  # when the posts named no tower is the correct coarser answer, and the finer
+  # place is reachable the moment a post names it. The tree resolves that
+  # ambiguity structurally — so fixing the tree makes the question disappear,
+  # which is the point of a recursive model.
+  defp rivals(form, world, linked) do
+    candidates =
+      world.name_index
+      |> Enum.reject(fn {_folded, place} -> place.id == linked.id end)
+      |> Enum.uniq_by(fn {_folded, place} -> place.id end)
+
+    # A place of the SAME name is a rival wherever it sits — being nested does not
+    # help when the mention is word-for-word either one. Only a longer name is
+    # settled by the tree.
+    case Enum.filter(candidates, fn {folded, _place} -> folded == form end) do
+      [] -> {:begins_alike, begins_alike(form, candidates, linked)}
+      same -> {:same_name, Enum.map(same, fn {folded, place} -> named(folded, place) end)}
+    end
+  end
+
+  defp begins_alike(form, candidates, linked) do
+    beneath = MapSet.new(Tree.subtree_ids(Core.Place, linked.id))
+
+    candidates
     |> Enum.filter(fn {folded, place} ->
-      place.id != linked.id and folded != form and String.starts_with?(folded, form)
+      String.starts_with?(folded, form) and not MapSet.member?(beneath, place.id)
     end)
-    |> Enum.uniq_by(fn {_folded, place} -> place.id end)
-    |> Enum.map(fn {folded, place} -> %{name: folded, place: place} end)
+    |> Enum.map(fn {folded, place} -> named(folded, place) end)
+  end
+
+  defp named(folded, place), do: %{name: folded, place: place}
+
+  # Two places carry the same name outright — the resolver had nothing to choose
+  # by and picked one. Nothing about the mention can settle this; only a person
+  # who knows the ground can.
+  defp same_name(form, matches, rivals) do
+    linked = hd(matches).place
+
+    %{
+      kind: :same_name,
+      title: "Two places are called “#{form}” — which one?",
+      claim_ids: Enum.map(matches, & &1.claim.id),
+      body: """
+      The posts said **#{form}**, and the gazetteer holds more than one place of
+      exactly that name. The resolver took **#{path(linked)}**#{scored(matches)}
+      — there was nothing in the mention to choose by.
+
+      The others:
+
+      #{Enum.map_join(rivals, "\n", &"  - #{path(&1.place)}")}
+
+      Riding on the answer:
+
+      #{Enum.map_join(matches, "\n", &"  - #{line(&1.claim)}")}
+      """,
+      answer:
+        "Say which one a bare “#{form}” should mean — or whether these are one place recorded twice."
+    }
   end
 
   defp ambiguity(form, matches, others) do
