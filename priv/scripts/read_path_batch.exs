@@ -36,7 +36,10 @@ alias Wekui.Pipelines
 
 event_name = System.get_env("EVENT", "litoral-central-2026")
 place_name = System.get_env("PLACE_NAME", "Caraballeda")
-prompt_file = System.get_env("EXTRACTION_PROMPT", "prompts/extraction.v5.txt")
+# v7, not v5: v5 refused 46% of what it drafted on real posts and v7 refuses 15%
+# ([[research-2026-07-27-extraction-on-real-posts]]). The default must be the best
+# reading we have measured, or the next person runs the worst one by accident.
+prompt_file = System.get_env("EXTRACTION_PROMPT", "prompts/extraction.v7.txt")
 model = System.get_env("EXTRACTION_MODEL", "deepseek-ai/DeepSeek-V4-Flash")
 batch_from = System.get_env("FROM", "2026-06-25T04:00:00Z")
 batch_to = System.get_env("TO", "2026-06-25T05:00:00Z")
