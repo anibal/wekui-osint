@@ -2,7 +2,7 @@ title:: Open Questions
 type:: hub
 
 - What we cannot answer yet. Every page carries `opened::` so the age of an unknown stays visible, and each is linked from the concepts it blocks.
-- [[open-actor]] — the agent side of Actor is built; how a person's acts are recorded and attributed is not.
+- [[open-actor]] — answered: a person is named, and their acts are recorded as [[curation]] acts (see [[decision-2026-07-27-curation-is-a-record]]).
 - [[open-placement]] — answered: Placement now exists (see [[placement]]); only Proposed by remains, tracked on [[place]].
 - [[open-query-state]] — whether a Query's state should also be written down.
 - [[open-latest-vs-top]] — whether latest simply extends top.

@@ -29,6 +29,7 @@ type:: hub
   - [[claim]] — an Actor's account that something happened in the Event; one happening is one claim, drawn from many Posts and citing them. #planned
   - [[beat]] — the derived prose a reader reads, written from the Claims that hold for a Place and a stretch of time. #planned
   - [[run]] — the receipt of one execution of the system's own pipeline over an Event: which stages ran, over what scope, what each produced, and which gates it left open.
+  - [[curation]] — the receipt of one deliberate act by a person on the record: who decided, when, what changed, and why; the human twin of a run.
   - [[person]] — a human the Event's story is about (victim, rescuer, official, public figure…), whom Claims are about; a private person is protected by a gated handle, a public one is named; links their Claims into an arc. #planned
 - Policies
   - [[settling-a-collected-place]] — what becomes of the Posts collected under a Place that is later settled.

@@ -81,6 +81,20 @@ defmodule Wekui.Narrative.ClaimPlace do
       validate {SameEvent, references: [{:claim_id, Claim}, {:place_id, Place}]}
     end
 
+    destroy :unlink do
+      description """
+      Removes a link: this Claim is not about that Place after all. For a human
+      correcting a resolution, through `Wekui.Curation.relink_claim_place!/4` — never
+      for the resolver, which re-resolves by overwriting rather than by forgetting.
+
+      Destroying a record is otherwise unheard of here, and it is allowed exactly
+      because a place link is the one deliberately mutable thing in the model: a
+      current best reading, not a historical fact. What it read before survives in the
+      curation Act that removed it, together with who removed it and why — so the
+      information moves into the audit trail rather than out of the record.
+      """
+    end
+
     read :by_claim do
       description "Every Place a Claim is about, in the order they were linked."
       argument :claim_id, :uuid, allow_nil?: false

@@ -49,6 +49,7 @@ defmodule Wekui.Narrative do
 
     resource Wekui.Narrative.ClaimPlace do
       define :link_place, action: :link
+      define :unlink_place, action: :unlink
       define :list_claim_places, action: :by_claim, args: [:claim_id]
       define :claims_at_place, action: :by_place, args: [:place_id]
     end
