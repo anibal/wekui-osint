@@ -189,6 +189,96 @@ defmodule Wekui.CurationTest do
     end
   end
 
+  # "This turned out to be that" is one sentence, so it is one act — however many
+  # rows it moves. The record must not lose anything the folded node carried.
+  describe "folding a place that was never a place" do
+    setup ctx do
+      # The shape the pilot actually had: a parroquia, and beneath it a node of
+      # the same name that popular speech calls "Urbanización Caraballeda".
+      duplicate =
+        place!(ctx.event, %{
+          canonical_name: "Caraballeda",
+          type: "populated_place",
+          parent_id: ctx.place.id,
+          names: [{"Urbanización Caraballeda", :anchored}]
+        })
+
+      child =
+        place!(ctx.event, %{
+          canonical_name: "Residencias Golf Mar",
+          type: "edificio",
+          parent_id: duplicate.id
+        })
+
+      Map.merge(ctx, %{duplicate: duplicate, child: child})
+    end
+
+    test "the children move up to the place it turned out to be", ctx do
+      Curation.fold_place_into!(ctx.duplicate, ctx.place, ctx.curator, "popular speech")
+
+      assert Core.get_place!(ctx.child.id).parent_id == ctx.place.id
+    end
+
+    test "the names move up, so nothing it answered to is lost", ctx do
+      Curation.fold_place_into!(ctx.duplicate, ctx.place, ctx.curator, "popular speech")
+
+      names = ctx.place.id |> Core.list_place_names!() |> Enum.map(& &1.name)
+      assert "Urbanización Caraballeda" in names
+      # "Caraballeda" is already what the parroquia is called — not doubled.
+      assert Enum.count(names, &(&1 == "Caraballeda")) <= 1
+    end
+
+    test "its claims move up, by hand, so no claim reads as a retired place", ctx do
+      Narrative.link_place!(%{
+        claim_id: ctx.claim.id,
+        place_id: ctx.duplicate.id,
+        how_resolved: :mention_exact,
+        confidence: 0.5
+      })
+
+      Curation.fold_place_into!(ctx.duplicate, ctx.place, ctx.curator, "popular speech")
+
+      assert [link] = Narrative.list_claim_places!(ctx.claim.id)
+      assert link.place_id == ctx.place.id
+      assert link.how_resolved == :manual
+    end
+
+    test "the node is deprecated onto its replacement, not deleted", ctx do
+      folded =
+        Curation.fold_place_into!(ctx.duplicate, ctx.place, ctx.curator, "popular speech")
+
+      assert folded.lifecycle == :deprecated
+      assert folded.replaced_by_id == ctx.place.id
+      assert folded.status_note == "popular speech"
+    end
+
+    test "one act records the whole fold, and counts what moved", ctx do
+      Curation.fold_place_into!(
+        ctx.duplicate,
+        ctx.place,
+        ctx.curator,
+        "Caraballeda is the parish; the rest is popular speech"
+      )
+
+      assert [act] = Curation.list_acts!(ctx.event.id)
+      assert act.kind == :fold_place
+      assert act.place_id == ctx.duplicate.id
+      assert act.before["children"] == 1
+      assert act.after["replaced_by"] == "Caraballeda (parroquia)"
+    end
+
+    test "a fold that would create a cycle takes nothing with it", ctx do
+      # Folding the parent INTO its own child would reparent the child onto itself.
+      assert_raise Ash.Error.Invalid, fn ->
+        Curation.fold_place_into!(ctx.place, ctx.duplicate, ctx.curator, "backwards")
+      end
+
+      assert Core.get_place!(ctx.place.id).lifecycle == :active
+      assert Core.get_place!(ctx.child.id).parent_id == ctx.duplicate.id
+      assert Curation.list_acts!(ctx.event.id) == []
+    end
+  end
+
   describe "claims" do
     test "link adds a place by hand, with no confidence", ctx do
       Curation.link_claim_place!(ctx.claim, ctx.place, ctx.curator, "this is Caraballeda")
@@ -331,6 +421,19 @@ defmodule Wekui.CurationTest do
       Curation.set_person_kind!(person!(ctx.event), :public, ctx.curator, "an official")
 
       assert only_act!(ctx.event).after == %{"kind" => "public"}
+    end
+  end
+
+  # A kind added without a phrase used to crash the report on a valid record. The
+  # phrasing lives beside the vocabulary now, and this keeps the two in step.
+  describe "every act has a word a person can read" do
+    test "no kind falls back to its own atom", _ctx do
+      for kind <- Wekui.Curation.Act.kinds() do
+        phrase = Wekui.Curation.Act.phrase(kind)
+
+        refute phrase == kind |> to_string() |> String.replace("_", " "),
+               "#{kind} has no phrase — add one beside the vocabulary in Curation.Act"
+      end
     end
   end
 

@@ -29,6 +29,7 @@ defmodule Wekui.Curation do
 
   alias Wekui.Core
   alias Wekui.Narrative
+  alias Wekui.Normalize
 
   resources do
     resource Wekui.Curation.Act do
@@ -70,6 +71,45 @@ defmodule Wekui.Curation do
       {%{"lifecycle" => to_string(place.lifecycle)},
        Core.deprecate_place!(place, %{replaced_by_id: replacement.id, note: reason}),
        &%{"lifecycle" => to_string(&1.lifecycle), "replaced_by" => place_name(&1.replaced_by_id)}}
+    end)
+  end
+
+  @doc """
+  Folds a Place into another: it was never a distinct place, only another name for
+  one. Its children move up, its names move up, whatever Claims it held move up, and
+  it is deprecated onto the Place it turned out to be.
+
+  **One act, however many rows it moves.** The decision is a single sentence — "this
+  is that" — and recording fifty-nine reparentings would bury it. The act's `before`
+  counts what moved, so the scale of the change is on the record without the noise.
+
+  This is `docs/pages/decision-2026-07-24-merge-is-deprecation.md` in one verb: there
+  is no merge concept, because a lifecycle already says *this turned out to be that*.
+  A Claim it held is carried over `:manual` rather than left to read through the
+  replacement — a `ClaimPlace` is a link the reader follows directly, not a judgment
+  that resolves on read.
+  """
+  def fold_place_into!(place, into, curator, reason) do
+    attributed!(curator, :fold_place, reason, [place_id: place.id], fn ->
+      children = children_of(place)
+      links = Narrative.claims_at_place!(place.id)
+
+      before = %{
+        "lifecycle" => to_string(place.lifecycle),
+        "parent" => place_name(place.parent_id),
+        "children" => length(children),
+        "claims" => length(links)
+      }
+
+      Enum.each(children, &Core.set_place_parent!(&1, %{parent_id: into.id}))
+      carry_names!(place, into)
+      Enum.each(links, &carry_link!(&1, into))
+
+      {before, Core.deprecate_place!(place, %{replaced_by_id: into.id, note: reason}),
+       &%{
+         "lifecycle" => to_string(&1.lifecycle),
+         "replaced_by" => place_name(&1.replaced_by_id)
+       }}
     end)
   end
 
@@ -209,6 +249,50 @@ defmodule Wekui.Curation do
       end)
 
     changed
+  end
+
+  defp children_of(place) do
+    place.event_id
+    |> Core.list_places!()
+    |> Enum.filter(&(&1.parent_id == place.id))
+  end
+
+  # Whatever the folded place answered to, the Place it turned out to be answers to
+  # now — that is what makes the fold lossless. Kind and emission carry over
+  # untouched: a fold moves a name, it does not re-judge what the name is. A string
+  # the replacement already holds is skipped, canonical name included.
+  defp carry_names!(place, into) do
+    held =
+      into.id
+      |> Core.list_place_names!()
+      |> MapSet.new(& &1.normalized)
+      |> MapSet.put(Normalize.fold(into.canonical_name))
+
+    ([%{name: place.canonical_name, kind: :official, emission: :raw}] ++
+       Core.list_place_names!(place.id))
+    |> Enum.reject(&MapSet.member?(held, Normalize.fold(&1.name)))
+    |> Enum.uniq_by(&Normalize.fold(&1.name))
+    |> Enum.each(fn name ->
+      Core.create_place_name!(%{
+        place_id: into.id,
+        name: name.name,
+        kind: name.kind,
+        emission: name.emission
+      })
+    end)
+  end
+
+  # `:manual` and no confidence: a person decided this claim is about the replacement,
+  # and a person does not estimate. It also stops a later run from re-resolving it.
+  defp carry_link!(link, into) do
+    Narrative.link_place!(%{
+      claim_id: link.claim_id,
+      place_id: into.id,
+      how_resolved: :manual,
+      confidence: nil
+    })
+
+    Narrative.unlink_place!(link)
   end
 
   defp manual_link!(claim, place) do

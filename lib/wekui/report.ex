@@ -31,6 +31,7 @@ defmodule Wekui.Report do
   alias Wekui.Capture
   alias Wekui.Core
   alias Wekui.Curation
+  alias Wekui.Curation.Act
   alias Wekui.Narrative
   alias Wekui.Narrative.PlaceResolver
   alias Wekui.Normalize
@@ -514,26 +515,7 @@ defmodule Wekui.Report do
     who = (act.actor && act.actor.name) || "*(unattributed)*"
 
     "| #{Calendar.strftime(act.inserted_at, "%b %d")} | #{who} | " <>
-      "#{verb(act)} #{target(act, world)}#{moved(act)} | #{act.reason} |"
-  end
-
-  # The vocabulary as a person says it, not as the database spells it.
-  defp verb(%{kind: kind}) do
-    case kind do
-      :promote_place -> "promoted"
-      :reparent_place -> "reparented"
-      :retype_place -> "retyped"
-      :deprecate_place -> "deprecated"
-      :discard_place -> "discarded"
-      :link_claim_place -> "placed"
-      :relink_claim_place -> "re-placed"
-      :retract_claim -> "retracted"
-      :accept_support -> "accepted the support verdict on"
-      :approve_person -> "approved"
-      :withhold_person -> "withheld"
-      :set_person_handle -> "renamed the handle of"
-      :set_person_kind -> "set the privacy of"
-    end
+      "#{Act.phrase(act.kind)} #{target(act, world)}#{moved(act)} | #{act.reason} |"
   end
 
   defp target(%{place_id: id}, world) when not is_nil(id) do

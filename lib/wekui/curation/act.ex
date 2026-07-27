@@ -42,6 +42,9 @@ defmodule Wekui.Curation.Act do
     :retype_place,
     :deprecate_place,
     :discard_place,
+    # One decision, however many rows it moves: this node was never a distinct
+    # place, only another name for one.
+    :fold_place,
     # Claims. A relink says "and not the places it was about", so it drops the
     # others; a link only adds, because one happening can span adjacent buildings.
     :link_claim_place,
@@ -60,6 +63,33 @@ defmodule Wekui.Curation.Act do
 
   @doc "The vocabulary of deliberate acts a person can perform on the record."
   def kinds, do: @kinds
+
+  # How each verb reads to a person. It lives beside the vocabulary rather than in
+  # the reader that renders it, so the two cannot drift: a kind added without a
+  # phrase is caught by this module's own test, not by a report that dies on a
+  # perfectly valid record.
+  @phrases %{
+    promote_place: "promoted",
+    reparent_place: "reparented",
+    retype_place: "retyped",
+    deprecate_place: "deprecated",
+    discard_place: "discarded",
+    fold_place: "folded",
+    link_claim_place: "placed",
+    relink_claim_place: "re-placed",
+    retract_claim: "retracted",
+    accept_support: "accepted the support verdict on",
+    approve_person: "approved",
+    withhold_person: "withheld",
+    set_person_handle: "renamed the handle of",
+    set_person_kind: "set the privacy of"
+  }
+
+  @doc """
+  How an act reads to a person: `:fold_place` → "folded". Falls back to the kind
+  itself, because a record is never worth crashing over.
+  """
+  def phrase(kind), do: Map.get(@phrases, kind, kind |> to_string() |> String.replace("_", " "))
 
   sqlite do
     table "curation_acts"

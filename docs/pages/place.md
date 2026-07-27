@@ -21,6 +21,7 @@ type:: concept
     - What we collect under a proposed Place is **provisional** — it stands only as long as the Place does.
   - **Active** — an Actor has approved it. It is part of the Event's settled geography, which is what a [[search]] sweeps when it names no Places at all.
   - **Deprecated** — the Place has been retired in favour of another Place, which we call its **replacement**.
+    - The commonest reason is that it was never a distinct Place at all, only another name for one: popular speech names a parish, a sector and an urbanización with the same word, and the gazetteer records them as separate nodes. Settling that is a [[curation]] **fold** — the children, the names and the [[claim]]s move onto the Place it turned out to be, and the node is deprecated onto it.
   - **Discarded** — the Place has been retired with no replacement, because it was a mistake. A status note is always required.
 - Rules
   - A Place starts as proposed unless a person creates it active on purpose.
