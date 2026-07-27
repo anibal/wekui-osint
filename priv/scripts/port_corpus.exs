@@ -26,8 +26,11 @@
 # ── The nine the record already holds ─────────────────────────────────────────
 #
 # The pilot's posts carry the old app's ROW ID as their `x_id` ("129"), not the X post
-# id ("2070003831404908894"), and their text is a cleaned rendering — no emoji, no
-# `|` separators, no t.co URL, line breaks flattened. They are a rehearsal corpus.
+# id ("2070003831404908894"), and their text is editorially REWRITTEN — 1,732 characters
+# against the 3,788 actually written, and not only noise: the rehearsal of post 3920
+# drops the body lying between the rescuers and Aaron, and 4746 (123 against 871) keeps
+# the toll and drops the volunteers still clearing rubble by hand.
+#
 # This script SKIPS a post the record already holds under its row id, so the nine are
 # not doubled; a Post is never edited and never deleted, so the nine stand as they are.
 # Set INCLUDE_HELD=1 to bring their real payloads across anyway, as new Posts.
