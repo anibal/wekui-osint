@@ -31,6 +31,14 @@ defmodule Wekui.Gazetteer.Duplicates do
   model exists for. So the reduction is deliberately **not** used against ancestors —
   only the exact-name rule is, and only between a Place and its own ancestors.
 
+  ## Why a road, an area and a structure never collapse
+
+  Three kinds of thing share names constantly — an avenue runs along the strip it is
+  named after, a building stands in the sector it borrows its name from — and none of
+  those pairs is ever one node. So a pair whose types name different kinds of thing is
+  never offered, however exactly the strings match. A type nobody has classified
+  suppresses nothing: an unknown label is a reason to ask, never to stay quiet.
+
   ## Why a number or a direction ends the question
 
   `"El Palmar Este"` and `"El Palmar Oeste"` score 0.978 on Jaro. `"Residencias Green
@@ -63,6 +71,40 @@ defmodule Wekui.Gazetteer.Duplicates do
   # Tokens that exist to tell two places apart. "Este" and "Oeste" differ by four
   # letters and by the entire point of the name.
   @directions ~w(norte sur este oeste nororiente noroccidente n s e o)
+
+  # A Roman numeral does the same work as an Arabic one: "Residencia Caraballeda I"
+  # is not "Residencias Caraballeda". Anchored to a whole token, so it cannot catch
+  # a stray letter mid-name.
+  @numeral ~r/^(i{1,3}|iv|vi{0,3}|ix|xi{0,3}|x)$/
+
+  # What kind of thing a type names. A road is a line, an area is a region, a
+  # structure is a thing standing in one — and no two of those are ever the same
+  # node, however exactly their names match. "Avenida La Costanera" runs along "La
+  # Costanera"; "Residencias Los Corales" stands in "Los Corales"; "Residencia
+  # Caraballeda I" is not the sector "Caraballeda 1".
+  #
+  # This is the general form of a rule the operator gave twice on 2026-07-27, on the
+  # two pairs that scored a perfect 1.0. A type absent here classifies as nothing and
+  # suppresses nothing — an unknown label is a reason to ask, never to stay quiet.
+  @kinds_of_thing %{
+    "edificio" => :structure,
+    "calle" => :road,
+    "avenida" => :road,
+    "carrera" => :road,
+    "autopista" => :road,
+    "vialidad" => :road,
+    "vialidad y puentes" => :road,
+    "pais" => :area,
+    "estado" => :area,
+    "municipio" => :area,
+    "parroquia" => :area,
+    "populated_place" => :area,
+    "urbanizacion" => :area,
+    "barrio" => :area,
+    "sector" => :area,
+    "zona" => :area,
+    "plaza" => :area
+  }
 
   @doc """
   Every pair of active Places in `event_id` that may be one place recorded twice,
@@ -114,6 +156,7 @@ defmodule Wekui.Gazetteer.Duplicates do
         # duplicate. Between a Place and its own ancestor, only the exact-name rule
         # above applies.
         not related?(elder, younger, by_id),
+        not different_kind?(elder, younger),
         marks(elder.canonical_name) == marks(younger.canonical_name),
         score = closeness(elder.canonical_name, younger.canonical_name),
         score >= @jaro_threshold do
@@ -129,6 +172,19 @@ defmodule Wekui.Gazetteer.Duplicates do
       }
     end
   end
+
+  # A road, an area and a structure are three kinds of thing. Two of them are never
+  # one node — the street named after the place is not the place.
+  defp different_kind?(one, other) do
+    with kind when not is_nil(kind) <- kind_of(one.type),
+         other_kind when not is_nil(other_kind) <- kind_of(other.type) do
+      kind != other_kind
+    else
+      _unclassified_type -> false
+    end
+  end
+
+  defp kind_of(type), do: Map.get(@kinds_of_thing, Normalize.fold(type))
 
   defp related?(one, other, by_id) do
     one.id in Enum.map(ancestors(other, by_id), & &1.id) or
@@ -157,6 +213,26 @@ defmodule Wekui.Gazetteer.Duplicates do
 
   defp unspace(reduced), do: String.replace(reduced, " ", "")
 
+  # Read as the number it is, so "Torre II" and "Torre 2" carry the same mark and a
+  # building is not held twice for writing its number the other way.
+  @romans %{
+    "i" => "1",
+    "ii" => "2",
+    "iii" => "3",
+    "iv" => "4",
+    "v" => "5",
+    "vi" => "6",
+    "vii" => "7",
+    "viii" => "8",
+    "ix" => "9",
+    "x" => "10",
+    "xi" => "11",
+    "xii" => "12",
+    "xiii" => "13"
+  }
+
+  defp roman(token), do: Map.get(@romans, token, token)
+
   # The tokens that exist to tell places apart: if they disagree, the names do not
   # nearly match — they contradict.
   defp marks(name) do
@@ -166,6 +242,7 @@ defmodule Wekui.Gazetteer.Duplicates do
     |> Enum.flat_map(fn token ->
       cond do
         token in @directions -> [token]
+        Regex.match?(@numeral, token) -> [roman(token)]
         # A number anywhere in a token, "opp27" included — the digits are the mark.
         true -> Regex.scan(~r/\d+/, token) |> Enum.map(fn [digits] -> digits end)
       end
@@ -186,13 +263,15 @@ defmodule Wekui.Gazetteer.Duplicates do
       |> String.replace(~r/\s+/u, " ")
       |> String.trim()
 
-    case String.split(folded, " ", trim: true) do
-      [first | rest] when rest != [] ->
-        if first in @type_words, do: Enum.join(rest, " "), else: folded
-
-      _one_word_or_none ->
-        folded
+    folded
+    |> String.split(" ", trim: true)
+    |> case do
+      [first | rest] when rest != [] -> if first in @type_words, do: rest, else: [first | rest]
+      words -> words
     end
+    # A numeral is read as the number it is, here as well as in the marks, so
+    # "Torre II" and "Torres 2" compare as one string instead of as "ii" and "2".
+    |> Enum.map_join(" ", &roman/1)
   end
 
   defp fold(name), do: Normalize.fold(name)

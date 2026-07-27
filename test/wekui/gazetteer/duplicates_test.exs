@@ -133,6 +133,63 @@ defmodule Wekui.Gazetteer.DuplicatesTest do
     end
   end
 
+  # The operator ruled these apart on 2026-07-27, on the two pairs that matched most
+  # perfectly of all. What he was saying was not "not these two" but "not this kind".
+  describe "a road, an area and a structure are three kinds of thing" do
+    test "the avenue named after the strip is not the strip", ctx do
+      under(ctx, ctx.parroquia, "La Costanera", "sector")
+      under(ctx, ctx.parroquia, "Avenida La Costanera", "calle")
+
+      assert found(ctx) == []
+    end
+
+    test "the building named after the sector is not the sector", ctx do
+      sector = under(ctx, ctx.parroquia, "Caraballeda 1", "sector")
+      under(ctx, sector, "Tanaguarena", "sector")
+      under(ctx, ctx.parroquia, "Residencia Caraballeda 1", "edificio")
+
+      assert found(ctx) == []
+    end
+
+    test "two places of one kind are still compared", ctx do
+      under(ctx, ctx.parroquia, "La Costanera", "calle")
+      under(ctx, ctx.parroquia, "Avenida La Costanera", "calle")
+
+      assert pair?(found(ctx), "La Costanera", "Avenida La Costanera")
+    end
+
+    # An unknown label is a reason to ask, never a reason to stay quiet.
+    test "a type nobody has classified suppresses nothing", ctx do
+      under(ctx, ctx.parroquia, "La Costanera", "malecón")
+      under(ctx, ctx.parroquia, "Avenida La Costanera", "paseo")
+
+      assert pair?(found(ctx), "La Costanera", "Avenida La Costanera")
+    end
+  end
+
+  describe "a Roman numeral counts as a number" do
+    test "it tells two buildings apart", ctx do
+      under(ctx, ctx.parroquia, "Residencias Caraballeda")
+      under(ctx, ctx.parroquia, "Residencia Caraballeda I")
+
+      assert found(ctx) == []
+    end
+
+    test "and the same number written both ways still matches", ctx do
+      under(ctx, ctx.parroquia, "Torre II")
+      under(ctx, ctx.parroquia, "Torres 2")
+
+      assert pair?(found(ctx), "Torre II", "Torres 2")
+    end
+
+    test "a numeral is only a numeral as a whole word", ctx do
+      under(ctx, ctx.parroquia, "Residencias Iris")
+      under(ctx, ctx.parroquia, "Residencia Iris")
+
+      assert pair?(found(ctx), "Residencias Iris", "Residencia Iris")
+    end
+  end
+
   describe "what it will not find" do
     # Honest limit, worth a failing-in-spirit test so nobody assumes coverage:
     # "ancianato" and "asilo" both mean an old people's home. No string measure
