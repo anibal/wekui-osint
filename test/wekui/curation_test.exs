@@ -404,6 +404,60 @@ defmodule Wekui.CurationTest do
       assert only_act!(ctx.event).before == %{"kind" => "rescate", "subject" => "una mujer"}
     end
 
+    test "correcting a claim records what it said and what it says now", ctx do
+      corrected =
+        Curation.correct_claim!(
+          ctx.claim,
+          %{subject: "un hombre de 21 años"},
+          ctx.curator,
+          "the post says 21; the extractor read 31"
+        )
+
+      assert corrected.subject == "un hombre de 21 años"
+
+      act = only_act!(ctx.event)
+      assert act.kind == :correct_claim
+      # The act is about the claim that was corrected — the one whose state changed.
+      assert act.claim_id == ctx.claim.id
+      assert act.before == %{"subject" => "una mujer"}
+      assert act.after == %{"subject" => "un hombre de 21 años", "claim_id" => corrected.id}
+    end
+
+    test "only the fields that actually moved reach the act", ctx do
+      corrected =
+        Curation.correct_claim!(
+          ctx.claim,
+          %{kind: "rescate", status: "rescatado"},
+          ctx.curator,
+          "the kind was right; the status was missing"
+        )
+
+      act = only_act!(ctx.event)
+      assert act.before == %{"status" => nil}
+      assert act.after == %{"status" => "rescatado", "claim_id" => corrected.id}
+    end
+
+    test "a magnitude reaches the act as something a person can read", ctx do
+      Curation.correct_claim!(
+        ctx.claim,
+        %{magnitude: %{"horas" => 6}},
+        ctx.curator,
+        "the post gives six hours"
+      )
+
+      # `before`/`after` are a display record, not a query surface.
+      assert only_act!(ctx.event).after["magnitude"] == ~s(%{"horas" => 6})
+    end
+
+    test "a refused correction writes no act and closes nothing", ctx do
+      assert_raise ArgumentError, ~r/refused: :no_change/, fn ->
+        Curation.correct_claim!(ctx.claim, %{subject: "una mujer"}, ctx.curator, "no change")
+      end
+
+      assert Curation.list_acts!(ctx.event.id) == []
+      assert is_nil(Narrative.get_claim!(ctx.claim.id).superseded_at)
+    end
+
     test "accept_support changes nothing and records that it was read", ctx do
       flagged =
         Narrative.record_claim_support!(ctx.claim, %{

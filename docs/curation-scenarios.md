@@ -140,7 +140,7 @@ is a record of a conversation.
 
 ## 3. What has no verb — deliberate additions, weighed
 
-Building this surfaced three gaps. **One was closed; two are left for you.**
+Building this surfaced four gaps. **Three are closed; one is left for you.**
 
 1. **[BUILT] A `ClaimPlace` can now be unlinked.** Previously flagged as "a deliberate addition
    to weigh, not an oversight to patch" — so here is the weighing. Without it there is no such
@@ -158,11 +158,18 @@ Building this surfaced three gaps. **One was closed; two are left for you.**
    So "stop letting the populated_place answer to the bare name *Caraballeda*" — the durable fix
    for Q2 below — is still **not expressible**. Relinking fixes the affected claims; it does not
    stop the next run from tying again.
-3. **[OPEN] A `Place` cannot be renamed.** There is no `set_canonical_name`. Renaming the
-   populated_place to "Urbanización Caraballeda" — the alias it already carries — is not
-   expressible either.
+3. **[BUILT] A `Place` can now be renamed.** There was no `set_canonical_name`. `rename_place!`
+   adds one — and **keeps the old string** as a `PlaceName` of kind `:error`, emission
+   `:recognition_only`: still understood when a Post writes it, never emitted into a query of
+   ours. Built for "San Juilán → San Julián", the typo you named while ruling two places apart.
+4. **[BUILT] A `Claim` can now be corrected.** The report's own answer line on a flagged claim
+   reads *"correct the claim, retract it, or accept the attribution"*, and the record could do
+   only two of the three: one wrong word — "31 años" for 21 — meant withdrawing the whole
+   account. `correct_claim!` drafts the corrected account as a **successor**, carrying the
+   happening's first evidence, its citations and its people, and closes the wrong one onto it.
+   The support verdict does not carry; the places carry unless the mention is what was corrected.
 
-Both open gaps point the same way, and both are only worth building if your answer to Q2 is (b).
+The one open gap and Q2 point the same way.
 
 ---
 

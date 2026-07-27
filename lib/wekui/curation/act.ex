@@ -54,6 +54,9 @@ defmodule Wekui.Curation.Act do
     # others; a link only adds, because one happening can span adjacent buildings.
     :link_claim_place,
     :relink_claim_place,
+    # The extractor read the post wrong. A claim is append-only, so the correction
+    # is a successor account and the wrong one is closed onto it — never an edit.
+    :correct_claim,
     :retract_claim,
     # One happening told twice, folded into one — and its refusal, which changes
     # nothing and so can live nowhere but here.
@@ -88,6 +91,7 @@ defmodule Wekui.Curation.Act do
     distinguish_places: "kept apart",
     link_claim_place: "placed",
     relink_claim_place: "re-placed",
+    correct_claim: "corrected",
     retract_claim: "retracted",
     merge_claims: "merged",
     distinguish_claims: "kept apart",

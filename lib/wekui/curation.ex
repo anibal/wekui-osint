@@ -29,6 +29,7 @@ defmodule Wekui.Curation do
 
   alias Wekui.Core
   alias Wekui.Narrative
+  alias Wekui.Narrative.Correction
   alias Wekui.Narrative.Merge
   alias Wekui.Normalize
 
@@ -198,6 +199,51 @@ defmodule Wekui.Curation do
   end
 
   @doc """
+  Corrects what a Claim says — the number, the kind of happening, the status, the
+  mention, the note. `fields` is a map keyed by `Wekui.Narrative.Correction.fields/0`.
+
+  The report has asked for this since the support gate landed ("Correct the claim,
+  retract it, or accept the attribution") and until now the record could only do two
+  of the three: an overstated claim had to be withdrawn whole, even when one word of
+  it was wrong.
+
+  A Claim is append-only, so this is **not** an edit. The corrected account is drafted
+  as a new Claim carrying the original's first evidence, citations and people; the
+  wrong one is closed and pointed at it. The successor's support verdict starts over —
+  the gate judged the words that were wrong — and its places carry unless the mention
+  is what was corrected. See `Wekui.Narrative.Correction`.
+
+  The act is about the claim that was **corrected**, not its successor: that is the
+  one whose state changed, and `after` names the account that replaced it.
+  """
+  def correct_claim!(claim, fields, curator, reason) do
+    attributed!(curator, :correct_claim, reason, [claim_id: claim.id], fn ->
+      # Read fresh, and from the same authority the correction itself uses: a caller
+      # holding a stale struct must not put a stale `before` on the record.
+      was = Narrative.get_claim!(claim.id)
+      changed = Correction.changes(was, fields)
+      before = Map.new(changed, fn {field, _to} -> {to_string(field), show(was, field)} end)
+
+      corrected =
+        case Correction.correct(was, fields, curator) do
+          {:ok, corrected} ->
+            corrected
+
+          {:error, refusal} ->
+            raise ArgumentError, "the correction was refused: #{inspect(refusal)}"
+        end
+
+      after_fun = fn successor ->
+        changed
+        |> Map.new(fn {field, _to} -> {to_string(field), show(successor, field)} end)
+        |> Map.put("claim_id", successor.id)
+      end
+
+      {before, corrected, after_fun}
+    end)
+  end
+
+  @doc """
   Folds two accounts of one happening into one Claim. The earlier account survives —
   a happening lives at its first evidence — and absorbs the other's citations and
   places; the later is closed and linked to it.
@@ -357,6 +403,17 @@ defmodule Wekui.Curation do
         held
         |> Core.set_place_name_kind!(%{kind: :error})
         |> Core.set_place_name_emission!(%{emission: :recognition_only})
+    end
+  end
+
+  # One of a Claim's fields as an Act may hold it. `before`/`after` are a display
+  # record and not a query surface — string keys, scalar values — so `magnitude`, the
+  # one field that is a map, is written the way a reader would read it aloud.
+  defp show(claim, field) do
+    case Map.get(claim, field) do
+      nil -> nil
+      value when is_binary(value) -> value
+      value -> inspect(value)
     end
   end
 
