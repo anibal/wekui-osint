@@ -155,8 +155,8 @@ per-stage choices.)
 extract  9 posts → 8 claims drafted, 0 skipped
 resolve  8 claims, 8 mentions, 7 linked, 0 proposed, 1 unresolved: "Caraballeda-La Guaira"
 verify   8 judged → 8 supported, 0 overstated, 0 unsupported, 0 errors
-render   5 clauses, 6 sources   (3 claims sit above Caraballeda in the tree — La Guaira-level —
-         and are correctly out of a Caraballeda beat: scope holds by construction)
+render   5 clauses, 6 sources   (8 claims − 2 at La Guaira level, above Caraballeda in the tree
+         − 1 unresolved = 5: scope holds by construction, and the arithmetic closes)
 gates    5 persons pending review · 0 places proposed · 0 claims flagged
 beat     En Conjunto Residencial Caribe, se buscaba a Yaneth T. y Shaznay M.[1]; se buscaba a
          Damarys M., una maestra[2]; el edificio colapsó tras el terremoto[3]. En Caraballeda,
@@ -164,11 +164,32 @@ beat     En Conjunto Residencial Caribe, se buscaba a Yaneth T. y Shaznay M.[1];
          trabajaron para rescatar con vida a Aaron C., un hombre de 21 años[5][6].
 ```
 
-Read honestly: **8 claims where the old stub-tree pilot got 9** — single-pass MoE variance, the
-known reality the gates and your review exist to backstop, not a regression in the wiring. Every
-person is a derived handle, none a raw name. The one unresolved mention is the same relational
-one the resolver has always refused to guess. And the beat now reads in time order across a month
-boundary — which it did not before this session (scenario C-bis).
+Read honestly, because the receipt lets us:
+
+- **8 claims where the old stub-tree pilot got 9.** The receipt says `"skipped": 0, "skips": []`,
+  so nothing was refused by the F54 gate and nothing was dropped for bad citations — the model
+  simply produced eight. That is single-pass MoE variance measured, not asserted; the gates and
+  your review are the backstop, and the wiring is not the suspect.
+- **The one unresolved mention has no ClaimPlace row at all**, so that claim ("un hombre",
+  `Caraballeda-La Guaira`) is invisible to *every* beat, not merely to this one. Honest, and a
+  reminder that UNRESOLVED is a silence, not a flag a reader ever sees.
+- **Three of eight claims hang on one gazetteer alias, at a confidence that overstates it.** All
+  three "Residencias Caribe" claims — two searches for named people and the collapse — resolved
+  `mention_exact` at **0.9** to `Conjunto Residencial Caribe`, because the seeded gazetteer
+  carries "Residencias Caribe" as a curated `spelling_variant` of it. The tree also holds a
+  *distinct* building called `Residencias Caribe, Torre C` under the same barrio. So the mention
+  is genuinely ambiguous in the world while the resolver reports near-certainty: an exact hit on
+  an alias wins outright and never consults the ancestors. The link is defensible — a human put
+  that alias there — but the **0.9 is not**, and three claims in a memorial beat rest on it. This
+  is the "different Caribe building via an alias" item the backlog predicted, now concrete: a
+  curation call for review, not a code fix.
+- **The gates do not surface a low-confidence link.** The same run linked "Caraballeda" at
+  **0.5** (the parroquia-vs-populated_place tie the resolver breaks arbitrarily) and said nothing
+  about it in the receipt. `persons_pending_review`, `places_proposed` and `claims_not_supported`
+  are the three queues; a fourth — *place links below a confidence threshold* — is missing, and
+  is the cheapest addition the review console will want.
+- Every person is a derived handle, none a raw name. And the beat now reads in time order across
+  a month boundary — which it did not before this session (scenario C-bis).
 
 Note what the fresh event does *not* demonstrate: the deliberately-overstated control claim is a
 manual insert on the old pilot (stored verdict `:unsupported` — the kickstart calls it
@@ -387,6 +408,10 @@ seeded gazetteer *is* the stub.
   render. `EXTRACT=force` re-extracts and would mint a second set until the merge-judge lands.
 - **Your review of the 8 live claims** is the real next step: 5 persons sit `pending_review`, and
   a second pass would likely surface a different claim count (single-pass MoE variance).
+- **Two findings from that run that belong to the backlog, not to this layer:** the
+  `Residencias Caribe` alias resolving three claims at an overstated 0.9 (a gazetteer curation
+  call — the ambiguity is real, the confidence is not), and the missing **fourth gate queue** for
+  place links below a confidence threshold (the run linked one at 0.5 and said nothing).
 - Next rungs, unchanged and unstarted: the **beat LLM-polish** over the structured clauses, the
   **merge-judge** (which two claims are one happening — and the thing that would let a re-run
   extract safely), the **support-prompt iteration** (v1 answers in English), the **review UI**
