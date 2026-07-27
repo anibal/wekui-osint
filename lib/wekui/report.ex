@@ -542,17 +542,24 @@ defmodule Wekui.Report do
     end
   end
 
-  defp target(%{claim_id: id}, world) when not is_nil(id) do
+  # A retracted Claim is no longer current, so it is not in `world.claims` at all —
+  # what the act recorded of it is the only way left to name it.
+  defp target(%{claim_id: id} = act, world) when not is_nil(id) do
     case Enum.find(world.claims, &(&1.claim.id == id)) do
-      nil -> "a claim"
+      nil -> withdrawn(act.before)
       detail -> "*#{line(detail)}*"
     end
   end
 
   defp target(_no_target, _world), do: "—"
 
+  defp withdrawn(%{"kind" => kind} = before),
+    do: "*#{kind}#{if before["subject"], do: " — #{before["subject"]}"}*"
+
+  defp withdrawn(_no_record), do: "a claim"
+
   # Only worth saying when it actually moved, and only the fields this act touched.
-  defp moved(%{before: before, after: nil}) when is_map(before), do: ""
+  defp moved(%{after: nil}), do: ""
   defp moved(%{before: nil}), do: ""
 
   defp moved(%{before: before, after: later}) do
@@ -561,8 +568,6 @@ defmodule Wekui.Report do
       moved -> " (#{moved})"
     end
   end
-
-  defp moved(_no_shape), do: ""
 
   # The beat the last completed run produced, kept as its receipt of output. It
   # is re-derivable from the claims at any time — this is what was rendered, not

@@ -221,6 +221,19 @@ defmodule Wekui.ReportTest do
       assert report =~ "confirmed on the ground"
     end
 
+    # A retracted claim leaves the current record, so only the act still names it.
+    test "a retracted claim is still named in the trail that retracted it", ctx do
+      claim = claim!(ctx, %{subject: "un hombre", place_mention: "Caribe"}, place: ctx.caribe)
+
+      Curation.retract_claim!(claim, ctx.curator, "the post was a rumour")
+
+      report = Report.render(ctx.event)
+
+      assert report =~ "retracted *búsqueda — un hombre*"
+      assert report =~ "the post was a rumour"
+      assert report =~ "## The claims (0)"
+    end
+
     test "a report with no acts carries no such section", ctx do
       claim!(ctx, %{place_mention: "Caribe"}, place: ctx.caribe)
 

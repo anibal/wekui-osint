@@ -124,8 +124,9 @@ defmodule Wekui.Curation do
   @doc "Withdraws a Claim: it no longer holds, and nothing takes its place."
   def retract_claim!(claim, curator, reason) do
     attributed!(curator, :retract_claim, reason, [claim_id: claim.id], fn ->
-      {%{"kind" => claim.kind, "subject" => claim.subject}, Narrative.retract_claim!(claim),
-       fn _retracted -> %{"retracted" => true} end}
+      # No "became": the verb says what happened, and a retracted Claim drops out
+      # of the current record entirely — `before` is the only way to still name it.
+      {%{"kind" => claim.kind, "subject" => claim.subject}, Narrative.retract_claim!(claim), nil}
     end)
   end
 
