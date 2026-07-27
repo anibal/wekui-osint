@@ -191,6 +191,45 @@ defmodule Wekui.CurationTest do
 
   # "This turned out to be that" is one sentence, so it is one act — however many
   # rows it moves. The record must not lose anything the folded node carried.
+  describe "renaming a place" do
+    test "corrects the name and records both", ctx do
+      renamed = Curation.rename_place!(ctx.place, "Caraballeda", ctx.curator, "it was a typo")
+
+      assert renamed.canonical_name == "Caraballeda"
+      act = only_act!(ctx.event)
+      assert act.kind == :rename_place
+      assert act.before == %{"canonical_name" => "Caraballeda"}
+    end
+
+    # A correction that made the record forget what it used to say would cost us
+    # every Post that still spells it the old way.
+    test "keeps the old spelling as an error name, understood but never emitted", ctx do
+      misspelt = place!(ctx.event, %{canonical_name: "San Juilán", type: "sector"})
+
+      Curation.rename_place!(misspelt, "San Julián", ctx.curator, "it was a typo")
+
+      assert [name] = Core.list_place_names!(misspelt.id)
+      assert name.name == "San Juilán"
+      assert name.kind == :error
+      assert name.emission == :recognition_only
+      # And it still answers to it, which is the whole point.
+      assert name.normalized == "san juilan"
+    end
+
+    # The gazetteer records a Place's canonical name as a name too, so the old string
+    # is normally already there — as `:official`, which after a rename it is not.
+    test "corrects a name the place already answers to rather than doubling it", ctx do
+      place = place!(ctx.event, %{canonical_name: "Caribe", names: [{"Caribe", :raw}]})
+
+      Curation.rename_place!(place, "El Caribe", ctx.curator, "the article is part of it")
+
+      assert [name] = Core.list_place_names!(place.id)
+      assert name.name == "Caribe"
+      assert name.kind == :error
+      assert name.emission == :recognition_only
+    end
+  end
+
   describe "folding a place that was never a place" do
     setup ctx do
       # The shape the pilot actually had: a parroquia, and beneath it a node of

@@ -18,6 +18,7 @@ defmodule Wekui.Core do
       define :list_active_places, action: :active, args: [:event_id]
       define :place_ancestors, action: :ancestors, args: [:place_id]
       define :place_subtree, action: :subtree, args: [:place_id]
+      define :rename_place, action: :rename
       define :set_place_type, action: :set_type
       define :set_place_parent, action: :set_parent
       define :promote_place, action: :promote

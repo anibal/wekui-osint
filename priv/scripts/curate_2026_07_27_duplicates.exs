@@ -43,17 +43,24 @@ folds = [
   {"Residencia Las Villas", "Res. La Villa"}
 ]
 
-# {one, other, note} — two places, not one. The note is his where he gave one.
+# {one, other, note} — two places, not one. Each side is named with its type,
+# because one of these pairs is two places of the SAME name once the typo below is
+# corrected, and because a script that identified places only by name could not be
+# run twice after its own rename. The note is his where he gave one.
 aparts = [
-  {"El Palmar Este", "Av. El Palmar Este", "a road named after a place is not the place"},
-  {"La Costanera", "Avenida La Costanera", "a road named after a place is not the place"},
-  {"Residencias Caraballeda", "Residencia Caraballeda I", "the numeral names another building"},
-  {"San Julián", "San Juilán", "two places; he noted the second name is a typo"},
-  {"Tanaguarena", "Tanaguarenita", nil},
-  {"Residencias Caraballeda Sol", "Residencias Caraballeda", nil},
-  {"Edificio Caraballeda Suite", "Residencia Caraballeda I",
+  {{"El Palmar Este", "barrio"}, {"Av. El Palmar Este", "calle"},
+   "a road named after a place is not the place"},
+  {{"La Costanera", "sector"}, {"Avenida La Costanera", "calle"},
+   "a road named after a place is not the place"},
+  {{"Residencias Caraballeda", "edificio"}, {"Residencia Caraballeda I", "edificio"},
    "the numeral names another building"},
-  {"Residencias Coral Park", "Residencias RocaPark", nil}
+  {{"San Julián", "populated_place"}, {"San Julián", "sector"},
+   "two places; he noted the sector's name was a typo, corrected below"},
+  {{"Tanaguarena", "barrio"}, {"Tanaguarenita", "sector"}, nil},
+  {{"Residencias Caraballeda Sol", "edificio"}, {"Residencias Caraballeda", "edificio"}, nil},
+  {{"Edificio Caraballeda Suite", "edificio"}, {"Residencia Caraballeda I", "edificio"},
+   "the numeral names another building"},
+  {{"Residencias Coral Park", "edificio"}, {"Residencias RocaPark", "edificio"}, nil}
 ]
 
 event =
@@ -76,6 +83,13 @@ find = fn name ->
   |> Core.list_places!()
   |> Enum.find(&(&1.canonical_name == name)) ||
     Mix.raise("no place named #{inspect(name)} in #{event_name}")
+end
+
+find_typed = fn {name, type} ->
+  event.id
+  |> Core.list_places!()
+  |> Enum.find(&(&1.canonical_name == name and &1.type == type)) ||
+    Mix.raise("no #{type} named #{inspect(name)} in #{event_name}")
 end
 
 # A deprecated place reads through its replacement, and onwards if that one was
@@ -107,18 +121,50 @@ folded =
     end
   end)
 
+# ── The typo he named while ruling San Juilán apart ──────────────────────────
+#
+# "apart (typo)" — two places, and the sector's name is a misspelling of the
+# town's. Ruling them apart settles which places they are; it does not fix the
+# spelling. This does, and keeps "San Juilán" as a name of kind :error so a Post
+# that writes it still finds the sector.
+#
+# Looked up by BOTH names and by type: once the rename lands, the old name is no
+# longer a canonical name to find it by — which is the point of the rename, and the
+# reason a script that only knew the old one could not be run twice.
+misspelt =
+  event.id
+  |> Core.list_places!()
+  |> Enum.find(&(&1.type == "sector" and &1.canonical_name in ["San Juilán", "San Julián"])) ||
+    Mix.raise("no sector San Juilán/San Julián in #{event_name}")
+
+if misspelt.canonical_name == "San Juilán" do
+  Curation.rename_place!(
+    misspelt,
+    "San Julián",
+    curator,
+    "The sector's name was a misspelling of the town's. Noted on the 2026-07-27 report."
+  )
+
+  say.("renamed “San Juilán” → “San Julián” (sector)")
+else
+  say.("already: the sector reads “#{misspelt.canonical_name}”")
+end
+
 # Ruling two places apart moves no status anywhere, so the act is the only record
 # that the question was ever answered.
 ruled = Curation.list_acts!(event.id) |> Enum.filter(&(&1.kind == :distinguish_places))
 seen = MapSet.new(ruled, &MapSet.new([&1.place_id, &1.before["not_id"]]))
 
 kept_apart =
-  Enum.count(aparts, fn {one_name, other_name, note} ->
-    one = find.(one_name)
-    other = find.(other_name)
+  Enum.count(aparts, fn {one_named, other_named, note} ->
+    one = find_typed.(one_named)
+    other = find_typed.(other_named)
 
     if MapSet.member?(seen, MapSet.new([one.id, other.id])) do
-      say.("already: “#{one_name}” and “#{other_name}” are ruled apart")
+      say.(
+        "already: “#{one.canonical_name}” (#{one.type}) and “#{other.canonical_name}” (#{other.type}) are ruled apart"
+      )
+
       false
     else
       reason =
@@ -126,7 +172,11 @@ kept_apart =
           if note, do: " — #{note}.", else: "."
 
       Curation.distinguish_places!(other, one, curator, reason)
-      say.("apart: “#{other_name}” is not “#{one_name}”")
+
+      say.(
+        "apart: “#{other.canonical_name}” (#{other.type}) is not “#{one.canonical_name}” (#{one.type})"
+      )
+
       true
     end
   end)

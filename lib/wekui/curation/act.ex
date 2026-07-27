@@ -40,6 +40,7 @@ defmodule Wekui.Curation.Act do
     :promote_place,
     :reparent_place,
     :retype_place,
+    :rename_place,
     :deprecate_place,
     :discard_place,
     # One decision, however many rows it moves: this node was never a distinct
@@ -54,6 +55,10 @@ defmodule Wekui.Curation.Act do
     :link_claim_place,
     :relink_claim_place,
     :retract_claim,
+    # One happening told twice, folded into one — and its refusal, which changes
+    # nothing and so can live nowhere but here.
+    :merge_claims,
+    :distinguish_claims,
     # The support gate: seen, weighed, and left standing. Unlike every other act
     # this one changes NO state — which is exactly why it must be recorded, or the
     # report re-asks about the same flagged claim forever.
@@ -76,6 +81,7 @@ defmodule Wekui.Curation.Act do
     promote_place: "promoted",
     reparent_place: "reparented",
     retype_place: "retyped",
+    rename_place: "renamed",
     deprecate_place: "deprecated",
     discard_place: "discarded",
     fold_place: "folded",
@@ -83,6 +89,8 @@ defmodule Wekui.Curation.Act do
     link_claim_place: "placed",
     relink_claim_place: "re-placed",
     retract_claim: "retracted",
+    merge_claims: "merged",
+    distinguish_claims: "kept apart",
     accept_support: "accepted the support verdict on",
     approve_person: "approved",
     withhold_person: "withheld",

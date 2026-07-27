@@ -29,6 +29,7 @@ defmodule Wekui.Curation do
 
   alias Wekui.Core
   alias Wekui.Narrative
+  alias Wekui.Narrative.Merge
   alias Wekui.Normalize
 
   resources do
@@ -55,6 +56,26 @@ defmodule Wekui.Curation do
       {%{"parent" => place_name(place.parent_id)},
        Core.set_place_parent!(place, %{parent_id: parent.id}),
        &%{"parent" => place_name(&1.parent_id)}}
+    end)
+  end
+
+  @doc """
+  Corrects the name we ourselves use for a Place — the gazetteer held a misspelling,
+  or the wrong name outright.
+
+  **The old name is kept**, as a PlaceName of kind `:error` and emission
+  `:recognition_only`: understood when a Post writes it, never emitted into a query
+  of our own. A correction that made the record forget what it used to say would cost
+  us every Post that still spells it the old way, and forgetting is not what a
+  correction is for.
+  """
+  def rename_place!(place, name, curator, reason) do
+    attributed!(curator, :rename_place, reason, [place_id: place.id], fn ->
+      was = place.canonical_name
+      renamed = Core.rename_place!(place, %{canonical_name: name})
+      remember!(renamed, was)
+
+      {%{"canonical_name" => was}, renamed, &%{"canonical_name" => &1.canonical_name}}
     end)
   end
 
@@ -176,6 +197,54 @@ defmodule Wekui.Curation do
     end)
   end
 
+  @doc """
+  Folds two accounts of one happening into one Claim. The earlier account survives —
+  a happening lives at its first evidence — and absorbs the other's citations and
+  places; the later is closed and linked to it.
+
+  The order of the arguments does not matter: `Wekui.Narrative.Merge` picks the
+  canonical by first evidence, so a person says *these two are one* and does not have
+  to work out which one wins. The act is about the account that was folded away.
+  """
+  def merge_claims!(one, other, curator, reason) do
+    {canonical, duplicate} = ordered(one, other)
+
+    attributed!(curator, :merge_claims, reason, [claim_id: duplicate.id], fn ->
+      before = %{
+        "kind" => duplicate.kind,
+        "subject" => duplicate.subject,
+        "places" => claim_places(duplicate)
+      }
+
+      {:ok, merged} = Merge.merge(canonical, duplicate)
+
+      {before, merged, &%{"merged_into" => "#{&1.kind} — #{&1.subject}", "claim_id" => &1.id}}
+    end)
+  end
+
+  @doc """
+  Records that two accounts which read alike are **not** one happening. A woman
+  missing in one building and a woman missing in another are two claims, and no
+  reading of the strings can tell them apart.
+
+  Like `distinguish_places!/4` it changes nothing, and for the same reason it must be
+  written down: a "no" moves no status, so the pair would be offered again forever.
+  """
+  def distinguish_claims!(claim, from, curator, reason) do
+    attributed!(curator, :distinguish_claims, reason, [claim_id: claim.id], fn ->
+      {%{"not" => "#{from.kind} — #{from.subject}", "not_id" => from.id}, claim, nil}
+    end)
+  end
+
+  # The canonical is the earlier happening; a tie falls to the earlier record. The
+  # same order `Merge` applies, computed here so the act can name what was folded away
+  # before the fold makes it harder to read.
+  defp ordered(one, other) do
+    if {one.first_seen_at, one.inserted_at} <= {other.first_seen_at, other.inserted_at},
+      do: {one, other},
+      else: {other, one}
+  end
+
   @doc "Withdraws a Claim: it no longer holds, and nothing takes its place."
   def retract_claim!(claim, curator, reason) do
     attributed!(curator, :retract_claim, reason, [claim_id: claim.id], fn ->
@@ -264,6 +333,31 @@ defmodule Wekui.Curation do
       end)
 
     changed
+  end
+
+  # Keeps a string the Place used to answer to, marked as the mistake it was: still
+  # recognized when a Post writes it, never emitted into a query of ours.
+  #
+  # A row the Place already holds is corrected rather than doubled. It usually IS
+  # already held — the gazetteer records its canonical name as a name — and it was
+  # almost always recorded `:official`, which after a rename it plainly is not.
+  defp remember!(place, was) do
+    folded = Normalize.fold(was)
+
+    case place.id |> Core.list_place_names!() |> Enum.find(&(&1.normalized == folded)) do
+      nil ->
+        Core.create_place_name!(%{
+          place_id: place.id,
+          name: was,
+          kind: :error,
+          emission: :recognition_only
+        })
+
+      held ->
+        held
+        |> Core.set_place_name_kind!(%{kind: :error})
+        |> Core.set_place_name_emission!(%{emission: :recognition_only})
+    end
   end
 
   defp children_of(place) do

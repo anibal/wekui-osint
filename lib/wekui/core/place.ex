@@ -146,6 +146,16 @@ defmodule Wekui.Core.Place do
       end
     end
 
+    update :rename do
+      description """
+      Corrects the name we ourselves use for this Place. The name it was called
+      before does not vanish — `Wekui.Curation.rename_place!/4` keeps it as a
+      PlaceName, so a Post that uses the old spelling still finds its way here.
+      """
+
+      accept [:canonical_name]
+    end
+
     update :set_type do
       description "Curates the free-form type label."
       accept [:type]

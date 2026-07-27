@@ -34,6 +34,7 @@ defmodule Wekui.Report do
   alias Wekui.Curation.Act
   alias Wekui.Gazetteer.Duplicates
   alias Wekui.Narrative
+  alias Wekui.Narrative.Duplicates, as: ClaimDuplicates
   alias Wekui.Narrative.PlaceResolver
   alias Wekui.Normalize
   alias Wekui.Pipelines
@@ -135,7 +136,8 @@ defmodule Wekui.Report do
       pending_persons(world),
       flagged_claims(world),
       proposed_places(world),
-      duplicate_places(world)
+      duplicate_places(world),
+      duplicate_claims(world)
     ]
     |> List.flatten()
     |> Enum.with_index(1)
@@ -491,6 +493,70 @@ defmodule Wekui.Report do
 
     "| #{path(other)} | **#{place.canonical_name}** (#{place.type}) | #{closeness} | " <>
       "#{if certainty == :certain, do: "it sits inside it", else: "a second spelling"} |"
+  end
+
+  # One happening told twice. Within a batch the deterministic merge holds this line;
+  # across batches it does not, and that is the defect that compounds fastest as the
+  # corpus grows. Same shape as the duplicate places, and it stops in the same place:
+  # a "no" moves nothing, so it needs an act.
+  defp duplicate_claims(world) do
+    apart =
+      for act <- world.acts,
+          act.kind == :distinguish_claims,
+          into: MapSet.new(),
+          do: MapSet.new([act.claim_id, act.before["not_id"]])
+
+    world.event.id
+    |> ClaimDuplicates.find()
+    |> Enum.reject(&MapSet.member?(apart, MapSet.new([&1.claim.id, &1.other.id])))
+    |> case do
+      [] ->
+        []
+
+      found ->
+        [
+          %{
+            kind: :duplicate_claim,
+            title: "#{length(found)} claim(s) that may be one happening told twice",
+            claim_ids: Enum.flat_map(found, &[&1.claim.id, &1.other.id]),
+            body: """
+            A subject carrying its own mark — an age, a count — is offered wherever it
+            appears; a generic subject is only offered when both accounts sit at the
+            same place and close in time, because a woman missing in one building and
+            a woman missing in another are two claims.
+
+            #{Enum.map_join(found, "\n\n", &duplicate_claim_entry/1)}
+            """,
+            answer:
+              "Per pair: **merge** (the earlier account keeps its evidence and absorbs " <>
+                "the other's), or **apart** (two happenings — I record that so it is " <>
+                "never asked again)."
+          }
+        ]
+    end
+  end
+
+  defp duplicate_claim_entry(%{claim: claim, other: other, score: score}) do
+    """
+      - **#{line(other)}** — #{where(other)}
+        may be **#{line(claim)}** — #{where(claim)}
+        (subjects #{Float.round(score, 2)} alike)\
+    """
+  end
+
+  defp where(claim) do
+    claim.id
+    |> Narrative.list_claim_places!()
+    |> Enum.map_join(", ", fn link ->
+      case Core.get_place(link.place_id) do
+        {:ok, place} -> place.canonical_name
+        _gone -> "—"
+      end
+    end)
+    |> case do
+      "" -> "*unplaced*"
+      places -> places
+    end
   end
 
   ## ─────────────────────────── sections ───────────────────────────
