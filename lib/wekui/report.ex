@@ -1,0 +1,538 @@
+defmodule Wekui.Report do
+  @moduledoc """
+  The record, written out as markdown a person can read and answer — the
+  cheapest possible review surface until a console exists.
+
+  Two halves, in this order because that is the order attention should go:
+
+    * **What needs your call** — every place the system is honestly unsure and
+      has stopped rather than guessed: a mention that matches a name which is
+      *also* the beginning of another place's name (the ambiguity an exact
+      gazetteer hit hides), a link the resolver scored low, a mention that
+      resolved to nothing at all (and so appears in no [[beat]]), the [[person]]s
+      waiting on the handle gate, the [[claim]]s the support gate flagged, and
+      the [[place]]s a machine proposed. Each is numbered so an answer can name
+      it.
+    * **The record as it stands** — the beat a reader would meet, then every
+      current claim with its evidence, its place and its verdict, then the run
+      receipts.
+
+  It reads; it never writes. Nothing here decides anything — that is the point:
+  the questions go to a human and come back as deliberate acts through the same
+  Ash actions the pipeline uses.
+
+  **This output carries private full names.** The record protects them
+  everywhere else — a claim and a beat may only ever show a derived handle — but
+  a reviewer cannot confirm that "Aaron C." is the right handle for a name they
+  cannot see. So the report shows them, says so at the top, and is written to a
+  git-ignored path. It is a working document, not a publishable one.
+  """
+
+  alias Wekui.Capture
+  alias Wekui.Core
+  alias Wekui.Narrative
+  alias Wekui.Narrative.PlaceResolver
+  alias Wekui.Normalize
+  alias Wekui.Pipelines
+
+  @low_confidence 0.7
+
+  # A question with fifty candidates is a wall, not a question. The rest are
+  # counted, never silently dropped.
+  @max_candidates 6
+
+  @doc """
+  Renders the whole record of `event` as markdown. `opts`: `:at` (the timestamp
+  in the header, defaults to now).
+  """
+  def render(event, opts \\ []) do
+    at = Keyword.get_lazy(opts, :at, &DateTime.utc_now/0)
+    world = gather(event)
+    questions = questions(world)
+
+    [
+      header(event, world, questions, at),
+      calls(questions),
+      story(world),
+      claims_section(world),
+      runs_section(world)
+    ]
+    |> Enum.join("\n")
+  end
+
+  ## ─────────────────────────── gathering ───────────────────────────
+
+  # One read of everything the report needs, so the sections below are pure
+  # shaping. At pilot scale this is a handful of queries; when the corpus grows
+  # past a report you can read in one sitting, this is the thing to page.
+  defp gather(event) do
+    claims = Narrative.current_claims!(event.id)
+    places = Core.list_places!(event.id)
+    by_id = Map.new(places, &{&1.id, &1})
+
+    %{
+      event: event,
+      claims: Enum.map(claims, &detail(&1, by_id)),
+      places: places,
+      by_id: by_id,
+      name_index: name_index(places),
+      persons: Narrative.list_persons!(event.id),
+      runs: Pipelines.list_runs!(event.id)
+    }
+  end
+
+  defp detail(claim, by_id) do
+    links =
+      claim.id
+      |> Narrative.list_claim_places!()
+      |> Enum.map(&%{link: &1, place: Map.get(by_id, &1.place_id)})
+
+    posts =
+      claim.id
+      |> Narrative.list_claim_citations!()
+      |> Enum.map(&Capture.get_post!(&1.post_id))
+
+    persons =
+      claim.id
+      |> Narrative.list_claim_persons!()
+      |> Enum.map(&Narrative.get_person!(&1.person_id))
+
+    %{claim: claim, links: links, posts: posts, persons: persons}
+  end
+
+  # Every folded name any active place answers to, canonical and surface alike —
+  # the same index the resolver matches against, kept here to ask a different
+  # question of it: what ELSE begins with what the posts said.
+  defp name_index(places) do
+    active = Enum.filter(places, &(&1.lifecycle == :active))
+
+    canonical = Enum.map(active, &{Normalize.fold(&1.canonical_name), &1})
+
+    surface =
+      Enum.flat_map(active, fn place ->
+        place.id |> Core.list_place_names!() |> Enum.map(&{&1.normalized, place})
+      end)
+
+    Enum.uniq(canonical ++ surface)
+  end
+
+  ## ─────────────────────────── the questions ───────────────────────────
+
+  defp questions(world) do
+    ambiguous = ambiguous_names(world)
+    covered = ambiguous |> Enum.flat_map(& &1.claim_ids) |> MapSet.new()
+
+    [
+      ambiguous,
+      low_confidence(world, covered),
+      unresolved(world),
+      pending_persons(world),
+      flagged_claims(world),
+      proposed_places(world)
+    ]
+    |> List.flatten()
+    |> Enum.with_index(1)
+    |> Enum.map(fn {question, n} -> Map.put(question, :n, n) end)
+  end
+
+  # The ambiguity an exact match hides: the posts said a name the gazetteer
+  # holds, but that name is ALSO how another place's name begins. "Residencias
+  # Caribe" resolves outright to the building that carries it as an alias, while
+  # "Residencias Caribe, Torre C" stands next door — the resolver never looks,
+  # because an exact hit wins before the ancestors are consulted.
+  defp ambiguous_names(world) do
+    world.claims
+    |> Enum.flat_map(&mention_links/1)
+    |> Enum.group_by(& &1.form, & &1)
+    |> Enum.flat_map(fn {form, matches} ->
+      case others_beginning_with(form, world, hd(matches).place) do
+        [] -> []
+        others -> [ambiguity(form, matches, others)]
+      end
+    end)
+    |> Enum.sort_by(&(-length(&1.claim_ids)))
+  end
+
+  # A claim's mention forms paired with the place each one actually links to.
+  # One link and one mention is the common case; a claim spanning several places
+  # pairs them in order, which is the best available reading without re-running
+  # the resolver.
+  defp mention_links(%{claim: claim, links: links}) do
+    forms = claim.place_mention |> PlaceResolver.parse() |> Enum.map(&hd(&1.forms))
+
+    forms
+    |> Enum.zip(links)
+    |> Enum.reject(fn {_form, %{place: place}} -> is_nil(place) end)
+    |> Enum.map(fn {form, %{link: link, place: place}} ->
+      %{form: form, place: place, claim: claim, confidence: link.confidence}
+    end)
+  end
+
+  defp others_beginning_with(form, world, linked) do
+    world.name_index
+    |> Enum.filter(fn {folded, place} ->
+      place.id != linked.id and folded != form and String.starts_with?(folded, form)
+    end)
+    |> Enum.uniq_by(fn {_folded, place} -> place.id end)
+    |> Enum.map(fn {folded, place} -> %{name: folded, place: place} end)
+  end
+
+  defp ambiguity(form, matches, others) do
+    linked = hd(matches).place
+    {shown, rest} = Enum.split(others, @max_candidates)
+
+    %{
+      kind: :ambiguous_name,
+      title: "Which place is “#{form}”?",
+      claim_ids: Enum.map(matches, & &1.claim.id),
+      body: """
+      The posts said **#{form}**, and the gazetteer answers with
+      **#{path(linked)}** — a name that place carries#{scored(matches)}, so the
+      resolver matched it and weighed nothing else.
+
+      But these places answer to a name that *begins* the same way:
+
+      #{Enum.map_join(shown, "\n", &candidate/1)}
+      #{if rest == [], do: "", else: "  - …and #{length(rest)} more"}
+      Riding on the answer:
+
+      #{Enum.map_join(matches, "\n", &"  - #{line(&1.claim)}")}
+      """,
+      answer:
+        "Name the right place, or say “correct”. Wrong here misattributes every claim listed."
+    }
+  end
+
+  # Which name matched matters more than the place's canonical name: "caraballeda,
+  # residencias country mar" is why an unrelated-looking building is a candidate.
+  defp candidate(%{name: name, place: place}), do: "  - “#{name}” → #{path(place)}"
+
+  # How sure the resolver was, when it was not sure — an exact hit on a full name
+  # scores 0.9, a tie it could not break scores 0.5, and that gap is the reader's
+  # best cue about how much this question matters.
+  defp scored(matches) do
+    case Enum.find_value(matches, & &1.confidence) do
+      nil -> ""
+      confidence when confidence >= @low_confidence -> ""
+      confidence -> " (and it was only #{confidence} sure — several places matched)"
+    end
+  end
+
+  defp low_confidence(world, covered) do
+    world.claims
+    |> Enum.flat_map(fn detail ->
+      for %{link: link, place: place} <- detail.links,
+          place,
+          link.confidence && link.confidence < @low_confidence,
+          detail.claim.id not in covered do
+        %{
+          kind: :low_confidence,
+          title: "A place link the resolver is unsure of (#{link.confidence})",
+          claim_ids: [detail.claim.id],
+          body: """
+          “#{detail.claim.place_mention}” was linked to **#{path(place)}**
+          (#{link.how_resolved}, confidence #{link.confidence}) — matched, but
+          without anything in the mention to anchor which one was meant.
+
+            - #{line(detail)}
+          """,
+          answer: "Confirm the place, or name the right one."
+        }
+      end
+    end)
+  end
+
+  defp unresolved(world) do
+    world.claims
+    |> Enum.filter(&(&1.links == [] and &1.claim.place_mention not in [nil, ""]))
+    |> case do
+      [] ->
+        []
+
+      claims ->
+        [
+          %{
+            kind: :unresolved,
+            title: "#{length(claims)} mention(s) matched no place at all",
+            claim_ids: Enum.map(claims, & &1.claim.id),
+            body: """
+            Nothing in the gazetteer answers to these, and the resolver never
+            guesses a position in the tree. **A claim with no place appears in no
+            beat** — it is not flagged to a reader anywhere; it is simply absent.
+
+            #{Enum.map_join(claims, "\n", &"  - “#{&1.claim.place_mention}” — #{line(&1)}")}
+            """,
+            answer:
+              "Name the place (and where it sits), or leave it — an honest absence beats a guess."
+          }
+        ]
+    end
+  end
+
+  defp pending_persons(world) do
+    case Enum.filter(world.persons, &(&1.status == :pending_review)) do
+      [] ->
+        []
+
+      persons ->
+        [
+          %{
+            kind: :pending_person,
+            title: "#{length(persons)} person(s) waiting on the handle gate",
+            claim_ids: [],
+            body: """
+            A reader only ever sees the handle. The full name is here so you can
+            check the handle is right — it is written nowhere a reader reaches.
+
+            | shown as | full name | in |
+            |---|---|---|
+            #{Enum.map_join(persons, "\n", &person_row(&1, world))}
+            """,
+            answer:
+              "Per person: **approve** (handle stands), **withhold** (they drop out of every beat), or give a corrected handle."
+          }
+        ]
+    end
+  end
+
+  defp person_row(person, world) do
+    appears =
+      world.claims
+      |> Enum.filter(fn detail -> Enum.any?(detail.persons, &(&1.id == person.id)) end)
+      |> Enum.map_join("; ", & &1.claim.kind)
+
+    "| #{person.display_handle || "*(none — needs one)*"} | #{person.full_name} | #{appears} |"
+  end
+
+  defp flagged_claims(world) do
+    world.claims
+    |> Enum.filter(&(&1.claim.support in [:overstated, :unsupported]))
+    |> case do
+      [] ->
+        []
+
+      claims ->
+        [
+          %{
+            kind: :flagged,
+            title: "#{length(claims)} claim(s) the support gate flagged",
+            claim_ids: Enum.map(claims, & &1.claim.id),
+            body: """
+            The evidence does not bear these as they stand. Nothing is withheld —
+            a beat tells them as “según un reporte sin confirmar”.
+
+            #{Enum.map_join(claims, "\n", &"  - **#{&1.claim.support}** — #{line(&1)}\n    #{&1.claim.support_note}")}
+            """,
+            answer: "Correct the claim, retract it, or accept the attribution."
+          }
+        ]
+    end
+  end
+
+  defp proposed_places(world) do
+    case Enum.filter(world.places, &(&1.lifecycle == :proposed)) do
+      [] ->
+        []
+
+      places ->
+        [
+          %{
+            kind: :proposed_place,
+            title: "#{length(places)} place(s) a machine proposed",
+            claim_ids: [],
+            body: """
+            The resolver found the coarser place but not the finer one, so it
+            proposed the finer under it. A proposed place cannot widen the name
+            gate until a human promotes it.
+
+            #{Enum.map_join(places, "\n", &"  - **#{&1.canonical_name}** (#{&1.type}) — #{path(&1)}")}
+            """,
+            answer: "Promote, rename, or discard."
+          }
+        ]
+    end
+  end
+
+  ## ─────────────────────────── sections ───────────────────────────
+
+  defp header(event, world, questions, at) do
+    """
+    # El registro — #{event.name}
+
+    *#{Calendar.strftime(at, "%Y-%m-%d %H:%M UTC")} · #{length(world.claims)} current claims · \
+    #{length(questions)} question(s) for you*
+
+    > **This file names private individuals.** The record protects those names
+    > everywhere a reader could reach — a claim and a beat carry only a derived
+    > handle. They are here because you cannot check a handle you cannot see.
+    > It is written to a git-ignored path: review it, then let it be overwritten.
+    > Do not commit or share it.
+    """
+  end
+
+  defp calls([]) do
+    """
+
+    ## What needs your call
+
+    Nothing. Every mention resolved, every person is decided, every claim is
+    supported.
+    """
+  end
+
+  defp calls(questions) do
+    """
+
+    ## What needs your call
+
+    Answer by number — here in the file or in chat. Nothing below has been
+    guessed at: each is a place the system stopped rather than decide for you.
+
+    #{Enum.map_join(questions, "\n", &"#{&1.n}. #{&1.title}")}
+
+    #{Enum.map_join(questions, "\n", &question(&1))}
+    """
+  end
+
+  defp question(q) do
+    """
+    ### Q#{q.n} — #{q.title}
+
+    #{q.body}
+    **To answer:** #{q.answer}
+
+    ---
+    """
+  end
+
+  # The beat the last completed run produced, kept as its receipt of output. It
+  # is re-derivable from the claims at any time — this is what was rendered, not
+  # a canonical story.
+  defp story(world) do
+    case Enum.find(world.runs, &(&1.status == :completed and is_map(&1.summary["beat"]))) do
+      nil ->
+        """
+
+        ## The story as it reads now
+
+        No completed run has rendered a beat yet.
+        """
+
+      run ->
+        beat = run.summary["beat"]
+        sources = beat["sources"] || []
+
+        """
+
+        ## The story as it reads now
+
+        *#{run.options["place_name"]}, #{window(run)} — rendered by run `#{short(run.id)}`.*
+
+        #{beat["prose"]}
+
+        #{Enum.map_join(sources, "\n", &"[#{&1["n"]}] post #{&1["x_id"]}")}
+        """
+    end
+  end
+
+  defp claims_section(world) do
+    """
+
+    ## The claims (#{length(world.claims)})
+
+    #{Enum.map_join(world.claims, "\n", &claim_entry/1)}
+    """
+  end
+
+  defp claim_entry(%{claim: claim} = detail) do
+    """
+    ### #{claim.kind}#{if claim.subject, do: " — #{claim.subject}"}
+
+    - **where** #{places_of(detail)}
+    - **when** #{Calendar.strftime(claim.first_seen_at, "%Y-%m-%d %H:%M")} · **status** #{claim.status || "—"}#{magnitude(claim)}
+    - **support** #{claim.support}#{if claim.support_note, do: " — #{claim.support_note}"}
+    - **people** #{people_of(detail)}
+    - **evidence**
+    #{Enum.map_join(detail.posts, "\n", &"  - [#{&1.x_id}] #{excerpt(&1.text)}")}
+    """
+  end
+
+  defp excerpt(text) do
+    if String.length(text) > 180, do: String.slice(text, 0, 180) <> "…", else: text
+  end
+
+  defp places_of(%{claim: claim, links: []}), do: "*unresolved* — “#{claim.place_mention || "—"}”"
+
+  defp places_of(%{claim: claim, links: links}) do
+    told =
+      Enum.map_join(links, ", ", fn %{link: l, place: p} -> "#{path(p)} (#{l.confidence})" end)
+
+    "#{told} — from “#{claim.place_mention}”"
+  end
+
+  defp people_of(%{persons: []}), do: "—"
+
+  defp people_of(%{persons: persons}) do
+    Enum.map_join(persons, ", ", &"#{&1.display_handle || &1.full_name} (#{&1.status})")
+  end
+
+  defp magnitude(%{magnitude: nil}), do: ""
+  defp magnitude(%{magnitude: m}), do: " · **magnitude** #{inspect(m)}"
+
+  defp runs_section(world) do
+    """
+
+    ## The runs (#{length(world.runs)})
+
+    | receipt | status | asked | extract | resolve | verify |
+    |---|---|---|---|---|---|
+    #{Enum.map_join(world.runs, "\n", &run_row/1)}
+    """
+  end
+
+  defp run_row(run) do
+    summary = run.summary || %{}
+    options = run.options || %{}
+
+    "| `#{short(run.id)}` | #{run.status} | #{options["place_name"]} #{window(run)} | " <>
+      "#{stage(summary["extract"], ["drafted", "skipped"])} | " <>
+      "#{stage(summary["resolve"], ["linked", "proposed"])} | " <>
+      "#{stage(summary["verify"], ["supported", "unsupported"])} |"
+  end
+
+  defp stage(nil, _keys), do: "—"
+
+  defp stage(counts, keys) do
+    Enum.map_join(keys, ", ", &"#{&1} #{Map.get(counts, &1, 0)}")
+  end
+
+  ## ─────────────────────────── shared ───────────────────────────
+
+  # A place named the way a person can place it: the node, then its parent.
+  defp path(nil), do: "—"
+
+  defp path(place) do
+    case place.parent_id && Core.get_place(place.parent_id) do
+      {:ok, parent} -> "#{place.canonical_name} (#{place.type}, under #{parent.canonical_name})"
+      _no_parent -> "#{place.canonical_name} (#{place.type})"
+    end
+  end
+
+  defp line(%{claim: claim}), do: line(claim)
+
+  defp line(claim) do
+    "#{claim.kind}#{if claim.subject, do: " — #{claim.subject}"} " <>
+      "(#{Calendar.strftime(claim.first_seen_at, "%b %d")})"
+  end
+
+  defp window(run) do
+    options = run.options || %{}
+
+    case {options["from"], options["to"]} do
+      {nil, _to} -> ""
+      {from, to} -> "#{String.slice(from, 0, 10)} → #{String.slice(to || "", 0, 10)}"
+    end
+  end
+
+  defp short(id), do: String.slice(id, 0, 8)
+end
