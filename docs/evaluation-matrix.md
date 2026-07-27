@@ -4,6 +4,11 @@
 it was proven, and — separately — how we will judge whether the *record itself* is good.
 Written to be argued with; the ratings are mine, change them.
 
+**Revised 2026-07-27:** the *write-back* half now exists too — a person's answer to the report
+lands as an attributed, append-only **curation act** (who, when, what changed, why), in one
+transaction with the change it attributes, and the report reads its own acts back so a settled
+question stops being asked. `open-actor`, open since 2026-07-22, is closed.
+
 **State in one line (revised 2026-07-26):** the whole read path — public posts → structured,
 dignity-safe, evidence-cited **claims** → gazetteer places → a support verdict → the Spanish a
 reader meets — is built, orchestrated into **one auditable run**, and **proven end to end on real
@@ -35,7 +40,8 @@ posts) · **unit** (test suite) · — (not yet). Confidence: H / M / L.
 | **Orchestration** (the read-path run + its receipt) | ✅ | **live** + unit | H | records three gate queues, pauses at none; a **fourth queue is missing** — place links below a confidence threshold go unmentioned; no re-extract until the merge-judge lands | add the low-confidence-link queue; pause points arrive with the review console and the spend gate |
 | **Talking agent** (conversational driving, tools, HITL) | ○ | — | — | runtime deliberately undecided; the read path needed none, having no agentic decisions | decide the runtime at that rung |
 | Live acquisition (X collection, spend-gated) | ○ | — | — | pilot runs on a seeded corpus; no live spend yet | the runner + X client, gated |
-| Human-review workflow / UI | ○ | — | — | the gate is a *status* (`pending_review`), not yet an operable interface | a LiveView review console |
+| **Curation** (a human's act, attributed) | ✅ | unit | H | every verb records who/when/what/why in one transaction with its change; the report reads its own acts back and stops re-asking. No UI: the surface is a code interface + a dated script | the review console, when a UI is wanted |
+| Human-review workflow / UI | ◐ | — | — | the *workflow* now exists end to end — report asks, human answers, `Wekui.Curation` applies it attributed, report stops asking. What is missing is only the **interface**: today it is a markdown file and a script | a LiveView review console |
 | Read / timeline UI | ○ | — | — | nothing to look at but the DB | port feed/timeline after Beats |
 | whether / when judgments (relevance, time) | ○ | — | — | seeded = accepted; time via posted_at | port when the corpus needs it |
 
@@ -78,8 +84,13 @@ these three into numbers against Cronista's hand-verified record is itself a tas
    gated property.
 3. **Dedup does not scale yet.** The deterministic merge exists; the *judge* that decides what
    to merge does not — so across many batches/scopes the OPP-25-style duplication returns.
-4. **The human gate is a flag, not a workflow.** `pending_review` protects nothing until there
-   is an interface for a human to actually review, approve, withhold, and fix handles.
+4. **The human gate is a workflow now, but not an interface (2026-07-27).** `pending_review` is
+   serviced end to end: the report asks, a person answers, `Wekui.Curation` applies the answer
+   with **who, when and why** in one transaction, and the report reads its own acts back and
+   stops asking. Two things are still missing — an interface better than a markdown file and a
+   script, and the fact that a *machine* can still call the underlying actions directly, so
+   attribution is a discipline of the curation surface rather than something the resource
+   enforces on every caller.
 5. **Place is text, not geography.** Until `place_mention` is mapped, the place-tree (subtree
    rollup, "filter to Caraballeda") — a core showcase feature — doesn't work on claims.
 6. **Everything rides on a small model's judgment.** DeepSeek-Flash is good but fallible and
@@ -96,11 +107,11 @@ these three into numbers against Cronista's hand-verified record is itself a tas
 
 Roughly in order, what stands between here and a shippable, donation-facing Caraballeda story:
 
-1. **Human-review console** — the support gate is built (flag-only), the person gate makes
-   `pending_review` rows, and a run now *hands you those queues* in its receipt (5 persons on
-   the live run). Nothing services them. The console makes them operable (approve people,
-   confirm handles, adjudicate support verdicts), and the publish path keys off
-   `support == :supported` + person `approved`. **This is now the top of the path.**
+1. ~~**Human-review console**~~ — the *loop* is built (2026-07-27): the report asks, a person
+   answers, `Wekui.Curation` applies it as an attributed act, the report stops asking. What is
+   left of this item is the **console** itself — an interface instead of a markdown file — plus
+   the publish path keying off `support == :supported` + person `approved`. Worth doing when
+   the record is big enough that a file stops being readable in one sitting.
 2. ~~**Place mapping**~~ — built: deterministic resolver + ClaimPlace, live on the real tree.
 3. **Merge-judge** — so one happening is one claim across the whole corpus. Also what would let
    a run re-extract safely rather than skipping.

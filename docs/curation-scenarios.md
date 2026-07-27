@@ -138,19 +138,31 @@ is a record of a conversation.
 
 ---
 
-## 3. What has no verb yet — deliberate additions to weigh, not oversights
+## 3. What has no verb — deliberate additions, weighed
 
-Building this surfaced three gaps. **None is patched this session** without your say-so.
+Building this surfaced three gaps. **One was closed; two are left for you.**
 
-1. **A `PlaceName` cannot be retired.** `PlaceName` has `set_kind` and `set_emission` only. So
-   "stop letting the populated_place answer to the bare name *Caraballeda*" — the durable fix for
-   Q2 below — is **not expressible**. Today's workaround is to relink the affected claims by hand,
-   which fixes the claims but not the next run.
-2. **A `Place` cannot be renamed.** There is no `set_canonical_name`. Renaming the
+1. **[BUILT] A `ClaimPlace` can now be unlinked.** Previously flagged as "a deliberate addition
+   to weigh, not an oversight to patch" — so here is the weighing. Without it there is no such
+   thing as *relinking*: `link_place` only ever adds, so correcting a wrong place would leave the
+   claim about both. And "relink a claim" is half of what this session is for.
+
+   Destroying a row is unheard of everywhere else in this model, and it is right here for one
+   reason: a `ClaimPlace` is the **one deliberately mutable thing** in the design — its own
+   doc says "re-resolution overwrites the provenance and confidence" — so a link is a *current
+   best reading*, not a historical fact. And the Act preserves what it read, with who changed it
+   and why. **The Act is what makes the deletion safe**: before curation existed, dropping a link
+   would have lost information; now it moves that information into the audit trail. Say the word
+   and it comes out again.
+2. **[OPEN] A `PlaceName` cannot be retired.** `PlaceName` has `set_kind` and `set_emission` only.
+   So "stop letting the populated_place answer to the bare name *Caraballeda*" — the durable fix
+   for Q2 below — is still **not expressible**. Relinking fixes the affected claims; it does not
+   stop the next run from tying again.
+3. **[OPEN] A `Place` cannot be renamed.** There is no `set_canonical_name`. Renaming the
    populated_place to "Urbanización Caraballeda" — the alias it already carries — is not
    expressible either.
-3. **A `ClaimPlace` cannot be unlinked.** Known and previously flagged. A wrong link can be
-   overwritten but not removed.
+
+Both open gaps point the same way, and both are only worth building if your answer to Q2 is (b).
 
 ---
 
