@@ -5,6 +5,11 @@ type:: open-question
 
 - `Wekui.Pipelines.Extract.run/4` renders **every [[post]] it is given into a single `{{material}}` block** and makes one call. The [[run]]'s preflight hands it `Capture.list_posts!(event_id)` — the event's *entire* corpus, deliberately, so that "the beat's own interval does the scoping" and no claim is lost for falling outside a render window.
 - That was right for nine posts. It does not survive a real corpus: the Caraballeda subtree of the old app holds **6,982** posts, and asking one model call to read all of them and answer in one JSON object is neither payable nor trustworthy.
+- **The wall is measured, twice, from opposite sides, on two different models — so it is a property of the task and not of the worker.**
+  - `deepseek-ai/DeepSeek-V4-Flash`, 98 posts, one call: the transport timed out at 180 seconds. It never finished writing.
+  - `claude-sonnet`, 302 posts, one call, twice: **the response exceeded the 64,000-token output maximum** and the agent died. Not a timeout — it ran out of room to answer in.
+  - The two failures are the same failure. **The bound is on OUTPUT, not on input.** A batch of 302 posts is only ~30k tokens to read and is trivially affordable; what does not fit is one structured answer per post. So a batch must be sized by what the model has to WRITE, and roughly 25 posts per call is what has actually worked here.
+  - Both retries succeeded by writing the answer in several passes rather than one. That is a hint at the shape of the fix: a batch may be large if its answer is streamed or chunked, and small otherwise.
 - So the bound sits in the wrong place today — in `priv/scripts/port_corpus.exs`, which ports a window rather than the corpus. That is a stopgap and it is written down as one: the record is being kept small to fit the pipeline, which is backwards.
 - What has to be decided before the rest of the corpus crosses:
   - **How a batch is chosen.** By time is the obvious axis and matches how the beat already reads; by place is the other. Neither is free — a happening told across a batch boundary becomes two [[claim]]s, which is the merge question ([[open-when-two-posts-say-the-same-thing]]) arriving through the back door.
