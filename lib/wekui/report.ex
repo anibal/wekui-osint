@@ -30,6 +30,7 @@ defmodule Wekui.Report do
 
   alias Wekui.Capture
   alias Wekui.Core
+  alias Wekui.Curation
   alias Wekui.Narrative
   alias Wekui.Narrative.PlaceResolver
   alias Wekui.Normalize
@@ -54,6 +55,7 @@ defmodule Wekui.Report do
     [
       header(event, world, questions, at),
       calls(questions),
+      settled(world),
       story(world),
       claims_section(world),
       runs_section(world)
@@ -78,7 +80,8 @@ defmodule Wekui.Report do
       by_id: by_id,
       name_index: name_index(places),
       persons: Narrative.list_persons!(event.id),
-      runs: Pipelines.list_runs!(event.id)
+      runs: Pipelines.list_runs!(event.id),
+      acts: Curation.list_acts!(event.id, load: [:actor])
     }
   end
 
@@ -164,12 +167,18 @@ defmodule Wekui.Report do
   # One link and one mention is the common case; a claim spanning several places
   # pairs them in order, which is the best available reading without re-running
   # the resolver.
+  #
+  # A link a human set by hand is dropped: `:manual` IS the answer to "which
+  # place did the posts mean", so re-asking it would be the report arguing with
+  # a decision it already has. The gazetteer tie stays — this is the one
+  # question that cannot suppress itself by watching a status.
   defp mention_links(%{claim: claim, links: links}) do
     forms = claim.place_mention |> PlaceResolver.parse() |> Enum.map(&hd(&1.forms))
 
     forms
     |> Enum.zip(links)
     |> Enum.reject(fn {_form, %{place: place}} -> is_nil(place) end)
+    |> Enum.reject(fn {_form, %{link: link}} -> link.how_resolved == :manual end)
     |> Enum.map(fn {form, %{link: link, place: place}} ->
       %{form: form, place: place, claim: claim, confidence: link.confidence}
     end)
@@ -363,9 +372,17 @@ defmodule Wekui.Report do
     "| #{person.display_handle || "*(none — needs one)*"} | #{person.full_name} | #{appears} |"
   end
 
+  # The only question a human's answer cannot silence by itself: accepting a
+  # support verdict leaves the claim exactly as it was, so nothing about the
+  # claim will ever say it was read. The curation act is the only record that it
+  # was — which is precisely why `:accept_support` exists.
   defp flagged_claims(world) do
+    accepted =
+      for act <- world.acts, act.kind == :accept_support, into: MapSet.new(), do: act.claim_id
+
     world.claims
     |> Enum.filter(&(&1.claim.support in [:overstated, :unsupported]))
+    |> Enum.reject(&MapSet.member?(accepted, &1.claim.id))
     |> case do
       [] ->
         []
@@ -463,6 +480,89 @@ defmodule Wekui.Report do
     ---
     """
   end
+
+  # What a person already decided, so the report stops asking. Most questions
+  # above suppress themselves by watching the state an answer moved; this
+  # section is the other half of that — it says the answer was a deliberate act
+  # by a named person, with a reason, on a date. Without it the report is a nag;
+  # with it, it is the record of a conversation.
+  defp settled(%{acts: []}), do: ""
+
+  defp settled(world) do
+    """
+
+    ## What you already settled (#{length(world.acts)})
+
+    Newest first. Each of these was a deliberate act — it is why the questions
+    it answered are no longer above.
+
+    | when | who | what | why |
+    |---|---|---|---|
+    #{Enum.map_join(world.acts, "\n", &act_row(&1, world))}
+    """
+  end
+
+  defp act_row(act, world) do
+    who = (act.actor && act.actor.name) || "*(unattributed)*"
+
+    "| #{Calendar.strftime(act.inserted_at, "%b %d")} | #{who} | " <>
+      "#{verb(act)} #{target(act, world)}#{moved(act)} | #{act.reason} |"
+  end
+
+  # The vocabulary as a person says it, not as the database spells it.
+  defp verb(%{kind: kind}) do
+    case kind do
+      :promote_place -> "promoted"
+      :reparent_place -> "reparented"
+      :retype_place -> "retyped"
+      :deprecate_place -> "deprecated"
+      :discard_place -> "discarded"
+      :link_claim_place -> "placed"
+      :relink_claim_place -> "re-placed"
+      :retract_claim -> "retracted"
+      :accept_support -> "accepted the support verdict on"
+      :approve_person -> "approved"
+      :withhold_person -> "withheld"
+      :set_person_handle -> "renamed the handle of"
+      :set_person_kind -> "set the privacy of"
+    end
+  end
+
+  defp target(%{place_id: id}, world) when not is_nil(id) do
+    case Map.get(world.by_id, id) do
+      nil -> "a place"
+      place -> "**#{place.canonical_name}** (#{place.type})"
+    end
+  end
+
+  defp target(%{person_id: id}, world) when not is_nil(id) do
+    case Enum.find(world.persons, &(&1.id == id)) do
+      nil -> "a person"
+      person -> "**#{person.display_handle || person.full_name}**"
+    end
+  end
+
+  defp target(%{claim_id: id}, world) when not is_nil(id) do
+    case Enum.find(world.claims, &(&1.claim.id == id)) do
+      nil -> "a claim"
+      detail -> "*#{line(detail)}*"
+    end
+  end
+
+  defp target(_no_target, _world), do: "—"
+
+  # Only worth saying when it actually moved, and only the fields this act touched.
+  defp moved(%{before: before, after: nil}) when is_map(before), do: ""
+  defp moved(%{before: nil}), do: ""
+
+  defp moved(%{before: before, after: later}) do
+    case Enum.map_join(later, ", ", fn {key, to} -> "#{Map.get(before, key) || "—"} → #{to}" end) do
+      "" -> ""
+      moved -> " (#{moved})"
+    end
+  end
+
+  defp moved(_no_shape), do: ""
 
   # The beat the last completed run produced, kept as its receipt of output. It
   # is re-derivable from the claims at any time — this is what was rendered, not

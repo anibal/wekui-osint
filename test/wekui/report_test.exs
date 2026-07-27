@@ -4,6 +4,7 @@ defmodule Wekui.ReportTest do
   import Wekui.Fixtures
 
   alias Wekui.Core
+  alias Wekui.Curation
   alias Wekui.Narrative
   alias Wekui.Report
 
@@ -195,6 +196,103 @@ defmodule Wekui.ReportTest do
 
     assert report =~ "1 place(s) a machine proposed"
     assert report =~ "**OPP 25** (edificio"
+  end
+
+  describe "what a person already settled" do
+    setup ctx do
+      Map.put(ctx, :curator, curator!(ctx.event, %{name: "Aníbal Rojas"}))
+    end
+
+    test "an act is shown with the person, the date, the move and the reason", ctx do
+      proposed =
+        Core.create_place!(%{
+          event_id: ctx.event.id,
+          canonical_name: "OPP 25",
+          type: "edificio",
+          parent_id: ctx.caribe.id
+        })
+
+      Curation.promote_place!(proposed, ctx.curator, "confirmed on the ground")
+
+      report = Report.render(ctx.event)
+
+      assert report =~ "## What you already settled (1)"
+      assert report =~ "| Aníbal Rojas | promoted **OPP 25** (edificio) (proposed → active) |"
+      assert report =~ "confirmed on the ground"
+    end
+
+    test "a report with no acts carries no such section", ctx do
+      claim!(ctx, %{place_mention: "Caribe"}, place: ctx.caribe)
+
+      refute Report.render(ctx.event) =~ "What you already settled"
+    end
+
+    # The tie in the gazetteer does not go away when a human answers it, so this
+    # question cannot suppress itself the way a status-driven one does.
+    test "the same-name question stops being asked once the link is manual", ctx do
+      place!(ctx.event, %{
+        canonical_name: "Caraballeda",
+        type: "populated_place",
+        parent_id: ctx.caraballeda.id
+      })
+
+      claim =
+        claim!(ctx, %{place_mention: "Caraballeda"}, place: ctx.caraballeda, confidence: 0.5)
+
+      assert Report.render(ctx.event) =~ "Two places are called"
+
+      Curation.relink_claim_place!(
+        claim,
+        ctx.caraballeda,
+        ctx.curator,
+        "a bare Caraballeda means the parish"
+      )
+
+      report = Report.render(ctx.event)
+      refute report =~ "Two places are called"
+      assert report =~ "a bare Caraballeda means the parish"
+    end
+
+    # The one question no state change can answer: accepting a verdict leaves the
+    # claim exactly as it stood, so only the act says it was read.
+    test "a flagged claim stops being asked once the verdict is accepted", ctx do
+      claim =
+        ctx
+        |> claim!(%{place_mention: "Caribe"}, place: ctx.caribe)
+        |> Narrative.record_claim_support!(%{
+          support: :unsupported,
+          support_note: "nadie lo dice"
+        })
+
+      assert Report.render(ctx.event) =~ "claim(s) the support gate flagged"
+
+      Curation.accept_support!(claim, ctx.curator, "the source is named in the beat")
+
+      report = Report.render(ctx.event)
+      refute report =~ "claim(s) the support gate flagged"
+      assert report =~ "accepted the support verdict on"
+    end
+
+    test "a second correction is listed beside the first, newest first", ctx do
+      person = Narrative.identify_person!(%{event_id: ctx.event.id, full_name: "Damarys Melo"})
+
+      Curation.approve_person!(person, ctx.curator, "handle checked")
+
+      person.id
+      |> Narrative.get_person!()
+      |> Curation.withhold_person!(ctx.curator, "she asked us not to")
+
+      report = Report.render(ctx.event)
+
+      assert report =~ "## What you already settled (2)"
+      # A stamp would show only the second; the record shows the change of mind.
+      assert report =~ "handle checked"
+      assert report =~ "she asked us not to"
+
+      {withheld_at, _len} = :binary.match(report, "withheld **Damarys M.**")
+      {approved_at, _len} = :binary.match(report, "approved **Damarys M.**")
+      assert withheld_at < approved_at
+    end
   end
 
   test "questions are numbered so an answer can name one", ctx do
