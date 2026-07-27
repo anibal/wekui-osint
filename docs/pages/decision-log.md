@@ -21,4 +21,5 @@ type:: hub
   - [[decision-2026-07-26-extract-once-per-event]] — a re-run extracts only onto an event with no claims; the citation-coverage rule mis-fired on the happy path.
 - 2026-07-27
   - [[decision-2026-07-27-curation-is-a-record]] — a person's act is an append-only record, not a stamp; a stamp's second correction overwrites the first.
+  - [[decision-2026-07-27-the-corpus-crosses-whole]] — a ported Post carries the payload X sent; the nine cleaned rehearsal posts stay as they are.
 - Dates say when a decision was recorded in this log; the measurements behind the earliest entries predate it.
