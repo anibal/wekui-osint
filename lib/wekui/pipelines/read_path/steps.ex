@@ -187,8 +187,10 @@ defmodule Wekui.Pipelines.ReadPath.Steps do
   def resolve(%{event: event, agent: agent}, _context) do
     claims = Narrative.current_claims!(event.id)
 
+    zero = %{mentions: 0, linked: 0, proposed: 0, unresolved: [], settled: 0}
+
     counts =
-      Enum.reduce(claims, %{mentions: 0, linked: 0, proposed: 0, unresolved: []}, fn claim, acc ->
+      Enum.reduce(claims, zero, fn claim, acc ->
         {:ok, summary} =
           PlaceResolver.resolve(claim, actor_id: agent.id, post_id: first_post_id(claim))
 
@@ -196,7 +198,8 @@ defmodule Wekui.Pipelines.ReadPath.Steps do
           mentions: acc.mentions + summary.mentions,
           linked: acc.linked + summary.linked,
           proposed: acc.proposed + summary.proposed,
-          unresolved: acc.unresolved ++ summary.unresolved
+          unresolved: acc.unresolved ++ summary.unresolved,
+          settled: acc.settled + summary.settled
         }
       end)
 
@@ -206,7 +209,10 @@ defmodule Wekui.Pipelines.ReadPath.Steps do
        "mentions" => counts.mentions,
        "linked" => counts.linked,
        "proposed" => counts.proposed,
-       "unresolved" => counts.unresolved
+       "unresolved" => counts.unresolved,
+       # Claims a person placed by hand, which this pass deliberately did not touch.
+       # Without this the receipt would read as though the resolver had done the work.
+       "settled" => counts.settled
      }}
   end
 

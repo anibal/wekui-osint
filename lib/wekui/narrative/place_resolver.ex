@@ -49,17 +49,38 @@ defmodule Wekui.Narrative.PlaceResolver do
   @doc """
   Resolves `claim`'s `place_mention` into ClaimPlace links. `opts`: `:actor_id` and
   `:post_id`, the provenance stamped on any Place the resolver proposes. Returns
-  `{:ok, summary}` where summary counts linked / proposed / unresolved.
+  `{:ok, summary}` where summary counts linked / proposed / unresolved / settled.
+
+  **A claim a person already placed by hand is left alone**, and counted as `settled`.
   """
   def resolve(claim, opts \\ []) do
-    index = gazetteer_index(claim.event_id)
+    if settled_by_hand?(claim) do
+      {:ok, %{mentions: 0, linked: 0, proposed: 0, unresolved: [], settled: 1}}
+    else
+      index = gazetteer_index(claim.event_id)
 
-    results =
-      claim.place_mention
-      |> parse()
-      |> Enum.map(&resolve_one(&1, claim, index, opts))
+      results =
+        claim.place_mention
+        |> parse()
+        |> Enum.map(&resolve_one(&1, claim, index, opts))
 
-    {:ok, summarize(results)}
+      {:ok, summarize(results)}
+    end
+  end
+
+  # A place link is an upsert on (claim, place) that overwrites `how_resolved` and
+  # `confidence` — which is right when the resolver is correcting itself, and wrong
+  # when it would overwrite a person. Re-running would put `:mention_exact` back over
+  # a `:manual` link, or re-add a link a curation act deliberately removed, and the
+  # act would be silently undone.
+  #
+  # So a human's answer outranks the resolver's, and the whole claim is skipped rather
+  # than each link: the mention "Caraballeda" is the thing that was settled, and
+  # re-resolving it would only tie again.
+  defp settled_by_hand?(claim) do
+    claim.id
+    |> Narrative.list_claim_places!()
+    |> Enum.any?(&(&1.how_resolved == :manual))
   end
 
   ## ─────────────────────────── parsing ───────────────────────────
@@ -304,7 +325,8 @@ defmodule Wekui.Narrative.PlaceResolver do
       mentions: length(results),
       linked: Enum.count(results, &match?({:linked, _how, _name}, &1)),
       proposed: Enum.count(results, &match?({:proposed, _name}, &1)),
-      unresolved: for({:unresolved, name} <- results, do: name)
+      unresolved: for({:unresolved, name} <- results, do: name),
+      settled: 0
     }
   end
 end

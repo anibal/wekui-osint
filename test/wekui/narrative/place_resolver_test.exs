@@ -152,7 +152,47 @@ defmodule Wekui.Narrative.PlaceResolverTest do
     test "a blank mention resolves to nothing — the claim is event-wide", ctx do
       {claim, summary} = resolve!(ctx, nil)
       assert links(claim) == []
-      assert summary == %{mentions: 0, linked: 0, proposed: 0, unresolved: []}
+      assert summary == %{mentions: 0, linked: 0, proposed: 0, unresolved: [], settled: 0}
+    end
+  end
+
+  # A place link is an upsert that overwrites how_resolved and confidence — right when
+  # the resolver corrects itself, wrong when it would overwrite a person. Without this
+  # guard the second run of the pipeline silently undoes every curation act.
+  describe "a claim a person already placed by hand" do
+    test "is left exactly as the person left it, and counted as settled", ctx do
+      {claim, _first} = resolve!(ctx, "Residencias Caribe")
+      assert [%{how_resolved: :mention_exact}] = links(claim)
+
+      # The person says it was really the parroquia, not the building.
+      Narrative.unlink_place!(hd(links(claim)))
+
+      Narrative.link_place!(%{
+        claim_id: claim.id,
+        place_id: ctx.caraballeda.id,
+        how_resolved: :manual,
+        confidence: nil
+      })
+
+      {:ok, summary} = PlaceResolver.resolve(claim, actor_id: ctx.agent.id, post_id: ctx.post.id)
+
+      assert summary.settled == 1
+      assert summary.linked == 0
+
+      # Not overwritten back to :mention_exact, and the building was not re-added.
+      assert [only] = links(claim)
+      assert only.place_id == ctx.caraballeda.id
+      assert only.how_resolved == :manual
+      assert is_nil(only.confidence)
+    end
+
+    test "a claim with no manual link still resolves normally", ctx do
+      {claim, _first} = resolve!(ctx, "Residencias Caribe")
+
+      {:ok, summary} = PlaceResolver.resolve(claim, actor_id: ctx.agent.id, post_id: ctx.post.id)
+
+      assert summary.settled == 0
+      assert summary.linked == 1
     end
   end
 end

@@ -376,13 +376,21 @@ defmodule Wekui.Report do
   # support verdict leaves the claim exactly as it was, so nothing about the
   # claim will ever say it was read. The curation act is the only record that it
   # was — which is precisely why `:accept_support` exists.
+  #
+  # It suppresses the verdict that was accepted, not the claim. Verify re-runs by
+  # default and the judge may honestly move a claim from :overstated to
+  # :unsupported; a worse verdict silently swallowed by an older acceptance is the
+  # exact failure the honesty layer exists to prevent, so it asks again.
   defp flagged_claims(world) do
     accepted =
-      for act <- world.acts, act.kind == :accept_support, into: MapSet.new(), do: act.claim_id
+      for act <- world.acts,
+          act.kind == :accept_support,
+          into: MapSet.new(),
+          do: {act.claim_id, act.before["support"]}
 
     world.claims
     |> Enum.filter(&(&1.claim.support in [:overstated, :unsupported]))
-    |> Enum.reject(&MapSet.member?(accepted, &1.claim.id))
+    |> Enum.reject(&MapSet.member?(accepted, {&1.claim.id, to_string(&1.claim.support)}))
     |> case do
       [] ->
         []

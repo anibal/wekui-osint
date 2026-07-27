@@ -286,6 +286,26 @@ defmodule Wekui.ReportTest do
       assert report =~ "accepted the support verdict on"
     end
 
+    # An acceptance answers a verdict, not a claim: verify re-runs by default, and a
+    # judge that moves :overstated → :unsupported must be asked about again.
+    test "a WORSE verdict is asked about again, even after an acceptance", ctx do
+      claim =
+        ctx
+        |> claim!(%{place_mention: "Caribe"}, place: ctx.caribe)
+        |> Narrative.record_claim_support!(%{support: :overstated, support_note: "too strong"})
+
+      Curation.accept_support!(claim, ctx.curator, "the source is named in the beat")
+      refute Report.render(ctx.event) =~ "claim(s) the support gate flagged"
+
+      claim.id
+      |> Narrative.get_claim!()
+      |> Narrative.record_claim_support!(%{support: :unsupported, support_note: "nadie lo dice"})
+
+      report = Report.render(ctx.event)
+      assert report =~ "1 claim(s) the support gate flagged"
+      assert report =~ "nadie lo dice"
+    end
+
     test "a second correction is listed beside the first, newest first", ctx do
       person = Narrative.identify_person!(%{event_id: ctx.event.id, full_name: "Damarys Melo"})
 
