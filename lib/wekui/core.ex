@@ -35,6 +35,7 @@ defmodule Wekui.Core do
 
     resource Wekui.Core.Actor do
       define :register_agent, action: :register_agent
+      define :register_person, action: :register_person
       define :get_actor, action: :read, get_by: [:id]
       define :list_actors, action: :by_event, args: [:event_id]
     end

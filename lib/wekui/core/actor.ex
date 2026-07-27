@@ -13,11 +13,19 @@ defmodule Wekui.Core.Actor do
   (`(content_hash, model)`) elevated into a first-class thing, now Event-scoped
   like everything else.
 
+  A **person** is named, and that name is the whole of their details: `register_person`
+  is an upsert on `(event_id, name)`, so the same name is the same curator. An agent
+  leaves `name` absent and a person leaves `model`, `prompt` and `content_hash` absent —
+  SQLite treats NULLs as distinct in a unique index, so each kind coexists freely under
+  the other's identity.
+
+  An Actor's name is **not** a `Wekui.Narrative.Person`'s name and the private-name gate
+  does not reach it: a Person is whom a Claim is *about*, an Actor is who *acted*. An
+  Actor's name never enters a Claim or a Beat — it appears in the audit trail and in the
+  report's record of what a human already settled.
+
   An Actor is remembered, never revised: it has no lifecycle, and no update or
   destroy action — it is only ever the who behind acts that have one.
-
-  Only the agent write-path is built this session; a person's details and how
-  one is created arrive with the first curation act that must be attributed.
   """
 
   use Ash.Resource,
@@ -65,6 +73,26 @@ defmodule Wekui.Core.Actor do
       upsert_fields []
     end
 
+    create :register_person do
+      description """
+      Records a person — a human who curates this Event's record — or returns the one
+      it already holds. The same name is the same curator; re-registering changes
+      nothing and returns them.
+      """
+
+      accept [:event_id, :name]
+
+      # A person with no name is the thing this action exists to stop being.
+      validate present([:name])
+
+      change set_attribute(:kind, :person)
+
+      upsert? true
+      upsert_identity :unique_person
+      # Remembered, never revised — same as an agent.
+      upsert_fields []
+    end
+
     read :by_event do
       description "Every Actor of one Event, oldest first."
       argument :event_id, :uuid, allow_nil?: false
@@ -82,6 +110,11 @@ defmodule Wekui.Core.Actor do
       allow_nil? false
       public? true
       constraints one_of: [:person, :agent]
+    end
+
+    attribute :name, :string do
+      description "What a person is called — the whole of a person's details. Absent for an agent, and never a Person's name: this is who acted, not whom a Claim is about."
+      public? true
     end
 
     attribute :model, :string do
@@ -111,6 +144,10 @@ defmodule Wekui.Core.Actor do
   identities do
     identity :unique_agent, [:event_id, :content_hash, :model] do
       message "this Event already holds that agent"
+    end
+
+    identity :unique_person, [:event_id, :name] do
+      message "this Event already holds that person"
     end
   end
 end

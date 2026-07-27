@@ -8,4 +8,5 @@ type:: concept
 - An Actor is remembered, never revised: once recorded it never changes and is never retired. Unlike a [[place]] or a [[theme]] it has no lifecycle of its own — it is only ever the who behind acts that have one.
 - Like everything else, an Actor belongs to one Event; the same model and prompt used in two Events are two Actors, and each carries only what it did inside its own Event.
 - We treat people and agents the same way on purpose: it is the only way to ask, within an Event, *how good is this agent at this job compared to a person*, and to answer it with evidence rather than impression.
-- The agent side is real; how a person's deliberate acts are recorded and attributed is not settled yet — see [[open-actor]].
+- A **person is named**, and the name is the whole of their details: two acts by the same name within an Event are the same curator. An Actor's name is never a [[person]]'s name — a Person is whom a [[claim]] is *about*, an Actor is who *acted* — so the private-name gate does not reach it, and an Actor's name never enters a Claim or a [[beat]].
+- What a person's acts are recorded *as* is [[open-actor]]'s remaining half: a person can now be named, and the record of what they decided is the next thing to land.

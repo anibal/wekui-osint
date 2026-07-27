@@ -70,6 +70,19 @@ defmodule Wekui.Fixtures do
     )
   end
 
+  @doc "A person Actor — a human who curates one Event's record."
+  def curator!(event, attrs \\ %{}) do
+    Core.register_person!(
+      Map.merge(
+        %{
+          event_id: event.id,
+          name: "Curator ##{System.unique_integer([:positive])}"
+        },
+        attrs
+      )
+    )
+  end
+
   @doc "An active Theme of one Event — a classification target a Post can be judged against."
   def theme!(event, attrs \\ %{}) do
     Taxonomy.create_theme!(

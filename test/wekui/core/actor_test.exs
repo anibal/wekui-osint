@@ -77,6 +77,75 @@ defmodule Wekui.Core.ActorTest do
     end
   end
 
+  describe "register_person" do
+    test "records a person, named, belonging to their Event", %{event: event} do
+      person = curator!(event, %{name: "Aníbal Rojas"})
+
+      assert person.kind == :person
+      assert person.name == "Aníbal Rojas"
+      assert person.event_id == event.id
+
+      # A person is not driven by a model and a prompt, and carries no content address.
+      assert is_nil(person.model)
+      assert is_nil(person.prompt)
+      assert is_nil(person.content_hash)
+    end
+
+    test "requires a name — a nameless person is what this action exists to stop", %{event: event} do
+      assert {:error, %Ash.Error.Invalid{}} = Core.register_person(%{event_id: event.id})
+    end
+
+    test "the same name is the same person; re-registering returns the row we hold", %{
+      event: event
+    } do
+      first = curator!(event, %{name: "Aníbal Rojas"})
+      second = curator!(event, %{name: "Aníbal Rojas"})
+
+      assert second.id == first.id
+      assert second.inserted_at == first.inserted_at
+    end
+
+    test "the same person in two Events is two Actors", %{event: event, other_event: other} do
+      here = curator!(event, %{name: "Aníbal Rojas"})
+      there = curator!(other, %{name: "Aníbal Rojas"})
+
+      refute here.id == there.id
+    end
+  end
+
+  # The two identities overlap on event_id and each leaves the other's fields NULL.
+  # SQLite treats NULLs as distinct in a unique index, so neither identity collapses
+  # the other's rows — asserted here rather than assumed, because the whole
+  # attribution layer rests on it.
+  describe "the two kinds coexist under each other's identity" do
+    test "many agents coexist though every one has a NULL name", %{event: event} do
+      agents = for n <- 1..3, do: agent!(event, %{model: "m", prompt: "p#{n}"})
+
+      assert Enum.uniq(Enum.map(agents, & &1.id)) |> length() == 3
+      assert Enum.all?(agents, &is_nil(&1.name))
+    end
+
+    test "many persons coexist though every one has a NULL model and content_hash", %{
+      event: event
+    } do
+      persons = for name <- ~w(Aníbal Cronista Ada), do: curator!(event, %{name: name})
+
+      assert Enum.uniq(Enum.map(persons, & &1.id)) |> length() == 3
+
+      {:ok, actors} = Core.list_actors(event.id)
+      assert length(actors) == 3
+    end
+
+    test "an agent and a person of one Event are two Actors, both listed", %{event: event} do
+      agent = agent!(event, %{model: "m", prompt: "p"})
+      person = curator!(event, %{name: "Aníbal Rojas"})
+
+      {:ok, actors} = Core.list_actors(event.id)
+      assert Enum.map(actors, & &1.id) == [agent.id, person.id]
+      assert Enum.map(actors, & &1.kind) == [:agent, :person]
+    end
+  end
+
   describe "event scope" do
     test "the same model and prompt in two Events are two distinct Actors", %{
       event: event,
