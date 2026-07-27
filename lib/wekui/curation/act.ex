@@ -45,6 +45,10 @@ defmodule Wekui.Curation.Act do
     # One decision, however many rows it moves: this node was never a distinct
     # place, only another name for one.
     :fold_place,
+    # The answer "no, those two are different places". Like accepting a support
+    # verdict it changes nothing — and so, like it, the record is the only place
+    # the answer can live.
+    :distinguish_places,
     # Claims. A relink says "and not the places it was about", so it drops the
     # others; a link only adds, because one happening can span adjacent buildings.
     :link_claim_place,
@@ -75,6 +79,7 @@ defmodule Wekui.Curation.Act do
     deprecate_place: "deprecated",
     discard_place: "discarded",
     fold_place: "folded",
+    distinguish_places: "kept apart",
     link_claim_place: "placed",
     relink_claim_place: "re-placed",
     retract_claim: "retracted",

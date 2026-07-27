@@ -306,6 +306,51 @@ defmodule Wekui.ReportTest do
       assert report =~ "nadie lo dice"
     end
 
+    # Asked over the whole tree, up front — a duplicate splits a story long before
+    # any claim happens to name it.
+    test "asks about a place the gazetteer may hold twice", ctx do
+      place!(ctx.event, %{
+        canonical_name: "Caraballeda",
+        type: "populated_place",
+        parent_id: ctx.caraballeda.id
+      })
+
+      report = Report.render(ctx.event)
+
+      assert report =~ "1 place(s) the gazetteer may hold twice"
+      assert report =~ "**same name**"
+      assert report =~ "**apart**"
+    end
+
+    test "a folded pair stops being asked about", ctx do
+      duplicate =
+        place!(ctx.event, %{
+          canonical_name: "Caraballeda",
+          type: "populated_place",
+          parent_id: ctx.caraballeda.id
+        })
+
+      Curation.fold_place_into!(duplicate, ctx.caraballeda, ctx.curator, "popular speech")
+
+      refute Report.render(ctx.event) =~ "the gazetteer may hold twice"
+    end
+
+    # "No, those are two places" moves no status. Without the act it would be asked
+    # again on every report, forever — the same shape as accepting a support verdict.
+    test "a pair ruled apart stops being asked about", ctx do
+      one = place!(ctx.event, %{canonical_name: "La Costanera", type: "calle"})
+      two = place!(ctx.event, %{canonical_name: "Avenida La Costanera", type: "calle"})
+
+      assert Report.render(ctx.event) =~ "the gazetteer may hold twice"
+
+      Curation.distinguish_places!(two, one, ctx.curator, "the avenue and the beach are not one")
+
+      report = Report.render(ctx.event)
+      refute report =~ "the gazetteer may hold twice"
+      assert report =~ "kept apart **Avenida La Costanera**"
+      assert report =~ "the avenue and the beach are not one"
+    end
+
     test "a second correction is listed beside the first, newest first", ctx do
       person = Narrative.identify_person!(%{event_id: ctx.event.id, full_name: "Damarys Melo"})
 

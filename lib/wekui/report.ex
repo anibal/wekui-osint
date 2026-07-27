@@ -32,6 +32,7 @@ defmodule Wekui.Report do
   alias Wekui.Core
   alias Wekui.Curation
   alias Wekui.Curation.Act
+  alias Wekui.Gazetteer.Duplicates
   alias Wekui.Narrative
   alias Wekui.Narrative.PlaceResolver
   alias Wekui.Normalize
@@ -133,7 +134,8 @@ defmodule Wekui.Report do
       unresolved(world),
       pending_persons(world),
       flagged_claims(world),
-      proposed_places(world)
+      proposed_places(world),
+      duplicate_places(world)
     ]
     |> List.flatten()
     |> Enum.with_index(1)
@@ -436,6 +438,59 @@ defmodule Wekui.Report do
           }
         ]
     end
+  end
+
+  # The gazetteer holding one place twice splits its story in half, and the split is
+  # invisible until a claim happens to name it. So it is asked up front, over the
+  # whole tree, rather than waited for.
+  #
+  # A "yes" folds one into the other and the pair leaves the tree. A "no" moves
+  # nothing — so it needs an act, exactly like accepting a support verdict, or the
+  # same pair comes back on every report forever.
+  defp duplicate_places(world) do
+    apart =
+      for act <- world.acts,
+          act.kind == :distinguish_places,
+          into: MapSet.new(),
+          do: MapSet.new([act.place_id, act.before["not_id"]])
+
+    world.event.id
+    |> Duplicates.find()
+    |> Enum.reject(&MapSet.member?(apart, MapSet.new([&1.place.id, &1.other.id])))
+    |> case do
+      [] ->
+        []
+
+      found ->
+        [
+          %{
+            kind: :duplicate_place,
+            title: "#{length(found)} place(s) the gazetteer may hold twice",
+            claim_ids: [],
+            body: """
+            Two rows for one place split its story: half the claims land on each, and
+            a reader meets the same place twice. Nothing here is guessed at — a pair
+            whose numbers or compass directions disagree is never offered, because
+            that token is what tells two neighbours apart.
+
+            | keep | may be the same as | how close | why |
+            |---|---|---|---|
+            #{Enum.map_join(found, "\n", &duplicate_row/1)}
+            """,
+            answer:
+              "Per pair: **fold** (the second becomes a name of the first, and its " <>
+                "children move up), or **apart** (they are two places — I record that " <>
+                "so it is never asked again)."
+          }
+        ]
+    end
+  end
+
+  defp duplicate_row(%{place: place, other: other, score: score, certainty: certainty}) do
+    closeness = if certainty == :certain, do: "**same name**", else: Float.round(score, 2)
+
+    "| #{path(other)} | **#{place.canonical_name}** (#{place.type}) | #{closeness} | " <>
+      "#{if certainty == :certain, do: "it sits inside it", else: "a second spelling"} |"
   end
 
   ## ─────────────────────────── sections ───────────────────────────

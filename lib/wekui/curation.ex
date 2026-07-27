@@ -113,6 +113,21 @@ defmodule Wekui.Curation do
     end)
   end
 
+  @doc """
+  Records that two Places which read almost alike are **not** the same place. "El
+  Palmar Este" and "El Palmar Oeste"; "Residencias Green 7" and "Green 8".
+
+  Like accepting a support verdict it changes nothing, and for the same reason it has
+  to be written down: a "no" moves no status, so without an act the question comes
+  back on every report, forever. The act is about `place` — the one something
+  proposed to fold away — and names the other in `before`.
+  """
+  def distinguish_places!(place, from, curator, reason) do
+    attributed!(curator, :distinguish_places, reason, [place_id: place.id], fn ->
+      {%{"not" => "#{from.canonical_name} (#{from.type})", "not_id" => from.id}, place, nil}
+    end)
+  end
+
   @doc "Retires a Place with no replacement, because it was a mistake."
   def discard_place!(place, curator, reason) do
     attributed!(curator, :discard_place, reason, [place_id: place.id], fn ->
