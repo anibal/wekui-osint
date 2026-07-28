@@ -166,9 +166,59 @@ defmodule Wekui.ReportTest do
 
     report = Report.render(ctx.event)
 
-    assert report =~ "1 person(s) waiting on the handle gate"
+    assert report =~ "1 person(s) at the handle gate"
     assert report =~ "| Damarys M. | Damarys Melo |"
-    assert report =~ "**withhold**"
+    # Nothing is auto-approved: being told is a decision about dignity and it stays his.
+    assert report =~ "Nothing below was approved for you"
+  end
+
+  # Human attention is bounded and machine attention is not, so what a person must
+  # look at cannot grow with the corpus (`docs/mechanisms.md`).
+  test "the handle gate asks about a bounded sample, however many people arrive", ctx do
+    claim = claim!(ctx, %{place_mention: "Caribe"}, place: ctx.caribe)
+
+    for n <- 1..25 do
+      person =
+        Narrative.identify_person!(%{
+          event_id: ctx.event.id,
+          full_name: "Nombre#{n} Apellido#{n}"
+        })
+
+      Narrative.link_person!(%{claim_id: claim.id, person_id: person.id})
+    end
+
+    report = Report.render(ctx.event)
+
+    assert report =~ "25 person(s) at the handle gate — 3 need you"
+    assert report =~ "derived cleanly and collide with nobody — 3 to spot-check"
+    # The rest are listed, never hidden.
+    assert report =~ "and 22 more, listed so nothing is hidden"
+    assert report =~ "approve the rest as a batch"
+  end
+
+  test "a handle two people share is a defect, and it is shown as one", ctx do
+    claim = claim!(ctx, %{place_mention: "Caribe"}, place: ctx.caribe)
+
+    for full_name <- ["Damarys Melo", "Damarys Medina"] do
+      person = Narrative.identify_person!(%{event_id: ctx.event.id, full_name: full_name})
+      Narrative.link_person!(%{claim_id: claim.id, person_id: person.id})
+    end
+
+    report = Report.render(ctx.event)
+
+    assert report =~ "2 collide — two people, one handle, which identifies neither"
+  end
+
+  test "a name the derivation refused is separated from the ones it read", ctx do
+    claim = claim!(ctx, %{place_mention: "Caribe"}, place: ctx.caribe)
+
+    # A lone token: `Handle` refuses rather than guess, and a person must write one.
+    lone = Narrative.identify_person!(%{event_id: ctx.event.id, full_name: "Marcela"})
+    Narrative.link_person!(%{claim_id: claim.id, person_id: lone.id})
+
+    report = Report.render(ctx.event)
+
+    assert report =~ "1 have no handle — the derivation refused"
   end
 
   test "asks about a claim the support gate flagged", ctx do

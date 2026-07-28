@@ -413,30 +413,92 @@ defmodule Wekui.Report do
     "| **#{theme.name}** | #{(parent && parent.name) || "—"} | #{rule} |"
   end
 
+  # How many of a person's handles a human must actually look at. THREE, whether the
+  # corpus holds three hundred posts or three hundred thousand — human attention is
+  # bounded and machine attention is not (`docs/mechanisms.md`).
+  @spot_checks 3
+
+  # The handle gate, bounded.
+  #
+  # Nothing here is auto-approved: whether a person may be told is a decision about
+  # dignity and it stays a person's, always. What a mechanism CAN do is stop presenting
+  # non-decisions as decisions. Two deterministic checks split the queue:
+  #
+  #   * NO HANDLE — `Wekui.Narrative.Handle` refused to derive one (a lone token, a
+  #     compound surname it cannot split). Those genuinely need a human to write one.
+  #   * A COLLISION — two people in this Event derive to the same handle, so the handle
+  #     no longer identifies anybody. That is a real defect and it must be seen.
+  #
+  # A handle that derived cleanly and collides with nobody is not a question; it is a
+  # decision the machine already made correctly, and the honest ask is a SAMPLE of them.
+  # The rest are listed so the record is complete and nothing is hidden.
   defp pending_persons(world) do
     case Enum.filter(world.persons, &(&1.status == :pending_review)) do
       [] ->
         []
 
       persons ->
+        {needs_handle, derived} = Enum.split_with(persons, &is_nil(&1.display_handle))
+
+        colliding =
+          derived
+          |> Enum.group_by(& &1.display_handle)
+          |> Enum.filter(fn {_handle, people} -> length(people) > 1 end)
+          |> Enum.flat_map(fn {_handle, people} -> people end)
+
+        clean = derived -- colliding
+        {sample, rest} = Enum.split(clean, @spot_checks)
+
         [
           %{
             kind: :pending_person,
-            title: "#{length(persons)} person(s) waiting on the handle gate",
+            title:
+              "#{length(persons)} person(s) at the handle gate — #{length(needs_handle) + length(colliding) + length(sample)} need you",
             claim_ids: [],
             body: """
             A reader only ever sees the handle. The full name is here so you can
             check the handle is right — it is written nowhere a reader reaches.
 
-            | shown as | full name | in |
-            |---|---|---|
-            #{Enum.map_join(persons, "\n", &person_row(&1, world))}
+            **Nothing below was approved for you.** Being told is a decision about a
+            person's dignity and it stays yours. What the machine did was sort the
+            queue by whether it is a decision at all.
+
+            #{person_table("#{length(needs_handle)} have no handle — the derivation refused, so one has to be written", needs_handle, world)}
+            #{person_table("#{length(colliding)} collide — two people, one handle, which identifies neither", colliding, world)}
+            #{person_table("#{length(clean)} derived cleanly and collide with nobody — #{min(@spot_checks, length(clean))} to spot-check", sample, world)}
+            #{roster(rest, world)}
             """,
             answer:
-              "Per person: **approve** (handle stands), **withhold** (they drop out of every beat), or give a corrected handle."
+              "Write a handle for the ones that have none, break the collisions, and check the sample. If the sample is right, **approve the rest as a batch** — that is one ruling about the derivation, not #{length(clean)} rulings about people."
           }
         ]
     end
+  end
+
+  defp person_table(_title, [], _world), do: ""
+
+  defp person_table(title, persons, world) do
+    """
+    **#{title}**
+
+    | shown as | full name | in |
+    |---|---|---|
+    #{Enum.map_join(persons, "\n", &person_row(&1, world))}
+    """
+  end
+
+  defp roster([], _world), do: ""
+
+  defp roster(persons, world) do
+    """
+    <details><summary>and #{length(persons)} more, listed so nothing is hidden</summary>
+
+    | shown as | full name | in |
+    |---|---|---|
+    #{Enum.map_join(persons, "\n", &person_row(&1, world))}
+
+    </details>
+    """
   end
 
   defp person_row(person, world) do

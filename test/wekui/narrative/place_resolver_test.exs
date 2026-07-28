@@ -109,6 +109,37 @@ defmodule Wekui.Narrative.PlaceResolverTest do
     end
   end
 
+  # The operator ruled on 2026-07-27 that "the numeral names another building". This is
+  # that ruling reaching the resolver, on the exact case from the record that exposed it.
+  describe "a numeral refuses a fuzzy match, however close the strings read" do
+    setup ctx do
+      tower =
+        place!(ctx.event, %{
+          canonical_name: "Torre Celta Mar 1",
+          type: "edificio",
+          parent_id: ctx.caraballeda.id,
+          names: [{"Torre Celta Mar 1", :raw}, {"edificio celtamar", :raw}, {"celtamar i", :raw}]
+        })
+
+      %{tower: tower}
+    end
+
+    test "“edificio Celta Mar II” is not Torre Celta Mar 1", ctx do
+      {claim, summary} = resolve!(ctx, "edificio Celta Mar II, Tanaguarena")
+
+      # It reached the tower through the numeral-LESS alias "edificio celtamar" at
+      # 0.93 — so the check has to read the PLACE, not the name that matched.
+      refute Enum.any?(links(claim), &(&1.place_id == ctx.tower.id))
+      assert summary.linked == 0
+    end
+
+    test "the same name without a numeral still matches", ctx do
+      {claim, _summary} = resolve!(ctx, "edificio Celtamar, Caraballeda")
+
+      assert Enum.any?(links(claim), &(&1.place_id == ctx.tower.id))
+    end
+  end
+
   describe "matching against the gazetteer" do
     test "a full hierarchy resolves to the finest existing place — the building", ctx do
       {claim, summary} =

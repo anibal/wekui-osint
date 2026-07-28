@@ -263,11 +263,23 @@ defmodule Wekui.Narrative.PlaceResolver do
   defp fuzzy_form(form, index) do
     index.by_name
     |> Enum.filter(fn {folded, _pids} ->
-      String.jaro_distance(folded, form) >= @jaro_threshold and
-        not Marks.contradict?(folded, form)
+      String.jaro_distance(folded, form) >= @jaro_threshold
     end)
     |> Enum.flat_map(fn {_folded, pids} -> pids end)
     |> Enum.uniq()
+    |> Enum.reject(&contradicts?(&1, form, index))
+  end
+
+  # The marks are compared against the PLACE, not against whichever of its names
+  # happened to match. `Torre Celta Mar 1` also answers to the spelling variant
+  # `edificio celtamar`, which carries no numeral at all — so a name-level check let
+  # "edificio Celta Mar II" through at 0.93 and put a claim about building II on
+  # building 1. The building is numbered whichever of its names you arrive by.
+  defp contradicts?(place_id, form, index) do
+    case index.places[place_id] do
+      nil -> false
+      place -> Marks.contradict?(place.canonical_name, form)
+    end
   end
 
   # One candidate wins outright; several are decided by how many of the mention's
