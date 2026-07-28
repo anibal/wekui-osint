@@ -72,6 +72,8 @@ defmodule Wekui.ProposedByTest do
         Taxonomy.create_theme!(%{
           event_id: ctx.event.id,
           name: "rescate",
+          applies_when: "the post asserts that a person was pulled out alive",
+          nature: :happening,
           proposed_by_actor_id: ctx.agent.id,
           proposed_from_post_id: ctx.post.id
         })
@@ -85,6 +87,8 @@ defmodule Wekui.ProposedByTest do
                Taxonomy.create_theme(%{
                  event_id: ctx.event.id,
                  name: "damnificados",
+                 applies_when: "the post states that people were displaced from their homes",
+                 nature: :topic,
                  proposed_from_post_id: post!(ctx.other).id
                })
     end

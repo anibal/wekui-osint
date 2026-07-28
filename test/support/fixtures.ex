@@ -90,6 +90,10 @@ defmodule Wekui.Fixtures do
         %{
           event_id: event.id,
           name: "tema-#{System.unique_integer([:positive])}",
+          # Every Theme states what a Post must assert for it to apply; there is no
+          # way to make one without a rule, so the fixture carries one too.
+          applies_when: "the post asserts something this fixture theme covers",
+          nature: :happening,
           lifecycle: :active
         },
         attrs

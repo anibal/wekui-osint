@@ -12,6 +12,32 @@ defmodule Wekui.Taxonomy.Theme do
   against — and it leaves the working vocabulary either `:deprecated`
   (redirected onto a replacement) or `:discarded` (no replacement; a reason is
   required).
+
+  ## A Theme carries the rule that decides whether it applies
+
+  `applies_when` is **required**, and it is the reason this resource exists rather
+  than a free-text label somewhere. A vocabulary of names alone does not stop a
+  reader — human or machine — from stretching a name over evidence that does not
+  bear it: `colapso` was drawn three times from a post that said *"no es nada
+  confirmado"*. So a Theme states, operationally, **what the Post must assert**
+  for it to apply, and every consumer reads that one sentence: the extractor, the
+  support gate, and whatever renders it. A Theme with no rule is invisible to all
+  three, which is why there is no way to create one
+  (`docs/pages/research-2026-07-27-extraction-on-real-posts.md`).
+
+  `nature` says whether the Theme names a **happening** — something that occurred
+  at a moment a [[claim]] can assert — or a **topic**, something a Post is about
+  that no claim follows from: a plea, an opinion, a standing condition. Three
+  independent readers of the same corpus applied this split to sixteen of their
+  seventeen shared Themes identically, so it is the corpus's line and not ours
+  (`docs/pages/research-2026-07-27-three-readers-one-taxonomy.md`).
+
+  A rule may be **sharpened** through `redefine`, and the curation act records what
+  it used to say. What must never happen is a rule quietly coming to mean something
+  else: a Theme whose meaning has moved is a NEW Theme, and the old one is
+  deprecated onto it ([[decision-2026-07-24-merge-is-deprecation]]). *A flood that
+  just happened is not a flood two weeks old* — so the tree grows rather than
+  drifting under the claims already resting on it.
   """
 
   use Ash.Resource,
@@ -70,7 +96,17 @@ defmodule Wekui.Taxonomy.Theme do
     create :create do
       primary? true
       description "Adds a Theme to an Event's tree. Born :proposed unless created :active."
-      accept [:name, :event_id, :parent_id, :proposed_by_actor_id, :proposed_from_post_id]
+
+      accept [
+        :name,
+        :definition,
+        :applies_when,
+        :nature,
+        :event_id,
+        :parent_id,
+        :proposed_by_actor_id,
+        :proposed_from_post_id
+      ]
 
       argument :lifecycle, :atom do
         description "Manual curation may skip the proposal step and create a Theme :active."
@@ -141,6 +177,21 @@ defmodule Wekui.Taxonomy.Theme do
       validate {Reference, resource: __MODULE__, attribute: :parent_id, outside_subtree?: true}
     end
 
+    update :rename do
+      description "Corrects the label a person reads. The Theme is the same Theme; only the words change."
+      accept [:name]
+    end
+
+    update :redefine do
+      description """
+      Sharpens what the Theme means and when it applies. For a rule that was
+      imprecise — NOT for a Theme that has come to mean something else, which is a
+      new Theme with this one deprecated onto it.
+      """
+
+      accept [:definition, :applies_when]
+    end
+
     update :promote do
       description "The human gate: :proposed → :active."
       change transition_state(:active)
@@ -186,8 +237,28 @@ defmodule Wekui.Taxonomy.Theme do
     uuid_primary_key :id
 
     attribute :name, :string do
+      description "The display label people read: never folded, never emitted, never matched."
       allow_nil? false
       public? true
+    end
+
+    attribute :definition, :string do
+      description "One sentence saying what this Theme covers, for a person deciding whether to promote it."
+      public? true
+    end
+
+    attribute :applies_when, :string do
+      description "Operationally, what the Post must ASSERT for this Theme to apply. Required: a Theme with no rule cannot gate anything, and every consumer — extractor, support gate, renderer — reads this one sentence."
+      allow_nil? false
+      public? true
+      constraints min_length: 1
+    end
+
+    attribute :nature, :atom do
+      description "Whether this Theme names a happening — something that occurred at a moment a Claim can assert — or a topic, something a Post is about that no claim follows from."
+      allow_nil? false
+      public? true
+      constraints one_of: [:happening, :topic]
     end
 
     attribute :status_note, :string do

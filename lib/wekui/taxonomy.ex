@@ -11,6 +11,8 @@ defmodule Wekui.Taxonomy do
       define :theme_ancestors, action: :ancestors, args: [:theme_id]
       define :theme_subtree, action: :subtree, args: [:theme_id]
       define :set_theme_parent, action: :set_parent
+      define :rename_theme, action: :rename
+      define :redefine_theme, action: :redefine
       define :promote_theme, action: :promote
       define :deprecate_theme, action: :deprecate
       define :discard_theme, action: :discard

@@ -24,12 +24,114 @@ defmodule Wekui.Taxonomy.ThemeTest do
 
   defp theme!(event, attrs \\ %{}) do
     {:ok, theme} =
-      Taxonomy.create_theme(Map.merge(%{event_id: event.id, name: "Power grid"}, attrs))
+      Taxonomy.create_theme(
+        Map.merge(
+          %{
+            event_id: event.id,
+            name: "Power grid",
+            applies_when: "the post states that power was lost or restored somewhere",
+            nature: :happening
+          },
+          attrs
+        )
+      )
 
     theme
   end
 
   defp active!(event, attrs \\ %{}), do: theme!(event, Map.put(attrs, :lifecycle, :active))
+
+  describe "a Theme carries the rule that decides whether it applies" do
+    test "refuses a Theme with no rule — a name alone gates nothing", %{event: event} do
+      assert {:error, %Ash.Error.Invalid{}} =
+               Taxonomy.create_theme(%{
+                 event_id: event.id,
+                 name: "colapso",
+                 nature: :happening
+               })
+    end
+
+    test "refuses an empty rule as loudly as a missing one", %{event: event} do
+      assert {:error, %Ash.Error.Invalid{}} =
+               Taxonomy.create_theme(%{
+                 event_id: event.id,
+                 name: "colapso",
+                 applies_when: "",
+                 nature: :happening
+               })
+    end
+
+    test "refuses a Theme that does not say whether it is a happening", %{event: event} do
+      assert {:error, %Ash.Error.Invalid{}} =
+               Taxonomy.create_theme(%{
+                 event_id: event.id,
+                 name: "colapso",
+                 applies_when: "the post states that a named building came down"
+               })
+    end
+
+    test "nature is happening or topic and nothing else", %{event: event} do
+      assert {:error, %Ash.Error.Invalid{}} =
+               Taxonomy.create_theme(%{
+                 event_id: event.id,
+                 name: "colapso",
+                 applies_when: "the post states that a named building came down",
+                 nature: :vibe
+               })
+    end
+
+    test "keeps the rule, the definition and the nature", %{event: event} do
+      theme =
+        theme!(event, %{
+          name: "colapso estructural",
+          definition: "A specific building or piece of infrastructure came down.",
+          applies_when: "the post states that a named building collapsed, fell, or came down",
+          nature: :happening
+        })
+
+      assert theme.definition == "A specific building or piece of infrastructure came down."
+      assert theme.applies_when =~ "collapsed, fell, or came down"
+      assert theme.nature == :happening
+    end
+
+    test "a topic is a Theme too — a plea is something a Post is about", %{event: event} do
+      assert theme!(event, %{name: "solicitud de información", nature: :topic}).nature == :topic
+    end
+  end
+
+  describe "sharpening a rule" do
+    test "redefine corrects what the Theme means and when it applies", %{event: event} do
+      theme = theme!(event, %{applies_when: "the post mentions a collapse"})
+
+      sharpened =
+        Taxonomy.redefine_theme!(theme, %{
+          definition: "A named structure came down.",
+          applies_when: "the post ASSERTS the collapse as fact, not as an unconfirmed report"
+        })
+
+      assert sharpened.applies_when =~ "not as an unconfirmed report"
+      assert sharpened.definition == "A named structure came down."
+      # Sharpening a rule is not a lifecycle move: the Theme is the same Theme.
+      assert sharpened.lifecycle == theme.lifecycle
+    end
+
+    test "a rule may be sharpened but never emptied", %{event: event} do
+      theme = theme!(event)
+
+      assert {:error, %Ash.Error.Invalid{}} =
+               Taxonomy.redefine_theme(theme, %{applies_when: ""})
+    end
+
+    test "rename changes the label and nothing else", %{event: event} do
+      theme = theme!(event, %{name: "búsqueda"})
+
+      renamed = Taxonomy.rename_theme!(theme, %{name: "solicitud de información"})
+
+      assert renamed.name == "solicitud de información"
+      assert renamed.applies_when == theme.applies_when
+      assert renamed.nature == theme.nature
+    end
+  end
 
   describe "create" do
     test "is born proposed", %{event: event} do
