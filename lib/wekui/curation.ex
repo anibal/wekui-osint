@@ -32,6 +32,7 @@ defmodule Wekui.Curation do
   alias Wekui.Narrative.Correction
   alias Wekui.Narrative.Merge
   alias Wekui.Normalize
+  alias Wekui.Taxonomy
 
   resources do
     resource Wekui.Curation.Act do
@@ -311,6 +312,71 @@ defmodule Wekui.Curation do
   def accept_support!(claim, curator, reason) do
     attributed!(curator, :accept_support, reason, [claim_id: claim.id], fn ->
       {%{"support" => to_string(claim.support), "support_note" => claim.support_note}, claim, nil}
+    end)
+  end
+
+  ## ─────────────────────────── themes ───────────────────────────
+
+  @doc """
+  Takes a proposed [[theme]] into the Event's working vocabulary.
+
+  This is the highest-leverage act in the system, and the reason the Act grew a fourth
+  target. Every other verb settles one thing: a place, a person, an account. This one
+  decides **what the record is able to say at all** — for every claim drafted after it,
+  and for the extractor and the support gate, which both read the theme's rule. A
+  vocabulary nobody signed is exactly the unattributed decision this module abolishes.
+  """
+  def promote_theme!(theme, curator, reason) do
+    attributed!(curator, :promote_theme, reason, [theme_id: theme.id], fn ->
+      {%{"lifecycle" => to_string(theme.lifecycle), "nature" => to_string(theme.nature)},
+       Taxonomy.promote_theme!(theme), &%{"lifecycle" => to_string(&1.lifecycle)}}
+    end)
+  end
+
+  @doc "Retires a Theme onto an active replacement — the verb for a meaning that moved."
+  def deprecate_theme!(theme, replacement, curator, reason) do
+    attributed!(curator, :deprecate_theme, reason, [theme_id: theme.id], fn ->
+      {%{"lifecycle" => to_string(theme.lifecycle), "name" => theme.name},
+       Taxonomy.deprecate_theme!(theme, %{replaced_by_id: replacement.id, note: reason}),
+       &%{"lifecycle" => to_string(&1.lifecycle), "replaced_by" => replacement.name}}
+    end)
+  end
+
+  @doc "Retires a Theme with no replacement, because it was never a theme of this Event."
+  def discard_theme!(theme, curator, reason) do
+    attributed!(curator, :discard_theme, reason, [theme_id: theme.id], fn ->
+      {%{"lifecycle" => to_string(theme.lifecycle), "name" => theme.name},
+       Taxonomy.discard_theme!(theme, %{note: reason}),
+       &%{"lifecycle" => to_string(&1.lifecycle)}}
+    end)
+  end
+
+  @doc "Corrects the Spanish a reader meets. The Theme is the same Theme; only the words change."
+  def rename_theme!(theme, name, curator, reason) do
+    attributed!(curator, :rename_theme, reason, [theme_id: theme.id], fn ->
+      {%{"name" => theme.name}, Taxonomy.rename_theme!(theme, %{name: name}),
+       &%{"name" => &1.name}}
+    end)
+  end
+
+  @doc """
+  Sharpens what a Theme means and when it applies — for a rule that was imprecise.
+
+  **Not** for a Theme that has come to mean something else. A rule that shifts under the
+  claims already resting on it is [[principle-never-rewrite-the-record]] failing quietly,
+  so a Theme whose meaning moved is a new Theme with this one deprecated onto it. What
+  the rule used to say survives here, which is what makes sharpening safe at all.
+  """
+  def redefine_theme!(theme, fields, curator, reason) do
+    attributed!(curator, :redefine_theme, reason, [theme_id: theme.id], fn ->
+      before =
+        %{"applies_when" => theme.applies_when, "definition" => theme.definition}
+        |> Map.take(Enum.map(Map.keys(fields), &to_string/1))
+
+      {before, Taxonomy.redefine_theme!(theme, fields),
+       fn changed ->
+         Map.new(fields, fn {field, _to} -> {to_string(field), Map.get(changed, field)} end)
+       end}
     end)
   end
 

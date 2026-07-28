@@ -70,7 +70,15 @@ defmodule Wekui.Curation.Act do
     :approve_person,
     :withhold_person,
     :set_person_handle,
-    :set_person_kind
+    :set_person_kind,
+    # Themes — the vocabulary of happenings itself. Promoting one is the single
+    # highest-leverage act in the system: it decides what the record is able to
+    # say, for every claim after it. Which is exactly why it must name a person.
+    :promote_theme,
+    :deprecate_theme,
+    :discard_theme,
+    :rename_theme,
+    :redefine_theme
   ]
 
   @doc "The vocabulary of deliberate acts a person can perform on the record."
@@ -99,7 +107,12 @@ defmodule Wekui.Curation.Act do
     approve_person: "approved",
     withhold_person: "withheld",
     set_person_handle: "renamed the handle of",
-    set_person_kind: "set the privacy of"
+    set_person_kind: "set the privacy of",
+    promote_theme: "took into the vocabulary",
+    deprecate_theme: "retired",
+    discard_theme: "discarded",
+    rename_theme: "renamed",
+    redefine_theme: "sharpened the rule for"
   }
 
   @doc """
@@ -128,6 +141,7 @@ defmodule Wekui.Curation.Act do
       reference :place, on_delete: :restrict
       reference :person, on_delete: :restrict
       reference :claim, on_delete: :restrict
+      reference :theme, on_delete: :restrict
     end
   end
 
@@ -153,7 +167,8 @@ defmodule Wekui.Curation.Act do
         :after,
         :place_id,
         :person_id,
-        :claim_id
+        :claim_id,
+        :theme_id
       ]
 
       # Attribution is the point: an agent's acts are receipted by a run, and an Act
@@ -166,6 +181,7 @@ defmodule Wekui.Curation.Act do
       validate {Reference, resource: Wekui.Core.Place, attribute: :place_id}
       validate {Reference, resource: Wekui.Narrative.Person, attribute: :person_id}
       validate {Reference, resource: Wekui.Narrative.Claim, attribute: :claim_id}
+      validate {Reference, resource: Wekui.Taxonomy.Theme, attribute: :theme_id}
     end
 
     read :by_event do
@@ -231,6 +247,11 @@ defmodule Wekui.Curation.Act do
 
     belongs_to :claim, Wekui.Narrative.Claim do
       description "The Claim this act was about — including a relink, where the claim's set of places is what moved."
+      public? true
+    end
+
+    belongs_to :theme, Wekui.Taxonomy.Theme do
+      description "The Theme this act was about — the vocabulary itself, ratified or retired by a person."
       public? true
     end
   end

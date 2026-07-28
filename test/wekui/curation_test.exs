@@ -6,6 +6,7 @@ defmodule Wekui.CurationTest do
   alias Wekui.Core
   alias Wekui.Curation
   alias Wekui.Narrative
+  alias Wekui.Taxonomy
 
   setup do
     event = event!()
@@ -474,6 +475,114 @@ defmodule Wekui.CurationTest do
       assert act.kind == :accept_support
       assert act.before["support"] == "overstated"
       assert is_nil(act.after)
+    end
+  end
+
+  describe "themes — the vocabulary itself" do
+    setup ctx do
+      %{
+        theme:
+          Taxonomy.create_theme!(%{
+            event_id: ctx.event.id,
+            name: "solicitud de información",
+            definition: "A request asking whether anyone has news about a person or a place.",
+            applies_when: "the post asks if anyone has information, and asserts nothing itself",
+            nature: :topic
+          })
+      }
+    end
+
+    test "promoting a theme is the act that decides what the record can say", ctx do
+      promoted = Curation.promote_theme!(ctx.theme, ctx.curator, "three readers reached it")
+
+      assert promoted.lifecycle == :active
+
+      act = only_act!(ctx.event)
+      assert act.kind == :promote_theme
+      assert act.theme_id == ctx.theme.id
+      assert act.before == %{"lifecycle" => "proposed", "nature" => "topic"}
+      assert act.after == %{"lifecycle" => "active"}
+    end
+
+    test "an act about a theme is about the theme and nothing else", ctx do
+      Curation.promote_theme!(ctx.theme, ctx.curator, "ratified")
+
+      act = only_act!(ctx.event)
+      assert is_nil(act.place_id) and is_nil(act.person_id) and is_nil(act.claim_id)
+    end
+
+    test "renaming keeps the rule and changes the words", ctx do
+      renamed =
+        Curation.rename_theme!(
+          ctx.theme,
+          "consulta de paradero",
+          ctx.curator,
+          "closer to the posts"
+        )
+
+      assert renamed.name == "consulta de paradero"
+      assert renamed.applies_when == ctx.theme.applies_when
+
+      act = only_act!(ctx.event)
+      assert act.before == %{"name" => "solicitud de información"}
+      assert act.after == %{"name" => "consulta de paradero"}
+    end
+
+    test "sharpening a rule records what it used to say", ctx do
+      Curation.redefine_theme!(
+        ctx.theme,
+        %{
+          applies_when:
+            "the post asks about a BUILDING only; a named person also takes desaparecida"
+        },
+        ctx.curator,
+        "reader A's boundary"
+      )
+
+      act = only_act!(ctx.event)
+      assert act.kind == :redefine_theme
+      # The old rule survives here — which is what makes sharpening safe at all.
+      assert act.before["applies_when"] =~ "asserts nothing itself"
+      assert act.after["applies_when"] =~ "BUILDING only"
+      # A field not given is not claimed to have changed.
+      refute Map.has_key?(act.before, "definition")
+    end
+
+    test "a theme that came to mean something else is retired onto its successor", ctx do
+      successor =
+        Taxonomy.create_theme!(%{
+          event_id: ctx.event.id,
+          name: "persona desaparecida o sin contacto",
+          applies_when: "the post states that contact with a specific person has been lost",
+          nature: :topic,
+          lifecycle: :active
+        })
+
+      # Only a theme already in the vocabulary can be retired out of it — a proposed
+      # one that turns out to be wrong is discarded, not replaced.
+      active = Curation.promote_theme!(ctx.theme, ctx.curator, "ratified on the 27th")
+
+      retired = Curation.deprecate_theme!(active, successor, ctx.curator, "the meaning moved")
+
+      assert retired.lifecycle == :deprecated
+      assert retired.replaced_by_id == successor.id
+      assert only_act!(ctx.event).after["replaced_by"] == successor.name
+    end
+
+    test "discarding needs a reason and leaves no replacement", ctx do
+      discarded = Curation.discard_theme!(ctx.theme, ctx.curator, "not a theme of this event")
+
+      assert discarded.lifecycle == :discarded
+      assert is_nil(discarded.replaced_by_id)
+      assert only_act!(ctx.event).kind == :discard_theme
+    end
+
+    test "an agent cannot ratify the vocabulary", ctx do
+      assert_raise Ash.Error.Invalid, fn ->
+        Curation.promote_theme!(ctx.theme, ctx.agent, "I decided this myself")
+      end
+
+      assert Taxonomy.get_theme!(ctx.theme.id).lifecycle == :proposed
     end
   end
 
