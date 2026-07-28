@@ -69,6 +69,46 @@ defmodule Wekui.Narrative.PlaceResolverTest do
 
   defp links(claim), do: Narrative.list_claim_places!(claim.id)
 
+  # Every mention below is verbatim from the record. The resolver read six of the
+  # fourteen comma-separated mentions backwards, placed those claims on a parroquia,
+  # and asked a person to confirm it.
+  describe "which segment is the finest — real mentions, both directions" do
+    test "fine-to-coarse still reads as it always did" do
+      assert [%{original: "edificio OPP 25", ancestors: ["tanaguarena", "caraballeda"]}] =
+               PlaceResolver.parse("edificio OPP 25, Tanaguarena, Caraballeda")
+    end
+
+    test "coarse-to-fine no longer places the claim on the parish" do
+      assert [%{original: "edificio Roca Azul", ancestors: ["caraballeda"]}] =
+               PlaceResolver.parse("Caraballeda, edificio Roca Azul")
+
+      assert [%{original: "residencias Caribe", ancestors: ["caraballeda"]}] =
+               PlaceResolver.parse("Caraballeda, residencias Caribe")
+
+      assert [%{original: "Hotel Eduard's building", ancestors: ["la guaira"]}] =
+               PlaceResolver.parse("La Guaira, Hotel Eduard's building")
+    end
+
+    test "a landmark named mid-segment does not steal the finest position" do
+      # "diagonal al Hotel Las 15 Letras" locates the building; it is not the building.
+      # Only the LEADING word of a segment counts, so the hotel stays an ancestor.
+      assert [%{original: "edificio Las Palmas"}] =
+               PlaceResolver.parse(
+                 "Macuto, La Guaira, bajada del Playón, diagonal al Hotel Las 15 Letras, edificio Las Palmas"
+               )
+    end
+
+    test "an administrative level never outranks a bare name" do
+      assert [%{original: "Playa Los Cocos", ancestors: ["la guaira"]}] =
+               PlaceResolver.parse("Playa Los Cocos, estado La Guaira")
+    end
+
+    test "a tie keeps the original reading — two bare names stay fine-first" do
+      assert [%{original: "Tanaguarena", ancestors: ["caraballeda"]}] =
+               PlaceResolver.parse("Tanaguarena, Caraballeda")
+    end
+  end
+
   describe "matching against the gazetteer" do
     test "a full hierarchy resolves to the finest existing place — the building", ctx do
       {claim, summary} =

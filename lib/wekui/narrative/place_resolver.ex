@@ -27,6 +27,7 @@ defmodule Wekui.Narrative.PlaceResolver do
 
   alias Wekui.Core.Place
   alias Wekui.Core.PlaceName
+  alias Wekui.Gazetteer.Marks
   alias Wekui.Narrative
   alias Wekui.Normalize
   alias Wekui.Tree
@@ -64,6 +65,8 @@ defmodule Wekui.Narrative.PlaceResolver do
         |> parse()
         |> Enum.map(&resolve_one(&1, claim, index, opts))
 
+      prune!(claim, results)
+
       {:ok, summarize(results)}
     end
   end
@@ -98,7 +101,9 @@ defmodule Wekui.Narrative.PlaceResolver do
       [] ->
         []
 
-      [finest | ancestors_raw] ->
+      segments ->
+        {finest, ancestors_raw} = orient(segments)
+
         ancestors =
           ancestors_raw
           |> Enum.map(&Normalize.fold(strip_type(&1)))
@@ -108,6 +113,58 @@ defmodule Wekui.Narrative.PlaceResolver do
         |> split_siblings()
         |> Enum.map(&build_mention(&1, ancestors))
         |> Enum.reject(&(&1.forms == []))
+    end
+  end
+
+  # WHICH SEGMENT IS THE FINEST. Usually the first — "edificio OPP 25, Tanaguarena,
+  # Caraballeda" — and that is what this assumed. But real posts write it the other
+  # way round about as often: "Caraballeda, edificio Roca Azul", "Macuto, La Guaira,
+  # bajada del Playón, diagonal al Hotel Las 15 Letras, edificio Las Palmas". Six of
+  # fourteen mentions on the record run coarse-to-fine.
+  #
+  # Read in the wrong order, the claim lands on the PARROQUIA and the building it is
+  # actually about is filed as an ancestor that matches nothing — so a claim about one
+  # collapsed tower is placed on a whole parish, and a junk `lugar` called "Macuto" is
+  # proposed under La Guaira.
+  #
+  # So the finest is chosen by SPECIFICITY, not by position: a segment whose leading
+  # word names a structure ("edificio", "residencias", "hotel") outranks a street,
+  # which outranks an area, which outranks a bare name, which outranks an
+  # administrative level ("estado La Guaira"). Only the LEADING word counts — the same
+  # rule `strip_type_typed/1` already uses — so a landmark named mid-segment
+  # ("diagonal al Hotel Las 15 Letras") does not steal the position from the building
+  # the post is about.
+  #
+  # It moves only when a LATER segment is strictly more specific than the first. A tie
+  # keeps the original reading, so nothing that worked before changes.
+  defp orient([first | rest] = segments) do
+    base = rank(first)
+
+    finer =
+      segments
+      |> Enum.with_index()
+      |> Enum.filter(fn {segment, index} -> index > 0 and rank(segment) > base end)
+      |> List.last()
+
+    case finer do
+      nil -> {first, rest}
+      {segment, index} -> {segment, List.delete_at(segments, index)}
+    end
+  end
+
+  @structures ~w(edificio edif residencia residencias res resd conjunto torre torres
+                 bloque quinta complejo residencial club hotel)
+  @streets ~w(avenida av calle carrera)
+  @areas ~w(urbanizacion urb sector barrio zona)
+  @administrative ~w(parroquia municipio estado ciudad pais)
+
+  defp rank(segment) do
+    case segment |> String.split() |> List.first() |> to_string() |> Normalize.fold() do
+      word when word in @structures -> 3
+      word when word in @streets -> 2
+      word when word in @areas -> 1
+      word when word in @administrative -> -1
+      _bare_name -> 0
     end
   end
 
@@ -156,14 +213,14 @@ defmodule Wekui.Narrative.PlaceResolver do
     case match(mention, index) do
       {:ok, place_id, how, confidence} ->
         link(claim, place_id, how, confidence)
-        {:linked, how, mention.original}
+        {:linked, how, mention.original, place_id}
 
       :no_match ->
         case match_ancestor(mention, index) do
           {:ok, ancestor_id} ->
             place_id = find_or_propose(mention, ancestor_id, claim, opts)
             link(claim, place_id, :mention_ancestor, 0.5)
-            {:proposed, mention.original}
+            {:proposed, mention.original, place_id}
 
           :no_match ->
             {:unresolved, mention.original}
@@ -195,10 +252,19 @@ defmodule Wekui.Narrative.PlaceResolver do
     end)
   end
 
+  # A fuzzy match is refused outright when the two names' MARKS contradict, however
+  # close the strings read. "edificio Celta Mar II" scores 0.94 against "Torre Celta
+  # Mar 1" and they are two different buildings — the numeral is not noise in the
+  # name, it IS the name (`Wekui.Gazetteer.Marks`).
+  #
+  # The operator ruled this on 2026-07-27 and it reached the duplicate finder only.
+  # The resolver went on proposing the match and asking a person to confirm it, which
+  # is a ruling failing to travel — the defect this project keeps paying for.
   defp fuzzy_form(form, index) do
     index.by_name
     |> Enum.filter(fn {folded, _pids} ->
-      String.jaro_distance(folded, form) >= @jaro_threshold
+      String.jaro_distance(folded, form) >= @jaro_threshold and
+        not Marks.contradict?(folded, form)
     end)
     |> Enum.flat_map(fn {_folded, pids} -> pids end)
     |> Enum.uniq()
@@ -250,6 +316,31 @@ defmodule Wekui.Narrative.PlaceResolver do
   defp confidence(:mention_fuzzy, :ambiguous), do: 0.4
 
   ## ─────────────────────────── writes ───────────────────────────
+
+  # THE PASS OWNS THE WHOLE SET. `link_place!` is an upsert, so the resolver only ever
+  # ADDED: a link made on an earlier reading survived every later one, and a claim
+  # accumulated every place the resolver had ever guessed at. The report then asked a
+  # person which of the machine's own two guesses it had meant — a question that was
+  # never theirs, generated by the resolver's failure to withdraw.
+  #
+  # So a machine link the current reading did not produce is dropped. A `:manual` link
+  # is never touched and never reached: a claim holding one is skipped whole, because a
+  # person's answer outranks the machine's.
+  defp prune!(claim, results) do
+    kept =
+      results
+      |> Enum.flat_map(fn
+        {:linked, _how, _name, place_id} -> [place_id]
+        {:proposed, _name, place_id} -> [place_id]
+        _unresolved -> []
+      end)
+      |> MapSet.new()
+
+    claim.id
+    |> Narrative.list_claim_places!()
+    |> Enum.reject(&(&1.how_resolved == :manual or MapSet.member?(kept, &1.place_id)))
+    |> Enum.each(&Narrative.unlink_place!/1)
+  end
 
   defp link(claim, place_id, how, confidence) do
     Narrative.link_place!(%{
@@ -323,8 +414,8 @@ defmodule Wekui.Narrative.PlaceResolver do
   defp summarize(results) do
     %{
       mentions: length(results),
-      linked: Enum.count(results, &match?({:linked, _how, _name}, &1)),
-      proposed: Enum.count(results, &match?({:proposed, _name}, &1)),
+      linked: Enum.count(results, &match?({:linked, _how, _name, _id}, &1)),
+      proposed: Enum.count(results, &match?({:proposed, _name, _id}, &1)),
       unresolved: for({:unresolved, name} <- results, do: name),
       settled: 0
     }

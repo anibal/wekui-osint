@@ -296,11 +296,18 @@ defmodule Wekui.Report do
     end
   end
 
+  # A `:mention_ancestor` link is NOT an ambiguity — it is the resolver proposing a
+  # place the tree did not hold, under the nearest ancestor it did. Its 0.5 is the
+  # fixed confidence of a proposal, not a tie it could not break, and the place's name
+  # IS the mention. Asking "confirm the place, or name the right one" about it asked a
+  # person to confirm a tautology, ten times, while the SAME decision waited under
+  # "places a machine proposed". One question wearing two costumes.
   defp low_confidence(world, covered) do
     world.claims
     |> Enum.flat_map(fn detail ->
       for %{link: link, place: place} <- detail.links,
           place,
+          link.how_resolved != :mention_ancestor,
           link.confidence && link.confidence < @low_confidence,
           detail.claim.id not in covered do
         %{

@@ -54,29 +54,17 @@ defmodule Wekui.Gazetteer.Duplicates do
   """
 
   alias Wekui.Core
+  alias Wekui.Gazetteer.Marks
   alias Wekui.Normalize
 
   # The leading words that name what KIND of place a name is. Shared in spirit with
   # `Wekui.Narrative.PlaceResolver` — that one strips them off a mention coming in,
   # this one strips them off the gazetteer's own names.
-  @type_words ~w(
-    edificio edif residencia residencias res resd conjunto torre torres bloque
-    urbanizacion urb sector barrio parroquia municipio estado ciudad pais
-    avenida av calle carrera zona quinta complejo residencial club hotel
-  )
-
   # Two sibling names must be this close (Jaro) to be worth a person's attention.
   @jaro_threshold 0.92
 
   # Tokens that exist to tell two places apart. "Este" and "Oeste" differ by four
   # letters and by the entire point of the name.
-  @directions ~w(norte sur este oeste nororiente noroccidente n s e o)
-
-  # A Roman numeral does the same work as an Arabic one: "Residencia Caraballeda I"
-  # is not "Residencias Caraballeda". Anchored to a whole token, so it cannot catch
-  # a stray letter mid-name.
-  @numeral ~r/^(i{1,3}|iv|vi{0,3}|ix|xi{0,3}|x)$/
-
   # What kind of thing a type names. A road is a line, an area is a region, a
   # structure is a thing standing in one — and no two of those are ever the same
   # node, however exactly their names match. "Avenida La Costanera" runs along "La
@@ -157,7 +145,7 @@ defmodule Wekui.Gazetteer.Duplicates do
         # above applies.
         not related?(elder, younger, by_id),
         not different_kind?(elder, younger),
-        marks(elder.canonical_name) == marks(younger.canonical_name),
+        Marks.marks(elder.canonical_name) == Marks.marks(younger.canonical_name),
         score = closeness(elder.canonical_name, younger.canonical_name),
         score >= @jaro_threshold do
       %{
@@ -205,8 +193,8 @@ defmodule Wekui.Gazetteer.Duplicates do
   # the better of the two readings is the honest one. Loosening the threshold instead
   # would have admitted every distant pair as well.
   defp closeness(one, other) do
-    spaced = String.jaro_distance(reduce(one), reduce(other))
-    packed = String.jaro_distance(unspace(reduce(one)), unspace(reduce(other)))
+    spaced = String.jaro_distance(Marks.reduce(one), Marks.reduce(other))
+    packed = String.jaro_distance(unspace(Marks.reduce(one)), unspace(Marks.reduce(other)))
 
     max(spaced, packed)
   end
@@ -215,65 +203,6 @@ defmodule Wekui.Gazetteer.Duplicates do
 
   # Read as the number it is, so "Torre II" and "Torre 2" carry the same mark and a
   # building is not held twice for writing its number the other way.
-  @romans %{
-    "i" => "1",
-    "ii" => "2",
-    "iii" => "3",
-    "iv" => "4",
-    "v" => "5",
-    "vi" => "6",
-    "vii" => "7",
-    "viii" => "8",
-    "ix" => "9",
-    "x" => "10",
-    "xi" => "11",
-    "xii" => "12",
-    "xiii" => "13"
-  }
-
-  defp roman(token), do: Map.get(@romans, token, token)
-
-  # The tokens that exist to tell places apart: if they disagree, the names do not
-  # nearly match — they contradict.
-  defp marks(name) do
-    name
-    |> reduce()
-    |> String.split(~r/[^\p{L}\p{N}]+/u, trim: true)
-    |> Enum.flat_map(fn token ->
-      cond do
-        token in @directions -> [token]
-        Regex.match?(@numeral, token) -> [roman(token)]
-        # A number anywhere in a token, "opp27" included — the digits are the mark.
-        true -> Regex.scan(~r/\d+/, token) |> Enum.map(fn [digits] -> digits end)
-      end
-    end)
-    |> Enum.sort()
-  end
-
-  # The name without its leading type word or its punctuation: "Avenida La Costanera"
-  # → "la costanera", "McDonald's de Caraballeda" → "mcdonalds de caraballeda".
-  #
-  # `Wekui.Normalize` deliberately keeps punctuation, because "fuzzy tolerance belongs
-  # to the matching technique, never to the stored key". This IS the technique.
-  defp reduce(name) do
-    folded =
-      name
-      |> fold()
-      |> String.replace(~r/[^\p{L}\p{N}\s]/u, "")
-      |> String.replace(~r/\s+/u, " ")
-      |> String.trim()
-
-    folded
-    |> String.split(" ", trim: true)
-    |> case do
-      [first | rest] when rest != [] -> if first in @type_words, do: rest, else: [first | rest]
-      words -> words
-    end
-    # A numeral is read as the number it is, here as well as in the marks, so
-    # "Torre II" and "Torres 2" compare as one string instead of as "ii" and "2".
-    |> Enum.map_join(" ", &roman/1)
-  end
-
   defp fold(name), do: Normalize.fold(name)
 
   defp ancestors(place, by_id) do
