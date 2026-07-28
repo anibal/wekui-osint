@@ -1,0 +1,306 @@
+{
+  "source": "docs/pages/research-2026-07-27-three-readers-one-taxonomy.md",
+  "sample": "302 posts, a deterministic 1-in-23 slice of the 6,982 Caraballeda posts, 2026-06-24 to 2026-07-01",
+  "themes": [
+    {
+      "name": "Personas afectadas",
+      "nature": "topic",
+      "parent": null,
+      "definition": "Structural node: what happened to the people the earthquake reached.",
+      "applies_when": "Never classify against this node directly — it groups the themes below it. Use the finest child that fits."
+    },
+    {
+      "name": "Edificaciones e infraestructura",
+      "nature": "topic",
+      "parent": null,
+      "definition": "Structural node: what happened to buildings, roads and services.",
+      "applies_when": "Never classify against this node directly — it groups the themes below it. Use the finest child that fits."
+    },
+    {
+      "name": "Solicitudes y llamados",
+      "nature": "topic",
+      "parent": null,
+      "definition": "Structural node: what people asked for.",
+      "applies_when": "Never classify against this node directly — it groups the themes below it. Use the finest child that fits."
+    },
+    {
+      "name": "Respuesta institucional y operativa",
+      "nature": "topic",
+      "parent": null,
+      "definition": "Structural node: what responders, officials and outside help did.",
+      "applies_when": "Never classify against this node directly — it groups the themes below it. Use the finest child that fits."
+    },
+    {
+      "name": "Rescate de animal",
+      "definition": "A specific animal was found or rescued alive from rubble.",
+      "applies_when": "The post asserts that a specific animal was found alive or rescued from a collapsed or damaged structure.",
+      "nature": "happening",
+      "parent": null,
+      "not_to_be_confused_with": "T4 (Persona rescatada con vida): T23 is scoped to animals, not people.",
+      "evidence": {
+        "readers": 3,
+        "posts": 6,
+        "overlap_b": 1.0,
+        "overlap_c": 1.0,
+        "named_b": "Rescate de animales",
+        "named_c": "Rescate o hallazgo de animal"
+      }
+    },
+    {
+      "name": "Persona rescatada con vida",
+      "definition": "A specific person was pulled out from rubble or a collapse site alive.",
+      "applies_when": "The post asserts that a named or described person was extracted/rescued alive from a collapsed or damaged structure.",
+      "nature": "happening",
+      "parent": "Personas afectadas",
+      "not_to_be_confused_with": "T3 (Persona atrapada con vida): T4 requires the extraction itself to be asserted, not just that the person is alive and still trapped.",
+      "evidence": {
+        "readers": 3,
+        "posts": 47,
+        "overlap_b": 0.96,
+        "overlap_c": 1.0,
+        "named_b": "Persona rescatada con vida",
+        "named_c": "Rescate con vida"
+      }
+    },
+    {
+      "name": "Persona fallecida o cuerpo recuperado",
+      "definition": "A specific person's death is confirmed, or their body was recovered from a collapse site.",
+      "applies_when": "The post states that a named or described person died, or that a body/corpse was recovered or identified at a specific site.",
+      "nature": "happening",
+      "parent": "Personas afectadas",
+      "not_to_be_confused_with": "T6 (Búsqueda sin señales de vida): T6 is a negative search finding at a site in general, not a confirmed death or body recovery.",
+      "evidence": {
+        "readers": 3,
+        "posts": 10,
+        "overlap_b": 0.71,
+        "overlap_c": 0.69,
+        "named_b": "Persona fallecida",
+        "named_c": "Cuerpo recuperado o fallecimiento confirmado"
+      }
+    },
+    {
+      "name": "Operación de búsqueda y rescate en curso",
+      "definition": "Rescue teams are actively working a site, without the post asserting a specific outcome.",
+      "applies_when": "The post describes search-and-rescue teams actively working, removing rubble, or searching at a site, without asserting a specific person found alive, found dead, or a no-signs-of-life conclusion.",
+      "nature": "topic",
+      "parent": "Respuesta institucional y operativa",
+      "not_to_be_confused_with": "T13 (Solicitud): T16 reports ongoing work as fact; T13 is a plea for that work to happen. T4/T5/T6 require a stated outcome.",
+      "evidence": {
+        "readers": 3,
+        "posts": 33,
+        "overlap_b": 0.7,
+        "overlap_c": 0.64,
+        "named_b": "Operación de búsqueda y rescate en curso",
+        "named_c": "Labores de búsqueda y rescate en curso"
+      }
+    },
+    {
+      "name": "Persona atrapada con vida bajo escombros",
+      "definition": "A specific person is currently alive and trapped under rubble.",
+      "applies_when": "The post asserts that a named or described person remains alive under rubble right now — e.g., voice or phone contact was established, sounds/movement were detected, or the post explicitly says they are trapped but alive.",
+      "nature": "topic",
+      "parent": "Personas afectadas",
+      "not_to_be_confused_with": "T4 (Persona rescatada con vida): T3 is the standing condition of still being trapped; T4 requires the extraction itself to be asserted. T6 (Búsqueda sin señales de vida) is the opposite finding.",
+      "evidence": {
+        "readers": 3,
+        "posts": 61,
+        "overlap_b": 0.59,
+        "overlap_c": 0.78,
+        "named_b": "Señales de vida bajo escombros",
+        "named_c": "Persona atrapada bajo escombros"
+      }
+    },
+    {
+      "name": "Persona desaparecida o sin contacto",
+      "definition": "A specific named or described person has not been reached or located since the earthquake, and their fate is unknown.",
+      "applies_when": "The post states that a specific person's whereabouts are unknown or that contact with them has been lost since the earthquake (a missing-person report or a family statement that they cannot reach someone).",
+      "nature": "topic",
+      "parent": "Personas afectadas",
+      "not_to_be_confused_with": "T12 (Solicitud de información): T2 requires the post to assert that contact/whereabouts are actually lost; T12 covers a post that only asks whether anyone has news, without itself asserting the person is unreachable.",
+      "evidence": {
+        "readers": 3,
+        "posts": 66,
+        "overlap_b": 0.7,
+        "overlap_c": 0.56,
+        "named_b": "Persona desaparecida",
+        "named_c": "Reporte de persona desaparecida"
+      }
+    },
+    {
+      "name": "Solicitud de información",
+      "definition": "A request asking whether anyone has news about a specific person, building, or place, without itself asserting what happened to them.",
+      "applies_when": "The post asks if anyone has information about a named person, building, or place, and does NOT itself assert that the person is missing, trapped, hurt, or dead — only that the asker currently lacks news.",
+      "nature": "topic",
+      "parent": "Solicitudes y llamados",
+      "not_to_be_confused_with": "T2 (Persona desaparecida): if the post also states contact has been lost, tag T2 as well; T12 alone applies to a bare inquiry.",
+      "evidence": {
+        "readers": 3,
+        "posts": 32,
+        "overlap_b": 0.56,
+        "overlap_c": 0.6,
+        "named_b": "Solicitud de información sobre paradero",
+        "named_c": "Consulta de paradero"
+      }
+    },
+    {
+      "name": "Solicitud de rescate o recursos",
+      "definition": "A call for rescue teams, machinery, fuel, tools, or supplies to be sent to a specific site.",
+      "applies_when": "The post explicitly asks or urges that rescuers, heavy machinery, fuel, tools, medical supplies, or personnel be sent or deployed to a specific site or cause.",
+      "nature": "topic",
+      "parent": "Solicitudes y llamados",
+      "not_to_be_confused_with": "T18 (Entrega de ayuda): T13 is the request; T18 requires the aid to be asserted as actually delivered.",
+      "evidence": {
+        "readers": 3,
+        "posts": 56,
+        "overlap_b": 0.76,
+        "overlap_c": 0.5,
+        "named_b": "Necesidad de recursos para la respuesta",
+        "named_c": "Persona atrapada bajo escombros"
+      }
+    },
+    {
+      "name": "Colapso estructural",
+      "definition": "A specific building or piece of infrastructure came down (fully or partially collapsed).",
+      "applies_when": "The post states that a specific named building, residence, hotel, or piece of infrastructure (e.g., a bridge) collapsed, fell, or came down.",
+      "nature": "happening",
+      "parent": "Edificaciones e infraestructura",
+      "not_to_be_confused_with": "T10 (Daño sin colapso): T9 requires the structure to have actually come down, not merely been affected or damaged.",
+      "evidence": {
+        "readers": 3,
+        "posts": 32,
+        "overlap_b": 0.44,
+        "overlap_c": 0.64,
+        "named_b": "Colapso o daño de edificación",
+        "named_c": "Colapso total de edificio"
+      }
+    },
+    {
+      "name": "Sismo o réplica registrada",
+      "definition": "A specific earthquake or aftershock event is reported (its occurrence, time, or magnitude).",
+      "applies_when": "The post states that a specific earthquake or aftershock occurred, citing its time, magnitude, or epicenter.",
+      "nature": "happening",
+      "parent": null,
+      "not_to_be_confused_with": "T9 (Colapso estructural): tag both if the post also asserts the quake/aftershock caused a specific collapse.",
+      "evidence": {
+        "readers": 3,
+        "posts": 12,
+        "overlap_b": 0.46,
+        "overlap_c": 0.42,
+        "named_b": "Terremoto: relato o resumen del evento",
+        "named_c": "Réplica sísmica"
+      }
+    },
+    {
+      "name": "Apoyo internacional desplegado",
+      "definition": "A specific country's or organization's rescue/aid team is present in, or was sent to, the disaster zone.",
+      "applies_when": "The post states that a named foreign country, government, or organization sent, deployed, or has personnel/equipment present in the affected area.",
+      "nature": "happening",
+      "parent": "Respuesta institucional y operativa",
+      "not_to_be_confused_with": "T16 (Operación en curso): T17 is about which country/organization is involved; T16 is about the activity/status at a site. Both may apply to one post.",
+      "evidence": {
+        "readers": 2,
+        "posts": 51,
+        "overlap_b": 0.35,
+        "overlap_c": 0.89,
+        "named_b": "Operación de búsqueda y rescate en curso",
+        "named_c": "Misión de ayuda internacional"
+      }
+    },
+    {
+      "name": "Crítica o denuncia de la respuesta",
+      "definition": "An opinion, complaint, or accusation about who is (or is not) helping, or about how the response is handled.",
+      "applies_when": "The post expresses a critical, accusatory, or evaluative opinion about the disaster response — inaction, obstruction, corruption, or a comparison to how it should be handled — without itself being a request or a new factual claim about a person or building.",
+      "nature": "topic",
+      "parent": "Respuesta institucional y operativa",
+      "not_to_be_confused_with": "T20 (Declaración oficial): T19 is the author's own critical viewpoint; T20 reports what an official said or announced.",
+      "evidence": {
+        "readers": 2,
+        "posts": 26,
+        "overlap_b": 0.43,
+        "overlap_c": 0.35,
+        "named_b": "Crítica u opinión sobre la respuesta institucional",
+        "named_c": "Denuncia de obstrucción o inacción de autoridades"
+      }
+    },
+    {
+      "name": "Mensaje de solidaridad, fe o aliento",
+      "definition": "A post expressing emotional support, prayer, gratitude, or encouragement about the disaster, without asserting a specific new fact.",
+      "applies_when": "The post's content is substantially a prayer, message of hope, gratitude, solidarity, or encouragement directed at the disaster, its responders, or its victims in general, and does not otherwise assert a specific fact captured by another theme.",
+      "nature": "topic",
+      "parent": null,
+      "not_to_be_confused_with": "Residue ('none'): a bare link, photo, or place tag with no expressed sentiment and no assertion is residue, not T27 — T27 requires actual expressed sentiment in the text.",
+      "evidence": {
+        "readers": 2,
+        "posts": 8,
+        "overlap_b": 0.33,
+        "overlap_c": 0.5,
+        "named_b": "Expresión de fe, esperanza o solidaridad",
+        "named_c": "Expresión de duelo, fe o solidaridad"
+      }
+    },
+    {
+      "name": "Lista o directorio compilado",
+      "definition": "The post's main content is a compiled list of multiple people, buildings, or a shelter roster, rather than a report about one specific case.",
+      "applies_when": "The post's primary content is a compiled list of three or more named people, buildings, or locations (a roster of collapsed buildings, a shelter's occupant list, a list of missing persons).",
+      "nature": "topic",
+      "parent": null,
+      "not_to_be_confused_with": "T9 or T2: a list can also carry T9/T2 if it substantively asserts those facts about its items, but T24 marks it as a compiled reference.",
+      "evidence": {
+        "readers": 2,
+        "posts": 6,
+        "overlap_b": 0.67,
+        "overlap_c": 0.33,
+        "named_b": "Lista o directorio compilado",
+        "named_c": "Listado o directorio informativo"
+      }
+    },
+    {
+      "name": "Declaración o cifra oficial",
+      "definition": "An official or authority is reported as having made a statement or announced figures about the disaster.",
+      "applies_when": "The post reports that a named official, government body, or institution stated something, or announced a casualty/damage figure (deaths, injured, missing, homeless, economic loss).",
+      "nature": "happening",
+      "parent": "Respuesta institucional y operativa",
+      "not_to_be_confused_with": "T19 (Crítica): T20 is reporting the official's own statement/figures, not the poster's opinion.",
+      "evidence": {
+        "readers": 2,
+        "posts": 11,
+        "overlap_b": 0.27,
+        "overlap_c": 0.55,
+        "named_b": "Balance oficial de víctimas y daños",
+        "named_c": "Comunicado o desmentido oficial"
+      }
+    },
+    {
+      "name": "Entrega de ayuda humanitaria",
+      "definition": "Aid, supplies, or services were actually delivered or set up at a location.",
+      "applies_when": "The post states that supplies, equipment, medical care, electricity, connectivity, or another concrete service was delivered, installed, or made available at a specific location — not merely requested.",
+      "nature": "happening",
+      "parent": "Respuesta institucional y operativa",
+      "not_to_be_confused_with": "T13 (Solicitud de rescate o recursos): T18 requires delivery to be asserted as having happened; T13 is the request for it.",
+      "evidence": {
+        "readers": 2,
+        "posts": 10,
+        "overlap_b": 0.55,
+        "overlap_c": 0.24,
+        "named_b": "Entrega de ayuda humanitaria",
+        "named_c": "Solicitud o punto de insumos humanitarios"
+      }
+    },
+    {
+      "name": "Búsqueda sin señales de vida",
+      "definition": "Search teams found no signs of life at a specific site, or the search there was suspended or moved elsewhere.",
+      "applies_when": "The post states that rescuers found no indication of survivors at a specific site, or that the search/rescue effort there was called off, paused, or redirected to another building.",
+      "nature": "happening",
+      "parent": "Personas afectadas",
+      "not_to_be_confused_with": "T5 (Persona fallecida): T6 is a negative search result, not a confirmed death or body recovery. T3: opposite finding — signs of life.",
+      "evidence": {
+        "readers": 2,
+        "posts": 4,
+        "overlap_b": 0.8,
+        "overlap_c": 0.08,
+        "named_b": "Búsqueda concluida sin señales de vida",
+        "named_c": "Labores de búsqueda y rescate en curso"
+      }
+    }
+  ]
+}

@@ -38,6 +38,7 @@ defmodule Wekui.Report do
   alias Wekui.Narrative.PlaceResolver
   alias Wekui.Normalize
   alias Wekui.Pipelines
+  alias Wekui.Taxonomy
   alias Wekui.Tree
 
   @low_confidence 0.7
@@ -83,6 +84,7 @@ defmodule Wekui.Report do
       by_id: by_id,
       name_index: name_index(places),
       persons: Narrative.list_persons!(event.id),
+      themes: Taxonomy.list_themes!(event.id),
       runs: Pipelines.list_runs!(event.id),
       acts: Curation.list_acts!(event.id, load: [:actor])
     }
@@ -130,6 +132,9 @@ defmodule Wekui.Report do
     covered = ambiguous |> Enum.flat_map(& &1.claim_ids) |> MapSet.new()
 
     [
+      # First, because it governs everything under it: until the vocabulary is
+      # ratified, every claim below names a kind the record never agreed to.
+      proposed_vocabulary(world),
       ambiguous,
       low_confidence(world, covered),
       unresolved(world),
@@ -340,6 +345,65 @@ defmodule Wekui.Report do
           }
         ]
     end
+  end
+
+  # The vocabulary of happenings, waiting to be signed. ONE question, not twenty-one:
+  # the operator is the judgment the system cannot supply, not the labour it will not
+  # do, and a list of themes read out of the corpus is a single decision about a
+  # single artifact. Ratifying it governs every claim drafted afterwards, which is why
+  # it sits at the top and why the answer is a curation act.
+  defp proposed_vocabulary(world) do
+    case Enum.filter(world.themes, &(&1.lifecycle == :proposed)) do
+      [] ->
+        []
+
+      themes ->
+        by_id = Map.new(world.themes, &{&1.id, &1})
+        {happenings, topics} = Enum.split_with(themes, &(&1.nature == :happening))
+
+        [
+          %{
+            kind: :proposed_vocabulary,
+            title: "#{length(themes)} theme(s) proposed for the vocabulary",
+            claim_ids: [],
+            body: """
+            Until these are ratified the record has **no vocabulary of happenings**:
+            a claim's kind is whatever a model typed, and nothing can refuse one.
+            Every claim below this question names a kind nobody agreed to.
+
+            A **happening** is something that occurred at a moment — a claim may
+            carry it. A **topic** is something a post is about that no claim follows
+            from: a plea, an opinion, the standing condition of being trapped.
+
+            #{theme_table("Happenings — a claim may carry these", happenings, by_id)}
+            #{theme_table("Topics — a post is about these; no claim follows", topics, by_id)}
+            """,
+            answer:
+              "Per theme: **promote** (it enters the vocabulary), **rename** (the Spanish is wrong), **discard** (it is not a theme of this event), or sharpen its rule. Promote the ones you are sure of and leave the rest — a theme nobody signed simply does not exist yet."
+          }
+        ]
+    end
+  end
+
+  defp theme_table(_title, [], _by_id), do: ""
+
+  defp theme_table(title, themes, by_id) do
+    """
+    **#{title}**
+
+    | theme | under | applies when the post… |
+    |---|---|---|
+    #{Enum.map_join(themes, "\n", &theme_row(&1, by_id))}
+    """
+  end
+
+  defp theme_row(theme, by_id) do
+    parent = theme.parent_id && by_id[theme.parent_id]
+    # The rule is the column that matters: it is what the extractor and the support
+    # gate will read, so it is what is being signed.
+    rule = theme.applies_when |> String.split(" Not to be confused with:") |> hd()
+
+    "| **#{theme.name}** | #{(parent && parent.name) || "—"} | #{rule} |"
   end
 
   defp pending_persons(world) do

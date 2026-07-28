@@ -198,6 +198,40 @@ defmodule Wekui.ReportTest do
     assert report =~ "**OPP 25** (edificio"
   end
 
+  describe "the vocabulary waiting to be signed" do
+    test "a proposed theme is asked about, and it is asked first", ctx do
+      Wekui.Taxonomy.Seed.litoral_central(ctx.event.id)
+
+      report = Report.render(ctx.event)
+
+      assert report =~ "theme(s) proposed for the vocabulary"
+      # It governs everything under it, so it leads.
+      assert report =~ ~r/1\.\s+\d+ theme\(s\) proposed/
+      assert report =~ "Happenings — a claim may carry these"
+      assert report =~ "Topics — a post is about these"
+      # The rule is the column being signed, not the name.
+      assert report =~ "applies when the post"
+    end
+
+    test "a vocabulary the person has signed stops being asked about", ctx do
+      Wekui.Taxonomy.Seed.litoral_central(ctx.event.id)
+      curator = curator!(ctx.event, %{name: "Aníbal Rojas"})
+
+      for theme <- Wekui.Taxonomy.list_themes!(ctx.event.id) do
+        Curation.promote_theme!(theme, curator, "ratified")
+      end
+
+      report = Report.render(ctx.event)
+
+      refute report =~ "proposed for the vocabulary"
+      assert report =~ "took into the vocabulary"
+    end
+
+    test "an event with no themes is not asked about one", ctx do
+      refute Report.render(ctx.event) =~ "proposed for the vocabulary"
+    end
+  end
+
   describe "what a person already settled" do
     setup ctx do
       Map.put(ctx, :curator, curator!(ctx.event, %{name: "Aníbal Rojas"}))
