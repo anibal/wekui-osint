@@ -63,38 +63,6 @@
       }
     },
     {
-      "name": "Persona fallecida o cuerpo recuperado",
-      "definition": "A specific person's death is confirmed, or their body was recovered from a collapse site.",
-      "applies_when": "The post states that a named or described person died, or that a body/corpse was recovered or identified at a specific site.",
-      "nature": "happening",
-      "parent": "Personas afectadas",
-      "not_to_be_confused_with": "T6 (Búsqueda sin señales de vida): T6 is a negative search finding at a site in general, not a confirmed death or body recovery.",
-      "evidence": {
-        "readers": 3,
-        "posts": 10,
-        "overlap_b": 0.71,
-        "overlap_c": 0.69,
-        "named_b": "Persona fallecida",
-        "named_c": "Cuerpo recuperado o fallecimiento confirmado"
-      }
-    },
-    {
-      "name": "Operación de búsqueda y rescate en curso",
-      "definition": "Rescue teams are actively working a site, without the post asserting a specific outcome.",
-      "applies_when": "The post describes search-and-rescue teams actively working, removing rubble, or searching at a site, without asserting a specific person found alive, found dead, or a no-signs-of-life conclusion.",
-      "nature": "topic",
-      "parent": "Respuesta institucional y operativa",
-      "not_to_be_confused_with": "T13 (Solicitud): T16 reports ongoing work as fact; T13 is a plea for that work to happen. T4/T5/T6 require a stated outcome.",
-      "evidence": {
-        "readers": 3,
-        "posts": 33,
-        "overlap_b": 0.7,
-        "overlap_c": 0.64,
-        "named_b": "Operación de búsqueda y rescate en curso",
-        "named_c": "Labores de búsqueda y rescate en curso"
-      }
-    },
-    {
       "name": "Persona atrapada con vida bajo escombros",
       "definition": "A specific person is currently alive and trapped under rubble.",
       "applies_when": "The post asserts that a named or described person remains alive under rubble right now — e.g., voice or phone contact was established, sounds/movement were detected, or the post explicitly says they are trapped but alive.",
@@ -143,22 +111,6 @@
       }
     },
     {
-      "name": "Solicitud de rescate o recursos",
-      "definition": "A call for rescue teams, machinery, fuel, tools, or supplies to be sent to a specific site.",
-      "applies_when": "The post explicitly asks or urges that rescuers, heavy machinery, fuel, tools, medical supplies, or personnel be sent or deployed to a specific site or cause.",
-      "nature": "topic",
-      "parent": "Solicitudes y llamados",
-      "not_to_be_confused_with": "T18 (Entrega de ayuda): T13 is the request; T18 requires the aid to be asserted as actually delivered.",
-      "evidence": {
-        "readers": 3,
-        "posts": 56,
-        "overlap_b": 0.76,
-        "overlap_c": 0.5,
-        "named_b": "Necesidad de recursos para la respuesta",
-        "named_c": "Persona atrapada bajo escombros"
-      }
-    },
-    {
       "name": "Colapso estructural",
       "definition": "A specific building or piece of infrastructure came down (fully or partially collapsed).",
       "applies_when": "The post states that a specific named building, residence, hotel, or piece of infrastructure (e.g., a bridge) collapsed, fell, or came down.",
@@ -195,7 +147,7 @@
       "definition": "A specific country's or organization's rescue/aid team is present in, or was sent to, the disaster zone.",
       "applies_when": "The post states that a named foreign country, government, or organization sent, deployed, or has personnel/equipment present in the affected area.",
       "nature": "happening",
-      "parent": "Respuesta institucional y operativa",
+      "parent": "Apoyo desplegado",
       "not_to_be_confused_with": "T16 (Operación en curso): T17 is about which country/organization is involved; T16 is about the activity/status at a site. Both may apply to one post.",
       "evidence": {
         "readers": 2,
@@ -203,7 +155,8 @@
         "overlap_b": 0.35,
         "overlap_c": 0.89,
         "named_b": "Operación de búsqueda y rescate en curso",
-        "named_c": "Misión de ayuda internacional"
+        "named_c": "Misión de ayuda internacional",
+        "reparented_by_operator_on": "2026-07-28"
       }
     },
     {
@@ -275,7 +228,7 @@
       "definition": "Aid, supplies, or services were actually delivered or set up at a location.",
       "applies_when": "The post states that supplies, equipment, medical care, electricity, connectivity, or another concrete service was delivered, installed, or made available at a specific location — not merely requested.",
       "nature": "happening",
-      "parent": "Respuesta institucional y operativa",
+      "parent": "Ayuda humanitaria",
       "not_to_be_confused_with": "T13 (Solicitud de rescate o recursos): T18 requires delivery to be asserted as having happened; T13 is the request for it.",
       "evidence": {
         "readers": 2,
@@ -283,7 +236,8 @@
         "overlap_b": 0.55,
         "overlap_c": 0.24,
         "named_b": "Entrega de ayuda humanitaria",
-        "named_c": "Solicitud o punto de insumos humanitarios"
+        "named_c": "Solicitud o punto de insumos humanitarios",
+        "reparented_by_operator_on": "2026-07-28"
       }
     },
     {
@@ -301,6 +255,193 @@
         "named_b": "Búsqueda concluida sin señales de vida",
         "named_c": "Labores de búsqueda y rescate en curso"
       }
+    },
+    {
+      "name": "Persona fallecida",
+      "definition": "A specific person is reported or declared dead, whether or not a body has been found.",
+      "applies_when": "The post states that a named or described person died, was killed, or has been declared dead.",
+      "nature": "happening",
+      "parent": "Personas afectadas",
+      "not_to_be_confused_with": "Cuerpo recuperado o identificado — that requires the body itself to have been found, recovered or identified. A person may be declared dead with no body.",
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "A death and a body are not the same fact. As this ages, many will be declared dead with no body ever found or identified — a merged theme would silently conflate the two and the record could not tell them apart."
+      }
+    },
+    {
+      "name": "Cuerpo recuperado o identificado",
+      "definition": "A body was physically recovered from a site, handed over, or identified.",
+      "applies_when": "The post states that a body was pulled from the rubble, recovered, handed over to relatives, or identified at a specific site.",
+      "nature": "happening",
+      "parent": "Personas afectadas",
+      "not_to_be_confused_with": "Persona fallecida — a death may be reported or declared with no body found.",
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "A death and a body are not the same fact. As this ages, many will be declared dead with no body ever found or identified — a merged theme would silently conflate the two and the record could not tell them apart."
+      }
+    },
+    {
+      "name": "Solicitud de rescate",
+      "definition": "A call for rescuers to come to a site where someone is believed to be alive.",
+      "applies_when": "The post asks or urges that rescuers, teams or personnel be sent to a specific site because someone is, or may be, alive there.",
+      "nature": "topic",
+      "parent": "Solicitudes y llamados",
+      "not_to_be_confused_with": "Solicitud de recursos — that asks for things (machinery, fuel, tools, supplies), not for people to come and dig.",
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "Asking for rescuers because someone may be alive is not asking for fuel. One is a life; the other is logistics."
+      }
+    },
+    {
+      "name": "Solicitud de recursos",
+      "definition": "A call for machinery, fuel, tools, medical supplies or other material to be sent.",
+      "applies_when": "The post asks or urges that machinery, fuel, tools, medical supplies, water, food or other material be sent to a specific site or cause.",
+      "nature": "topic",
+      "parent": "Solicitudes y llamados",
+      "not_to_be_confused_with": "Solicitud de rescate — that asks for the rescuers themselves.",
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "Asking for rescuers because someone may be alive is not asking for fuel. One is a life; the other is logistics."
+      }
+    },
+    {
+      "name": "Operación de rescate con vida",
+      "definition": "Teams are working a site to reach someone believed or shown to be alive.",
+      "applies_when": "The post describes teams working a site to reach a person believed or shown to be alive — digging toward contact, a voice, or a located survivor.",
+      "nature": "topic",
+      "parent": "Respuesta institucional y operativa",
+      "not_to_be_confused_with": "Operación de recuperación de cuerpos — that is work where no survivor is expected.",
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "Working to reach someone believed alive is not working to recover the dead. The operation, its urgency and its meaning for the record all differ."
+      }
+    },
+    {
+      "name": "Operación de recuperación de cuerpos",
+      "definition": "Teams are working a site to recover the dead.",
+      "applies_when": "The post describes teams working a site to recover bodies, or working where the post says no survivor is expected.",
+      "nature": "topic",
+      "parent": "Respuesta institucional y operativa",
+      "not_to_be_confused_with": "Operación de rescate con vida — that is work toward someone believed alive.",
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "Working to reach someone believed alive is not working to recover the dead. The operation, its urgency and its meaning for the record all differ."
+      }
+    },
+    {
+      "name": "Apoyo desplegado",
+      "definition": "Structural node: who came to help, and from where.",
+      "applies_when": "Never classify against this node directly — it groups the themes below it. Use the finest child that fits.",
+      "nature": "topic",
+      "parent": null,
+      "not_to_be_confused_with": null,
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "International teams are the loudest but not the only ones. Locals trying to help, and national bodies deployed, are what was actually on the ground."
+      }
+    },
+    {
+      "name": "Apoyo nacional desplegado",
+      "definition": "A Venezuelan national or regional body sent people or equipment to the area.",
+      "applies_when": "The post states that a Venezuelan body — a ministry, the armed forces, Bomberos, a state or municipal government — sent, deployed, or has personnel or equipment present in the affected area.",
+      "nature": "happening",
+      "parent": "Apoyo desplegado",
+      "not_to_be_confused_with": "Apoyo internacional desplegado — that is a foreign country or organization.",
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "International teams are the loudest but not the only ones. Locals trying to help, and national bodies deployed, are what was actually on the ground."
+      }
+    },
+    {
+      "name": "Apoyo vecinal o voluntario",
+      "definition": "Neighbours, residents or self-organized volunteers are doing the work themselves.",
+      "applies_when": "The post states that neighbours, residents, volunteers or self-organized citizens are working at a site — clearing rubble by hand, digging, carrying, searching — rather than a deployed institution.",
+      "nature": "happening",
+      "parent": "Apoyo desplegado",
+      "not_to_be_confused_with": "Apoyo nacional desplegado — that is an institution with a name and a chain of command.",
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "International teams are the loudest but not the only ones. Locals trying to help, and national bodies deployed, are what was actually on the ground."
+      }
+    },
+    {
+      "name": "Ayuda humanitaria",
+      "definition": "Structural node: the aid chain — gathered, moved, delivered.",
+      "applies_when": "Never classify against this node directly — it groups the themes below it. Use the finest child that fits.",
+      "nature": "topic",
+      "parent": null,
+      "not_to_be_confused_with": null,
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "Aid is a chain, not an event: gathered, moved, delivered. Citizens self-organize collection points and the distribution effort is its own work."
+      }
+    },
+    {
+      "name": "Centro de acopio",
+      "definition": "A collection point for donated goods exists, was set up, or changed what it accepts.",
+      "applies_when": "The post states that a collection point (centro de acopio) exists, was opened or closed, is receiving goods, or has stopped receiving them, at a named location.",
+      "nature": "happening",
+      "parent": "Ayuda humanitaria",
+      "not_to_be_confused_with": "Entrega de ayuda humanitaria — that is aid reaching the people it is for.",
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "Aid is a chain, not an event: gathered, moved, delivered. Citizens self-organize collection points and the distribution effort is its own work."
+      }
+    },
+    {
+      "name": "Logística y distribución de ayuda",
+      "definition": "Gathered aid was moved, routed or handed between organizations.",
+      "applies_when": "The post states that aid already gathered was transported, flown, shipped, convoyed, routed or handed from one organization to another — the movement itself, not the gathering or the final delivery.",
+      "nature": "happening",
+      "parent": "Ayuda humanitaria",
+      "not_to_be_confused_with": "Centro de acopio (the gathering) and Entrega de ayuda humanitaria (the final delivery).",
+      "evidence": {
+        "ruled_by": "operator",
+        "on": "2026-07-28",
+        "why": "Aid is a chain, not an event: gathered, moved, delivered. Citizens self-organize collection points and the distribution effort is its own work."
+      }
+    },
+    {
+      "name": "Damnificados y refugio",
+      "definition": "People lost their homes, were displaced, or are staying in a shelter.",
+      "applies_when": "The post states that people lost their home, were displaced, evacuated, or are staying in a shelter, refuge or another household.",
+      "nature": "topic",
+      "parent": "Personas afectadas",
+      "not_to_be_confused_with": null,
+      "evidence": {
+        "restored_by": "assistant",
+        "on": "2026-07-28",
+        "why": "Cut by my two-of-three-readers threshold, which filters by SAMPLE SIZE, not by reality. The full corpus carries it (damnificados 40, refugio 24, and every reader had a damage-without-collapse theme that the post-overlap match failed to pair)."
+      }
+    },
+    {
+      "name": "Daño estructural sin colapso",
+      "definition": "A named structure was damaged or made unsafe but did not come down.",
+      "applies_when": "The post states that a named structure was damaged, cracked, tilted, or declared unsafe, and did NOT collapse.",
+      "nature": "happening",
+      "parent": "Edificaciones e infraestructura",
+      "not_to_be_confused_with": "Colapso estructural — that requires the structure to have actually come down.",
+      "evidence": {
+        "restored_by": "assistant",
+        "on": "2026-07-28",
+        "why": "Cut by my two-of-three-readers threshold, which filters by SAMPLE SIZE, not by reality. The full corpus carries it (damnificados 40, refugio 24, and every reader had a damage-without-collapse theme that the post-overlap match failed to pair)."
+      }
     }
+  ],
+  "retired_by_operator_2026_07_28": [
+    "Operación de búsqueda y rescate en curso",
+    "Persona fallecida o cuerpo recuperado",
+    "Solicitud de rescate o recursos"
   ]
 }

@@ -75,6 +75,7 @@ defmodule Wekui.Curation.Act do
     # highest-leverage act in the system: it decides what the record is able to
     # say, for every claim after it. Which is exactly why it must name a person.
     :promote_theme,
+    :reparent_theme,
     :deprecate_theme,
     :discard_theme,
     :rename_theme,
@@ -109,6 +110,7 @@ defmodule Wekui.Curation.Act do
     set_person_handle: "renamed the handle of",
     set_person_kind: "set the privacy of",
     promote_theme: "took into the vocabulary",
+    reparent_theme: "moved",
     deprecate_theme: "retired",
     discard_theme: "discarded",
     rename_theme: "renamed",

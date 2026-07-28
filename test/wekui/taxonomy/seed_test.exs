@@ -120,12 +120,65 @@ defmodule Wekui.Taxonomy.SeedTest do
       for name <- [
             "Persona atrapada con vida bajo escombros",
             "Persona rescatada con vida",
-            "Persona fallecida o cuerpo recuperado",
             "Persona desaparecida o sin contacto",
             "Solicitud de información"
           ] do
         assert MapSet.member?(names, name), "the seed lost #{inspect(name)}"
       end
+    end
+
+    # Each of these is a distinction the eight-day corpus could NOT teach, ruled by
+    # the operator on 2026-07-28 out of knowledge of how a disaster ages. They are
+    # tested by name because losing one is silent otherwise.
+    test "a death and a body are two themes", %{event: event} do
+      Seed.litoral_central(event.id)
+      names = event.id |> Taxonomy.list_themes!() |> MapSet.new(& &1.name)
+
+      # Many will be declared dead with no body ever found. A merged theme could not
+      # tell the two apart, and the record would lose the difference forever.
+      assert MapSet.member?(names, "Persona fallecida")
+      assert MapSet.member?(names, "Cuerpo recuperado o identificado")
+      refute MapSet.member?(names, "Persona fallecida o cuerpo recuperado")
+    end
+
+    test "asking for rescuers is not asking for fuel", %{event: event} do
+      Seed.litoral_central(event.id)
+      names = event.id |> Taxonomy.list_themes!() |> MapSet.new(& &1.name)
+
+      assert MapSet.member?(names, "Solicitud de rescate")
+      assert MapSet.member?(names, "Solicitud de recursos")
+    end
+
+    test "reaching the living is not recovering the dead", %{event: event} do
+      Seed.litoral_central(event.id)
+      names = event.id |> Taxonomy.list_themes!() |> MapSet.new(& &1.name)
+
+      assert MapSet.member?(names, "Operación de rescate con vida")
+      assert MapSet.member?(names, "Operación de recuperación de cuerpos")
+    end
+
+    test "the neighbours are in the record beside the international teams", %{event: event} do
+      Seed.litoral_central(event.id)
+      themes = Map.new(Taxonomy.list_themes!(event.id), &{&1.name, &1})
+
+      # The readers saw international teams (17% of the sample) and missed the
+      # neighbours — but the full corpus carries `vecin*` 215 times and `voluntari*`
+      # 177. Loudness is not weight.
+      assert themes["Apoyo vecinal o voluntario"]
+      assert themes["Apoyo nacional desplegado"]
+
+      family = themes["Apoyo desplegado"]
+      assert themes["Apoyo internacional desplegado"].parent_id == family.id
+    end
+
+    test "aid is a chain, not an event", %{event: event} do
+      Seed.litoral_central(event.id)
+      themes = Map.new(Taxonomy.list_themes!(event.id), &{&1.name, &1})
+
+      family = themes["Ayuda humanitaria"]
+      assert themes["Centro de acopio"].parent_id == family.id
+      assert themes["Logística y distribución de ayuda"].parent_id == family.id
+      assert themes["Entrega de ayuda humanitaria"].parent_id == family.id
     end
 
     test "a plea and a disappearance are two themes, not one", %{event: event} do

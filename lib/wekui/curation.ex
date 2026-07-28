@@ -333,6 +333,21 @@ defmodule Wekui.Curation do
     end)
   end
 
+  @doc """
+  Moves a Theme under the one that contains it — the act that rebalances the tree.
+
+  A vocabulary read out of a corpus arrives flat where the corpus was flat, and a person
+  who knows the ground puts the family back: *international help* is one of several
+  kinds of help deployed, not a top-level fact.
+  """
+  def reparent_theme!(theme, parent, curator, reason) do
+    attributed!(curator, :reparent_theme, reason, [theme_id: theme.id], fn ->
+      {%{"parent" => theme_name(theme.parent_id)},
+       Taxonomy.set_theme_parent!(theme, %{parent_id: parent && parent.id}),
+       &%{"parent" => theme_name(&1.parent_id)}}
+    end)
+  end
+
   @doc "Retires a Theme onto an active replacement — the verb for a meaning that moved."
   def deprecate_theme!(theme, replacement, curator, reason) do
     attributed!(curator, :deprecate_theme, reason, [theme_id: theme.id], fn ->
@@ -546,6 +561,15 @@ defmodule Wekui.Curation do
     |> case do
       "" -> nil
       places -> places
+    end
+  end
+
+  defp theme_name(nil), do: nil
+
+  defp theme_name(theme_id) do
+    case Taxonomy.get_theme(theme_id) do
+      {:ok, theme} -> theme.name
+      {:error, _gone} -> nil
     end
   end
 
