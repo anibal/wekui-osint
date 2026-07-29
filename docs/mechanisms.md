@@ -90,6 +90,14 @@ above has failed, and it reaches them **as a pattern, never as a row**.
   sure of beat thirty they guessed, and three candidates were dropped for being genuinely
   ambiguous, because an ambiguous case admitted as ground truth poisons every later
   measurement. On that set: v1 scores 2/5, the revision 5/5. **[BUILT]**
+- **An eval set with no example of a verdict cannot detect losing that verdict.** The
+  support-gate ground truth held 11 `supported` and 6 `unsupported` and **not one
+  `overstated`**, so it scored the revision 14/17 while the revision had quietly stopped
+  using the middle verdict at all: 0 of 200 on a live batch, where the old prompt used it
+  15 times. A three-way judgment had collapsed to two-way and the instrument measuring it
+  was blind by construction. **A ground-truth set must hold at least one case of every
+  answer the thing can give**, or it silently stops measuring the ones it lacks — the
+  same defect as a closed enum with no slot for the worst case. **[BUILT]**
 - **Ask a rung whether the question is its shape.** Pairwise judging cannot partition a
   dense group: refute the edge between `equipo USAR El Salvador` and `equipo USAR de
   Perú` and both still sit in one group through the generic `equipo extranjero` that
