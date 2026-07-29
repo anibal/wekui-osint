@@ -31,6 +31,66 @@
       "claim_id": "213db1cd-6135-4615-ab18-7d4939ef0b43",
       "verdict": "unsupported",
       "why": "THE WRONG HAPPENING. The claim is filed under a person being alive under rubble; the post says the person is among the desaparecidas and their whereabouts are unknown. Missing is not trapped-alive, and the theme's own 'not to be confused with' names this."
+    },
+    {
+      "claim_id": "30847157-ca39-4505-9f46-723052c8f2b4",
+      "verdict": "unsupported",
+      "why": "ASKING IS NOT TELLING, and the rule asks for the activity. 'Se necesitan rescatistas... que ayuden en edificio Costa Brava... falta ayuda' REQUESTS teams; the rule needs teams working the site. That the same post asserts signs of life supports a different happening, not this one."
+    },
+    {
+      "claim_id": "8e250d6e-12b3-487d-a420-77d2aafcb93d",
+      "verdict": "unsupported",
+      "why": "AN INSPECTION IS NOT A CLOSURE. 'Autoridades realizaron supervision tecnica del puente San Julian' says the bridge was examined. The rule needs the way collapsed, blocked or closed to traffic. Nothing in the post says any of those."
+    },
+    {
+      "claim_id": "ae1b9666-d747-4214-bf95-a7663f90f146",
+      "verdict": "unsupported",
+      "why": "THE OPPOSITE HAPPENING. Filed under recovering bodies, but the post says teams 'trabajan para rescatar con vida' a man of 21 who is still trapped. The theme's own 'not to be confused with' draws exactly this line: recovery is work where no survivor is expected."
+    },
+    {
+      "claim_id": "0111abb7-7406-46e6-946e-6be8ca4c99af",
+      "verdict": "supported",
+      "why": "A NAMED INSTITUTION STATING SOMETHING IS THE RULE, ENGLISH OR NOT. 'The U.S. Geological Survey said the latest tremor struck at a depth of 10 kilometres' is a named body announcing a finding. The record has this as unsupported; the record is wrong."
+    },
+    {
+      "claim_id": "2768131a-7068-4e59-bf8f-e7449487ea33",
+      "verdict": "supported",
+      "why": "A specific animal, named Giselle, pulled alive from a named structure after a five-hour operation at Residencial El Palmar, Caraballeda. Two independent posts. The rule asks for exactly this."
+    },
+    {
+      "claim_id": "30908935-0d57-4d17-8787-1bc8053d566e",
+      "verdict": "supported",
+      "why": "'Helicopteros venezolanos aterrizaron... en Playa Escondida, La Guaira con equipos de rescate.' A Venezuelan body with personnel and equipment present at a named place, which is what the rule asks."
+    },
+    {
+      "claim_id": "386ae9b5-fb6a-4e33-9897-30e68b229469",
+      "verdict": "supported",
+      "why": "The rule asks for a quake citing time, magnitude OR epicentre. The post gives two of the three: intensity 4.6, north of Caraballeda, attributed to USGS. That the author then asks whether there were two does not unmake the one reported."
+    },
+    {
+      "claim_id": "0f4ebda7-c45d-4444-be77-5dc824ad900a",
+      "verdict": "supported",
+      "why": "'Rescataron a un nino en la zona de Caribe en La Guaira.' The rule asks for a named OR DESCRIBED person extracted alive. A child is a description, and the extraction is asserted outright."
+    },
+    {
+      "claim_id": "71045a07-a2fb-4ed3-a3b5-df452b03bf30",
+      "verdict": "supported",
+      "why": "'Los rescatistas de Mexico y El Salvador confirmaron que no habian sobrevivientes en Coral Beach.' Rescuers, a named site, a finding of no survivors. This is the rule stated almost word for word."
+    },
+    {
+      "claim_id": "00eea700-5284-42b1-b313-2db749723abc",
+      "verdict": "supported",
+      "why": "'Personas que permanece viva en este momento en Residencias Country Mar... esta vivo pide ayuda.' The rule wants a person asserted alive under rubble RIGHT NOW at a place. That the post also asks for help does not unmake the assertion beside it."
+    },
+    {
+      "claim_id": "74012380-49a7-4635-906f-21f393834554",
+      "verdict": "supported",
+      "why": "The rule covers a collection point that has STOPPED receiving or is closed, not only one that opened. The post asserts the guard at the centro de acopio de Caraballeda ordered no more supplies handed out and that it is closed."
+    },
+    {
+      "claim_id": "0bdefba7-a851-4b72-95e1-a6c6e96aa784",
+      "verdict": "supported",
+      "why": "'Equipos especializados de Francia y Estados Unidos lograron sacar con vida...' Two named foreign countries with personnel present and working. Corroborated by a second post in another language."
     }
   ]
 }
