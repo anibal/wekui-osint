@@ -329,8 +329,10 @@ defmodule Wekui.Pipelines.ReadPath.Steps do
   end
 
   defp gates(event) do
+    # Current persons only: a row folded into another keeps `pending_review`, and
+    # counting it would report a gate that nobody can answer.
     persons =
-      event.id |> Narrative.list_persons!() |> Enum.filter(&(&1.status == :pending_review))
+      event.id |> Narrative.current_persons!() |> Enum.filter(&(&1.status == :pending_review))
 
     places = event.id |> Core.list_places!() |> Enum.filter(&(&1.lifecycle == :proposed))
     claims = event.id |> Narrative.current_claims!() |> Enum.filter(&(&1.support in @flagged))

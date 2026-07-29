@@ -528,6 +528,34 @@ defmodule Wekui.ReportTest do
     assert Report.render(ctx.event) =~ "No completed run has rendered a beat yet"
   end
 
+  # `merge_into` leaves `status` alone, so a folded row stays pending_review forever. It
+  # must not be asked about: that is a handle for someone the record no longer holds as
+  # a distinct human being.
+  test "a person folded into another is not asked about at the handle gate", ctx do
+    claim = claim!(ctx, %{place_mention: "Caribe"}, place: ctx.caribe)
+
+    survivor =
+      Narrative.identify_person!(%{
+        event_id: ctx.event.id,
+        full_name: "Belkys Josefina Barreto García"
+      })
+
+    folded = Narrative.identify_person!(%{event_id: ctx.event.id, full_name: "Belkis Barreto"})
+    Narrative.link_person!(%{claim_id: claim.id, person_id: folded.id})
+
+    assert Report.render(ctx.event) =~ "Belkis Barreto"
+
+    assert {:ok, _survivor} = Wekui.Narrative.PersonMerge.merge(survivor, folded, "one woman")
+
+    report = Report.render(ctx.event)
+
+    assert report =~ "1 person(s) at the handle gate"
+    refute report =~ "| Belkis B. | Belkis Barreto |"
+    # The claim keeps its link to the name the post actually used, so the row is still
+    # reachable by id — only the QUESTION about it is gone.
+    assert report =~ "Belkys Josefina Barreto García"
+  end
+
   # The finder offers pairs; a person is asked about groups. Measured on the corpus,
   # 3,213 pairs were 261 groups — printed as pairs the question is a wall.
   describe "the claims that may be one happening told more than once" do

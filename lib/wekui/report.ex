@@ -482,8 +482,13 @@ defmodule Wekui.Report do
   # A handle that derived cleanly and collides with nobody is not a question; it is a
   # decision the machine already made correctly, and the honest ask is a SAMPLE of them.
   # The rest are listed so the record is complete and nothing is hidden.
+  # A FOLDED ROW IS NOT A PERSON WAITING. `merge_into` leaves `status` alone, so a row
+  # folded into another stays `pending_review` forever and would be asked about here —
+  # a handle for someone the record no longer holds as a distinct human being. The
+  # filter is HERE and not on `world.persons`, because a [[claim]] keeps its link to the
+  # name its post actually used, and `person_line/2` still has to find that row by id.
   defp pending_persons(world) do
-    case Enum.filter(world.persons, &(&1.status == :pending_review)) do
+    case Enum.filter(world.persons, &(&1.status == :pending_review and is_nil(&1.merged_into_id))) do
       [] ->
         []
 
