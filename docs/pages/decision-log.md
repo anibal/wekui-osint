@@ -26,4 +26,5 @@ type:: hub
   - [[decision-2026-07-29-a-claim-carries-a-ratified-theme]] — a claim's kind is a theme a person ratified; a free string could refuse nothing, and 20 of 21 gate refusals were type errors.
   - [[decision-2026-07-29-the-record-knows-who]] — two claims naming different Persons are never one happening; two adversarial readings merged five people the record could already tell apart.
   - [[decision-2026-07-29-a-place-that-holds-everything]] — sharing the parroquia the corpus is collected over is not sharing a place; it made 54% of the duplicate queue.
+  - [[decision-2026-07-29-a-machine-may-fold-a-person]] — a machine may fold two Person rows into one, because a merge is a deprecation and never a rewrite; the naming rule lives in code, where prose could not hold it.
 - Dates say when a decision was recorded in this log; the measurements behind the earliest entries predate it.
