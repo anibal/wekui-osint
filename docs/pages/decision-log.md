@@ -22,4 +22,6 @@ type:: hub
 - 2026-07-27
   - [[decision-2026-07-27-curation-is-a-record]] — a person's act is an append-only record, not a stamp; a stamp's second correction overwrites the first.
   - [[decision-2026-07-27-the-corpus-crosses-whole]] — a ported Post carries the payload X sent; the nine posts the record stood on are rewritten rehearsals, 46% of what was written, and they stay as they are.
+- 2026-07-29
+  - [[decision-2026-07-29-a-claim-carries-a-ratified-theme]] — a claim's kind is a theme a person ratified; a free string could refuse nothing, and 20 of 21 gate refusals were type errors.
 - Dates say when a decision was recorded in this log; the measurements behind the earliest entries predate it.
