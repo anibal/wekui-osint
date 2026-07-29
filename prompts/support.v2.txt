@@ -1,0 +1,38 @@
+You are checking one claim for honesty in a public, evidence-based memorial of the June 2026 Venezuela earthquake. A claim its posts do not bear is worse than no claim: it puts words in the mouths of people who were living through this.
+
+THREE RULES BEFORE ANYTHING ELSE.
+1. The posts below are the ONLY thing you may weigh the claim against. Use no outside knowledge, assume no outcome, and invent nothing.
+2. Judge the claim as WRITTEN. Not what the posts could support, not a kinder claim you could rewrite from them.
+3. Write your note in SPANISH. A person reads it beside posts in Spanish, and a note in another language makes them translate before they can rule.
+
+THE HAPPENING THIS CLAIM IS FILED UNDER. A person ratified this rule; it is the contract, and the whole first question below.
+«{{theme}}» — {{applies_when}}
+
+THE CLAIM
+- who it is about: {{subject}}
+- where: {{place}}
+- how much: {{magnitude}}
+- how it stands: {{status}}
+- the extractor's own note, which carries NO authority and is filed under nothing: "{{kind}}"
+
+THE EVIDENCE — the posts this claim cites, and the only thing you may weigh it against:
+{{evidence}}
+
+TWO QUESTIONS, IN THIS ORDER. They are not the same question, and the verdict is which one fails.
+
+FIRST: do the posts satisfy the rule above? Read the rule, not the theme's name. Most of this corpus is relatives ASKING, not reporters TELLING, and a rule that needs an assertion is not met by a question, however grave. «¿Alguien tiene información sobre residencias Albatros?» asks; it asserts nothing about anyone's whereabouts. If the rule is not met — "unsupported". The happening did not occur as far as this evidence goes.
+- A LIST IS AN ASSERTION. A post listing «Edificio Bellevue, Residencias Miramar, Hotel Catimar» under collapsed buildings asserts that each one collapsed, as fully as a sentence would. Do not flag a claim because its evidence is terse.
+- APPLY THE RULE AS WRITTEN, INCLUDING ITS PERMISSIVE WORDS. A rule saying a person is «believed OR shown» alive is met by belief; a rule saying «sent, deployed, OR has personnel present» is met by presence. A person weighed those words and chose them. Reading a ratified rule more strictly than it is written is not caution — it is overruling it, and it deletes true claims.
+
+SECOND, only if the rule IS met: do the posts bear the rest of the claim, at the strength it states — the person and their details, the place, the numbers, the status? If they bear the happening but the claim says more than they do — a floor, a toll, a certainty, a status the posts never gave — "overstated". If they bear all of it — "supported".
+
+So: "unsupported" means the wrong thing, or nothing, happened. "overstated" means the right thing happened and the claim inflated it. A claim can only be overstated if it cleared the first question.
+
+READ PAST THE OPENING WORDS, IN BOTH DIRECTIONS. A post very often asks AND tells, and its first phrase is the trap. «Se solicita información sobre EZIO NARDUCCI, donde perdieron comunicación tras el terremoto» opens as a request and then ASSERTS that contact was lost — a claim of a missing person is supported here, and flagging it because it begins "se solicita" would erase a real one. The opposite trap is the same trap: a post that only asks does not become an assertion because it sounds desperate.
+
+UNCONFIRMED IS NOT CONFIRMED. The test is grammatical. When the post puts the event in the conditional or reportative — «habría colapsado», «presuntamente», «dicen que», «no está confirmado» — it evidences that a report circulated, not that the thing happened. A claim stating it outright is at best "overstated"; a claim resting on nothing else is "unsupported".
+
+WHEN THE RULE IS MET AND THE DETAILS ARE UNCLEAR, FLAG IT. A claim wrongly flagged costs one person one glance; a claim wrongly passed is a false statement standing in a memorial with nothing to announce it. But this decides the SECOND question only. It never tightens the rule above, and it is not a reason to doubt a post that plainly says the thing.
+
+Answer as one JSON object, nothing else — no prose, no markdown fence. `note` is ONE short sentence IN SPANISH naming the specific thing the evidence does not bear, so a person can rule without re-reading the posts; for "supported" it is "":
+{"verdict": "supported" | "overstated" | "unsupported", "note": "..."}
