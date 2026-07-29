@@ -1,0 +1,36 @@
+{
+  "about": "Claims a person adjudicated against their own cited posts, so a support-gate prompt can be measured against a ruling instead of against the previous prompt. Agreement with an earlier prompt measures drift, not correctness: v1 re-run agrees with its own record 28/30, so ANY revision looks like a regression by that metric. These are the cases the ladder's rung 7 has actually settled.",
+  "rules": [
+    "Only cases the adjudicator is confident about. An ambiguous case included as ground truth poisons every later measurement, and three cases were dropped from this set for that reason: a claim whose two posts disagree on mood (habria vs hay), and two whose deciding clause is cut off in the stored payload.",
+    "Claim ids, never post text. The posts name private individuals and this file is committed; the text is read from the record at run time.",
+    "Append only. A case is removed only when the adjudicator changes their ruling, and then the new ruling says so."
+  ],
+  "adjudicated": "2026-07-29",
+  "cases": [
+    {
+      "claim_id": "0112e325-7862-4c99-9bbe-33306ddf4e5a",
+      "verdict": "supported",
+      "why": "A LIST IS AN ASSERTION. The post lists Conjunto Residencial Caribe, Edificio Los Arrayares and Edificio Tanamar under buildings that came down. Each is a specific named structure, which is exactly what the rule asks for. Terse evidence is still evidence."
+    },
+    {
+      "claim_id": "0fc18210-10ae-4272-89bc-50a6e3e5da07",
+      "verdict": "unsupported",
+      "why": "A COUNT IS NOT A NAME. 'DOS edificios de la Mision Vivienda colapsaron' names no building: Mision Vivienda is a national housing programme, not a structure. The rule needs a specific named building. The adjudicator first scored this the other way and was wrong."
+    },
+    {
+      "claim_id": "0e531077-bc10-4eb1-a032-023de25036c7",
+      "verdict": "supported",
+      "why": "APPLY THE RULE'S PERMISSIVE WORDS. The rule says teams working to reach someone 'believed OR shown' alive. Two named foreign teams are digging at Edificio La Gabarra and noise tests drew responses. That one post adds 'no hay confirmacion' does not unmake it: belief is what the rule asks for."
+    },
+    {
+      "claim_id": "1f179046-e340-4376-a4b5-eaf223de9edc",
+      "verdict": "unsupported",
+      "why": "UNCONFIRMED IS NOT CONFIRMED, said by the source itself. The post reports that a president received messages about children alive under rubble and states outright 'No sabemos si la informacion es correcta'. A report circulated; nothing is asserted to have happened."
+    },
+    {
+      "claim_id": "213db1cd-6135-4615-ab18-7d4939ef0b43",
+      "verdict": "unsupported",
+      "why": "THE WRONG HAPPENING. The claim is filed under a person being alive under rubble; the post says the person is among the desaparecidas and their whereabouts are unknown. Missing is not trapped-alive, and the theme's own 'not to be confused with' names this."
+    }
+  ]
+}

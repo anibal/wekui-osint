@@ -75,6 +75,21 @@ above has failed, and it reaches them **as a pattern, never as a row**.
   money per item and can regress between runs, rung 1 does neither. Three of the four
   fixes in `research-2026-07-29-duplicate-claims-at-scale` were this same move.
   **[BUILT]**
+- **A model's explanation of its verdict is not evidence about the verdict.** Reading the
+  revised support prompt's own notes, they were persuasive and I scored it "right on 4 of
+  6". The control said otherwise: re-running the OLD prompt against its own record agreed
+  **28/30**, so the model is stable on this task and the revision's 16/30 was a real 47%
+  behavioural change, not noise. Adjudicating all eleven disagreements against the actual
+  posts, the revision was right 5 times and wrong 3 — differently wrong, not better. The
+  cheap control is always available and costs one run: **measure the old instrument
+  against its own output before believing anything about the new one.** **[BUILT]**
+- **Tune against rulings, never against the previous prompt.** Agreement with v1 cannot
+  say "better", only "different" — and with a 93%-stable baseline every revision scores
+  as a regression. `priv/eval/support_gate.json` holds claims a person adjudicated against
+  their own cited posts; it is the only score that means correct. Five cases someone is
+  sure of beat thirty they guessed, and three candidates were dropped for being genuinely
+  ambiguous, because an ambiguous case admitted as ground truth poisons every later
+  measurement. On that set: v1 scores 2/5, the revision 5/5. **[BUILT]**
 - **Ask a rung whether the question is its shape.** Pairwise judging cannot partition a
   dense group: refute the edge between `equipo USAR El Salvador` and `equipo USAR de
   Perú` and both still sit in one group through the generic `equipo extranjero` that

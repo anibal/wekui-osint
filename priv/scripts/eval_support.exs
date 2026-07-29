@@ -52,6 +52,41 @@ event =
 
 IO.puts("\nEvaluating #{prompt_file} on #{event.name}\n")
 
+# THE ADJUDICATED SET FIRST. These are rulings, not the previous prompt's opinion, so
+# they are the only part of this script that can say a revision is BETTER rather than
+# merely different. Small on purpose: five cases a person is sure of beat thirty they
+# guessed. Everything below this block measures drift.
+truth =
+  case File.read("priv/eval/support_gate.json") do
+    {:ok, raw} -> Jason.decode!(raw)["cases"]
+    {:error, _none} -> []
+  end
+
+unless truth == [] or dry? do
+  scored =
+    Enum.map(truth, fn adjudged ->
+      {:ok, claim} = Narrative.get_claim(adjudged["claim_id"])
+
+      verdict =
+        case Verify.judge(claim, prompt_file: prompt_file, model: model) do
+          {:ok, v, _note} -> to_string(v)
+          {:error, error} -> inspect(error)
+        end
+
+      Map.put(adjudged, "got", verdict)
+    end)
+
+  right = Enum.count(scored, &(&1["got"] == &1["verdict"]))
+  say.("ADJUDICATED: #{right}/#{length(scored)} — the only score that means correct")
+
+  for miss <- Enum.reject(scored, &(&1["got"] == &1["verdict"])) do
+    say.("  wrong: said #{miss["got"]}, ruling is #{miss["verdict"]}")
+    say.("         #{String.slice(miss["why"], 0, 150)}")
+  end
+
+  IO.puts("")
+end
+
 judged = event.id |> Narrative.current_claims!() |> Enum.reject(&(&1.support == :unverified))
 
 {flagged, passed} = Enum.split_with(judged, &(&1.support in [:overstated, :unsupported]))
@@ -95,14 +130,21 @@ else
   elapsed = System.monotonic_time(:second) - started
 
   for {stratum, judged} <- results do
-    agreed = Enum.count(judged, &(&1.verdict == &1.claim.support))
-    errors = Enum.count(judged, &match?({:error, _}, &1.verdict))
+    # A REFUSAL IS NOT A FAILURE. A themeless claim is one the gate correctly declines,
+    # and counting it as "unreadable" beside a parse error is this script telling the
+    # same lie it was built to catch.
+    {refused, read} =
+      Enum.split_with(judged, &match?({:error, {:no_ratified_rule, _id}}, &1.verdict))
+
+    broke = Enum.count(read, &match?({:error, _error}, &1.verdict))
+    agreed = Enum.count(read, &(&1.verdict == &1.claim.support))
 
     IO.puts("")
 
     say.(
-      "#{stratum}: #{agreed}/#{length(judged)} agreed with the recorded verdict" <>
-        if(errors > 0, do: " (#{errors} unreadable)", else: "")
+      "#{stratum}: #{agreed}/#{length(read)} agreed with the recorded verdict" <>
+        if(refused != [], do: " · #{length(refused)} refused (no ratified rule)", else: "") <>
+        if(broke > 0, do: " · #{broke} unreadable", else: "")
     )
 
     moved = Enum.reject(judged, &(&1.verdict == &1.claim.support))
