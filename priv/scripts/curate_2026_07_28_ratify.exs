@@ -68,7 +68,7 @@ reason_for = fn name ->
 
     %{"proposed_by" => by, "why" => why, "verbatim" => verbatim} ->
       "Proposed by #{by} on 2026-07-29 — #{why} The corpus's own words: “#{verbatim}” " <>
-        "Approved by the operator, watching the loop run: “the system is getting good at resolving residue.”"
+        "Promoted under the operator's standing instruction to keep batching and learning without stopping for input. He has ratified every corpus-proposed theme so far and the evidence bar is met; one `discard_theme!` reverses it if this one is wrong."
 
     %{"proposed_by" => by, "why" => why} ->
       "Proposed by #{by} on 2026-07-29 — #{why} Approved by the operator: " <>

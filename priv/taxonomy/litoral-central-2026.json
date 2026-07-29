@@ -554,6 +554,36 @@
         "verbatim": "Régimen retuvo 8 horas a rescatistas para un acto protocolar. / Un ciudadano ruso dio transporte a rescatistas retenidos.",
         "why": "Two residue entries, plus independent corroboration from the 2026-07-27 spike: reader B proposed `Obstrucción institucional` over 7 posts and marked it a HAPPENING, while reader C called the same thing a topic. That was the single nature disagreement in the entire spike — and the corpus has now settled it. Rescuers held for eight hours is an event."
       }
+    },
+    {
+      "name": "Colapso múltiple en una zona",
+      "parent": "Edificaciones e infraestructura",
+      "nature": "happening",
+      "definition": "Several buildings came down in a named area, without any one of them being identified.",
+      "applies_when": "The post states that more than one structure collapsed in a named sector, street, seafront or parish, without naming the individual buildings. A count (\"tres edificios\") is welcome but not required.",
+      "not_to_be_confused_with": "Colapso estructural — that needs a NAMED structure. This is the area-level report that rule refuses, and refusing it lost a real fact.",
+      "evidence": {
+        "proposed_by": "the corpus, through the residue list",
+        "on": "2026-07-29",
+        "trials": 5,
+        "verbatim": "Se reportan múltiples edificios colapsados en el malecón de Los Corales, La Guaira, sin especificar nombres. / Se reporta que tres edificios colapsaron en el sector Los Cocos de Caraballeda. / Se reportan múltiples edificios desplomados en Caraballeda, sin especificar nombres.",
+        "why": "Five residue entries across two separate sweeps. This is the corpus pushing back on a rule I WROTE: I made «Colapso estructural» require a named structure, to stop a vivid word producing a phantom claim. The corpus reports collapse at the AREA level constantly — three buildings in Los Cocos, a whole seafront — and that is a real, countable, evidenced fact a memorial must hold. The rule was right and its scope was too narrow."
+      }
+    },
+    {
+      "name": "Registro visual del daño",
+      "parent": null,
+      "nature": "topic",
+      "definition": "The post's content is a photograph or video of a place, and its text asserts nothing on its own.",
+      "applies_when": "The post publishes or points at an image or video of a named place — an aerial view, a street, a building — and the TEXT alone states no happening. Route it here; a text-only reading cannot see what the picture shows.",
+      "not_to_be_confused_with": "Colapso estructural and Colapso múltiple en una zona — if the TEXT itself states that something came down, that is a claim, whatever else the post carries.",
+      "evidence": {
+        "proposed_by": "the corpus, through the residue list",
+        "on": "2026-07-29",
+        "trials": 8,
+        "verbatim": "Se publica una foto del edificio Albatros en Caraballeda. / Un video muestra múltiples edificios colapsados en el malecón de Los Corales, sin identificar nombres. / Se publica una vista aérea de La Guaira mostrando daños estructurales.",
+        "why": "Eight residue entries across three sweeps, and rising as a share of it. This is the MODALITY gap the three-reader spike measured independently — six of its 302 posts were captions whose evidence sits in an image — and image reading is deliberately parked. A gap that is parked must still stop re-asking: a residue entry repeating every sweep is a queue, which is the one thing the report may not become. Naming it as a TOPIC routes those posts out of the residue, admits plainly that a text-only reading cannot see them, and makes them findable the day the images are read."
+      }
     }
   ],
   "retired_by_operator_2026_07_28": [
