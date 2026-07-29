@@ -584,6 +584,36 @@
         "verbatim": "Se publica una foto del edificio Albatros en Caraballeda. / Un video muestra múltiples edificios colapsados en el malecón de Los Corales, sin identificar nombres. / Se publica una vista aérea de La Guaira mostrando daños estructurales.",
         "why": "Eight residue entries across three sweeps, and rising as a share of it. This is the MODALITY gap the three-reader spike measured independently — six of its 302 posts were captions whose evidence sits in an image — and image reading is deliberately parked. A gap that is parked must still stop re-asking: a residue entry repeating every sweep is a queue, which is the one thing the report may not become. Naming it as a TOPIC routes those posts out of the residue, admits plainly that a text-only reading cannot see them, and makes them findable the day the images are read."
       }
+    },
+    {
+      "name": "Organización de la diáspora",
+      "parent": "Apoyo desplegado",
+      "nature": "happening",
+      "definition": "Venezuelans abroad organised to help — a census of the missing, remote expert assessment, a solidarity campaign, a shipment.",
+      "applies_when": "The post states that a Venezuelan community or organisation OUTSIDE the country did something concrete for the disaster: opened a register of the missing, assessed damage remotely, ran a collection or campaign, or tried to send aid.",
+      "not_to_be_confused_with": "Apoyo internacional desplegado — that is a foreign state or organisation with people on the ground. This is Venezuelans abroad, working at a distance.",
+      "evidence": {
+        "proposed_by": "the corpus, through the residue list",
+        "on": "2026-07-29",
+        "trials": 5,
+        "verbatim": "La comunidad venezolana de Rosario abrió un censo para localizar a familiares desaparecidos; hay ocho personas buscadas desde esa ciudad. / Una ingeniera civil radicada en Rosario colabora a distancia evaluando daños estructurales mediante fotos y videos. / Organizaciones venezolanas impulsan una campaña solidaria para enviar ayuda humanitaria, pero denuncian dificultades burocráticas.",
+        "why": "Five residue entries across two sweeps. The vocabulary had the international teams and the neighbours, and nothing for the people who left — who are doing the one thing distance permits: counting who is missing."
+      }
+    },
+    {
+      "name": "Persona localizada o a salvo",
+      "parent": "Personas afectadas",
+      "nature": "happening",
+      "definition": "Someone previously unaccounted for was found alive and safe, or is confirmed to be somewhere known.",
+      "applies_when": "The post states that a specific person who was missing or unreachable has been located, is safe, or has been found somewhere — a hospital, a shelter, another household.",
+      "not_to_be_confused_with": "Persona rescatada con vida — that is being pulled out of a collapse. This is simply being found, which is the answer a family is waiting for.",
+      "evidence": {
+        "proposed_by": "the corpus, through the residue list, with spike corroboration",
+        "on": "2026-07-29",
+        "trials": 2,
+        "verbatim": "Un niño de aproximadamente 2 años y medio, originario de Caribe, La Guaira, se encuentra en el Hospital Miguel Pérez Carreño sin familiares.",
+        "why": "THE FOURTH THEME MY TWO-OF-THREE THRESHOLD LOST. Reader B proposed `Persona confirmada a salvo` over 6 posts and reader C `Persona ubicada o confirmada a salvo` over 4, matching at 0.67 — and it never reached the seed. The corpus has now asked for it directly. A vocabulary that can say someone is missing and cannot say they were found is only half a memorial."
+      }
     }
   ],
   "retired_by_operator_2026_07_28": [

@@ -153,11 +153,24 @@ else
   end
 
   # The residue is the whole point of sweeping: it is the corpus asking for words the
-  # vocabulary does not have. Written out so it can be clustered, never proposed one by
-  # one (`docs/mechanisms.md`).
+  # vocabulary does not have. APPENDED to a log as well as printed, because clustering
+  # needs entries from several sweeps and a terminal scrollback is not a record —
+  # a sweep whose findings survive only until the next command is not methodical.
+  #
+  # tmp/ is git-ignored: the residue quotes real posts, which name real people.
   if residue != [] do
     IO.puts("\n  ── what the vocabulary could not name ──\n")
     for entry <- residue, do: IO.puts("  - #{entry}")
+
+    File.mkdir_p!("tmp")
+
+    File.write!(
+      "tmp/residue.log",
+      Enum.map_join(residue, "\n", &"#{DateTime.to_iso8601(DateTime.utc_now())}\t#{&1}") <> "\n",
+      [:append]
+    )
+
+    say.("appended #{length(residue)} entries to tmp/residue.log")
   end
 
   IO.puts("")
