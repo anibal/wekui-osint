@@ -496,6 +496,34 @@
         "why": "Reached by the extractor's `unfitted` list on 20 looting posts, in 2 of 3 identical runs. Nobody wrote this theme from a desk — it is the corpus asking for a word it does not have.",
         "also": "Reader A proposed `Servicios básicos caídos` in the 2026-07-27 spike and my two-of-three-readers threshold cut it — the THIRD real theme that threshold lost, after `Damnificados y refugio` and `Daño estructural sin colapso`. The corpus has now asked for it directly."
       }
+    },
+    {
+      "name": "Colapso o cierre de vía o puente",
+      "parent": "Edificaciones e infraestructura",
+      "nature": "happening",
+      "definition": "A road, bridge or access route came down, was blocked, or was closed.",
+      "applies_when": "The post states that a named road, avenue, bridge or access route collapsed, was blocked by rubble or a landslide, or was closed to traffic.",
+      "not_to_be_confused_with": "Colapso estructural — that is a building. This is the way to it.",
+      "evidence": {
+        "proposed_by": "two of three spike readers, at overlap 1.00 over 8 posts",
+        "on": "2026-07-29",
+        "why": "Readers B and C both proposed `Colapso o cierre de infraestructura vial` and their post sets matched EXACTLY. It never reached the vocabulary because my consensus script iterated reader A's themes and asked how well B and C matched each — so a theme A did not have was invisible however perfectly the other two agreed. A method bug, not a threshold one."
+      }
+    },
+    {
+      "name": "Obra para restablecer el acceso",
+      "parent": "Edificaciones e infraestructura",
+      "nature": "happening",
+      "definition": "Work was done to reopen a route — a temporary bridge moved in, rubble cleared from a road, a way reopened.",
+      "applies_when": "The post states that work is under way or completed to restore access to a place: a provisional or military bridge moved, installed or opened; a road cleared; a route reopened.",
+      "not_to_be_confused_with": "Colapso o cierre de vía o puente — that is access LOST; this is access being given back. And `Logística y distribución de ayuda` is moving aid, not building the way for it.",
+      "evidence": {
+        "proposed_by": "the corpus, through the residue list",
+        "on": "2026-07-29",
+        "trials": 1,
+        "verbatim": "Se desmonta un puente de guerra en El Rosal para ser llevado a Caraballeda.",
+        "why": "The FIRST batch read from a different day — 2026-06-29, day five — asked for this on its first run. Reader C also had a temporary-bridge post in its residue during the 2026-07-27 spike. Two mechanisms, two methods, two days, the same gap."
+      }
     }
   ],
   "retired_by_operator_2026_07_28": [

@@ -160,13 +160,28 @@ defmodule Wekui.Pipelines.ReadPath.Steps do
 
     case Extract.run(event, agent, posts, extract_opts) do
       {:ok, summary} ->
+        # EVERY POST ACCOUNTED FOR, IN THE RECEIPT. `Extract` computes the split —
+        # cited, routed to a topic, reported unfitted, or read and dropped — and this
+        # step used to keep four keys of it and discard the rest. A conservation law
+        # that does not reach the receipt is not auditable, which was the whole point
+        # of computing it (`docs/mechanisms.md`).
+        #
+        # `unfitted` matters most: it is the corpus asking for a word the vocabulary
+        # does not have, and it is how three themes were proposed without anybody
+        # writing them from a desk.
         %{
           "ran" => true,
-          "posts" => length(posts),
+          "posts" => summary.posts,
           "claims" => summary.claims,
           "drafted" => summary.drafted,
           "skipped" => summary.skipped,
-          "skips" => Enum.map(summary.skips, &reason/1)
+          "skips" => Enum.map(summary.skips, &reason/1),
+          "cited" => summary.cited,
+          "unread" => summary.unread,
+          "topics" => summary.topics,
+          # A happening named in the topics list is a claim that got away.
+          "misrouted_topics" => summary.misrouted_topics,
+          "unfitted" => summary.unfitted
         }
 
       {:error, error} ->

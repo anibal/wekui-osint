@@ -357,4 +357,20 @@ defmodule Wekui.Pipelines.ReadPathTest do
         else: Application.delete_env(:wekui, :worker_client)
     end)
   end
+
+  # A conservation law that does not reach the receipt is not auditable, which was the
+  # whole point of computing it. The step kept four keys and discarded the rest, so a
+  # day-five run reported nothing about what it could not read.
+  test "the receipt carries the whole accounting, not just the claims", ctx do
+    stub([Map.put(@rescue_claim, "theme", "rescate")])
+
+    {:ok, run} = run(ctx)
+    extract = run.summary["extract"]
+
+    for key <- ["posts", "cited", "unread", "topics", "misrouted_topics", "unfitted"] do
+      assert Map.has_key?(extract, key), "the receipt lost #{inspect(key)}"
+    end
+
+    assert extract["posts"] == extract["cited"] + extract["unread"]
+  end
 end
