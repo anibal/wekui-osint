@@ -23,8 +23,15 @@
 # running them per batch is quadratic for no gain; do one `read_path_batch.exs` after
 # the sweep to verify, render and leave a receipt.
 #
-# It stops early on three conditions, and says which: nothing left to read, the budget
-# of batches is spent, or a batch fails. A sweep that stops silently is not a sweep.
+# It stops for two reasons and says which: nothing left to read, or the budget of
+# batches is spent. A sweep that stops silently is not a sweep.
+#
+# A batch that FAILS does not stop it. The worker times out on a large answer often
+# enough that halting wasted most of the budget twice; the batch's posts are set aside
+# for this run, the failure is counted, and the sweep moves on. Those posts stay
+# unread and are picked up by the next sweep — no retry inside the run, because
+# repeating the same call is not more honest than reporting that it failed
+# ([[decision-2026-07-26-reactor-not-sagents]]).
 #
 # Overridable: EVENT, BATCH (posts per call), BATCHES (how many), EXTRACTION_PROMPT,
 # EXTRACTION_MODEL, DRY.
@@ -95,11 +102,13 @@ if dry? do
 else
   IO.puts("\n  batch  posts  claims  filed  topics  routed  refused  residue  unread")
 
-  {tallies, stopped} =
-    Enum.reduce_while(1..budget, {[], :budget_spent}, fn n, {tallies, _} ->
-      case Enum.take(unread.(), batch_size) do
+  {tallies, failures, stopped} =
+    Enum.reduce_while(1..budget, {[], [], :budget_spent}, fn n, {tallies, failures, _} ->
+      set_aside = failures |> Enum.flat_map(& &1) |> MapSet.new()
+
+      case unread.() |> Enum.reject(&MapSet.member?(set_aside, &1.id)) |> Enum.take(batch_size) do
         [] ->
-          {:halt, {tallies, :nothing_left}}
+          {:halt, {tallies, failures, :nothing_left}}
 
         posts ->
           case Extract.run(event, agent, posts, place_scope: "Caraballeda") do
@@ -119,11 +128,26 @@ else
                   "#{String.pad_leading(to_string(s.unread), 6)}"
               )
 
-              {:cont, {[s | tallies], :budget_spent}}
+              # A refusal names something the vocabulary does not have in "theme".
+              # One is noise; twenty-one in a batch is the model losing the list, and
+              # the table alone cannot say which — so the names are printed when they
+              # cluster. Not knowing WHAT was refused made a whole batch opaque.
+              if s.skipped >= 3 do
+                s.skips
+                |> Enum.map(fn {_kind, name} -> name end)
+                |> Enum.frequencies()
+                |> Enum.sort_by(&(-elem(&1, 1)))
+                |> Enum.each(fn {name, count} -> say.("        refused #{count}× «#{name}»") end)
+              end
+
+              {:cont, {[s | tallies], failures, :budget_spent}}
 
             {:error, error} ->
-              IO.puts("  #{n}  FAILED — #{inspect(error)}")
-              {:halt, {tallies, {:batch_failed, error}}}
+              IO.puts(
+                "  #{String.pad_leading(to_string(n), 5)}  FAILED — #{inspect(error)} (set aside, next sweep will take them)"
+              )
+
+              {:cont, {tallies, [Enum.map(posts, & &1.id) | failures], :budget_spent}}
           end
       end
     end)
@@ -135,6 +159,7 @@ else
 
   IO.puts("")
   say.("stopped: #{inspect(stopped)}")
+  if failures != [], do: say.("#{length(failures)} batch(es) failed and were set aside")
 
   topics =
     tallies

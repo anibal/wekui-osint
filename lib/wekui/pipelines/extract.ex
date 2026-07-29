@@ -175,8 +175,12 @@ defmodule Wekui.Pipelines.Extract do
       # a topic in "theme" eight times out of twenty-four. v9's rule holds on a mixed
       # batch and slips on a lopsided one, so the pipeline has to be forgiving of a
       # known, unambiguous error — and count it, or the slip is invisible.
+      # The posts come with it. An earlier version returned only the name and threw
+      # the citations away, so a topic that arrived through the wrong field left no
+      # judgment and no accounting — and the sweep read those posts again on the next
+      # pass, and the one after that.
       {:topic, name} ->
-        {:routed, name}
+        {:routed, name, posts}
 
       :none ->
         {:skip, {:no_theme, to_string(claim["theme"] || "")}}
@@ -242,20 +246,35 @@ defmodule Wekui.Pipelines.Extract do
   # `judge_set` replaces a post's whole set in one step, so the current answer always
   # reads as one coherent judgement from one Actor rather than an accretion.
   defp judge_topics(event, agent, written, topics, by_xid) do
-    routed =
-      for({:routed, name} <- written, do: name)
-      |> Enum.map(&%{"topic" => &1, "citations" => []})
+    from_topics =
+      Enum.flat_map(topics, fn entry ->
+        case active_topic(event, entry["topic"]) do
+          nil ->
+            []
 
-    (topics ++ routed)
-    |> Enum.flat_map(fn entry ->
-      case active_topic(event, entry["topic"]) do
-        nil ->
+          theme ->
+            for id <- List.wrap(entry["citations"]),
+                post = by_xid[to_string(id)],
+                do: {post, theme}
+        end
+      end)
+
+    # A topic that arrived through the wrong field brings its POSTS with it. Keeping
+    # only the name left those posts with no judgment and no accounting, so every
+    # sweep read them again, and the one after that.
+    from_theme_field =
+      Enum.flat_map(written, fn
+        {:routed, name, posts} ->
+          case active_topic(event, name) do
+            nil -> []
+            theme -> Enum.map(posts, &{&1, theme})
+          end
+
+        _other ->
           []
+      end)
 
-        theme ->
-          for id <- List.wrap(entry["citations"]), post = by_xid[to_string(id)], do: {post, theme}
-      end
-    end)
+    (from_topics ++ from_theme_field)
     |> Enum.group_by(fn {post, _theme} -> post end, fn {_post, theme} -> theme.id end)
     |> Enum.map(fn {post, theme_ids} ->
       Judgment.judge_theme_set!(%{
@@ -313,6 +332,8 @@ defmodule Wekui.Pipelines.Extract do
       |> Enum.flat_map(&Narrative.list_claim_citations!/1)
       |> MapSet.new(& &1.post_id)
 
+    from_routed = for({:routed, _name, posts} <- results, post <- posts, do: post.id)
+
     accounted =
       (unfitted ++ topics)
       |> Enum.flat_map(&List.wrap(&1["citations"]))
@@ -320,10 +341,11 @@ defmodule Wekui.Pipelines.Extract do
       |> Enum.reject(&is_nil/1)
       |> MapSet.new(& &1.id)
       |> MapSet.union(from_claims)
+      |> MapSet.union(MapSet.new(from_routed))
 
     # A topic the model put in "theme" instead of "topics" still routed correctly; it
     # just arrived through the wrong door, and the count says how often.
-    recovered = for({:routed, name} <- results, do: name)
+    recovered = for({:routed, name, _posts} <- results, do: name)
     {named, misrouted} = split_topics(topics, hd(posts).event_id)
 
     %{

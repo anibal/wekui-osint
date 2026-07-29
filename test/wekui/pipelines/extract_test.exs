@@ -288,6 +288,13 @@ defmodule Wekui.Pipelines.ExtractTest do
       assert summary.topics == %{"Solicitud de información" => 1}
       assert summary.routed_from_theme == %{"Solicitud de información" => 1}
       assert Narrative.list_claims!(ctx.event.id) == []
+
+      # ITS POSTS COME WITH IT. An earlier version kept only the name and threw the
+      # citations away, so the post left no judgment and no accounting — and every
+      # sweep read it again, and the one after that.
+      assert summary.unread == 0
+      assert summary.judged == 1
+      assert [_judgment] = Wekui.Judgment.current_theme_judgments!(ctx.p1.id)
     end
 
     test "every post is accounted for: cited, unfitted, or read and dropped", ctx do
