@@ -184,12 +184,17 @@ defmodule Wekui.Taxonomy.Theme do
 
     update :redefine do
       description """
-      Sharpens what the Theme means and when it applies. For a rule that was
-      imprecise — NOT for a Theme that has come to mean something else, which is a
-      new Theme with this one deprecated onto it.
+      Sharpens what the Theme means, when it applies, and whether it is a happening.
+      For a rule or a classification that was IMPRECISE — never for a Theme that has
+      come to mean something else, which is a new Theme with this one deprecated onto
+      it.
+
+      `nature` is here because getting it wrong is silent and total: a happening
+      mis-marked as a topic can never be claimed, so the record simply cannot say that
+      thing, and nothing announces it until claims start being refused.
       """
 
-      accept [:definition, :applies_when]
+      accept [:definition, :applies_when, :nature]
     end
 
     update :promote do

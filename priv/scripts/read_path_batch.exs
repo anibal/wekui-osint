@@ -13,11 +13,12 @@
 # `posts:` overrides the scope and `extract: :force` overrides the skip, so a
 # deliberate, named batch is expressible. Nothing automatic is." This is the hand.
 #
-# The batch is: posts in the window that **no current claim cites**. Every post left
-# out is left out because the record has already read it into a claim — which is not
-# the citation-coverage rule that mis-fired (a post the extractor correctly DROPPED is
-# uncited and belongs in no batch either; here it would simply be re-read once, which
-# is the cost of aiming by hand and is why this is a script and not a rule).
+# The batch is: posts in the window that NO CLAIM ABLE TO SPEAK cites. A claim with no
+# theme is silent — the record cannot say what kind of happening it is — so a post
+# cited only by silent claims has not been read by the vocabulary, whatever an earlier
+# rule thought. That is not the citation-coverage rule that mis-fired: a post the
+# extractor correctly DROPPED is uncited and belongs in no batch either, and here it
+# is simply re-read once, which is the cost of aiming by hand.
 #
 # The receipt says `extract: force` and carries the batch size, so the run does not
 # read as though the pipeline chose this by itself.
@@ -36,10 +37,10 @@ alias Wekui.Pipelines
 
 event_name = System.get_env("EVENT", "litoral-central-2026")
 place_name = System.get_env("PLACE_NAME", "Caraballeda")
-# v7, not v5: v5 refused 46% of what it drafted on real posts and v7 refuses 15%
-# ([[research-2026-07-27-extraction-on-real-posts]]). The default must be the best
-# reading we have measured, or the next person runs the worst one by accident.
-prompt_file = System.get_env("EXTRACTION_PROMPT", "prompts/extraction.v7.txt")
+# v8: the only prompt that reads the ratified vocabulary, so the only one whose claims
+# can reach a reader at all. The default must be the best reading we have, or the next
+# person runs a worse one by accident.
+prompt_file = System.get_env("EXTRACTION_PROMPT", "prompts/extraction.v8.txt")
 model = System.get_env("EXTRACTION_MODEL", "deepseek-ai/DeepSeek-V4-Flash")
 batch_from = System.get_env("FROM", "2026-06-25T04:00:00Z")
 batch_to = System.get_env("TO", "2026-06-25T05:00:00Z")
@@ -69,9 +70,13 @@ agent = Core.register_agent!(%{event_id: event.id, model: model, prompt: File.re
 
 posts = Capture.list_posts!(event.id)
 
+# A post is READ when a claim that can SPEAK cites it. A claim with no theme is
+# silent — the record cannot say what kind of happening it is — so a post cited only
+# by silent claims has not been read by the vocabulary, whatever the old rule thought.
 already_read =
   event.id
   |> Narrative.current_claims!()
+  |> Enum.filter(& &1.theme_id)
   |> Enum.flat_map(&Narrative.list_claim_citations!(&1.id))
   |> MapSet.new(& &1.post_id)
 
@@ -91,7 +96,10 @@ IO.puts("\n── the read path, over a named batch ─────────�
 say.("event  #{event.name} (#{event.id})")
 say.("place  #{place.canonical_name} (#{place.id})")
 say.("window #{batch_from} → #{batch_to}")
-say.("corpus #{length(posts)} post(s); #{MapSet.size(already_read)} already read into a claim")
+
+say.(
+  "corpus #{length(posts)} post(s); #{MapSet.size(already_read)} read into a claim that can speak"
+)
 
 say.(
   "batch  #{length(batch)} post(s) — #{batch |> Enum.map(&String.length(&1.text)) |> Enum.sum()} characters"

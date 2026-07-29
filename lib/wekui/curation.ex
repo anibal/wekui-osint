@@ -375,7 +375,8 @@ defmodule Wekui.Curation do
   end
 
   @doc """
-  Sharpens what a Theme means and when it applies — for a rule that was imprecise.
+  Sharpens what a Theme means, when it applies, and whether it is a happening — for a
+  rule or a classification that was imprecise.
 
   **Not** for a Theme that has come to mean something else. A rule that shifts under the
   claims already resting on it is [[principle-never-rewrite-the-record]] failing quietly,
