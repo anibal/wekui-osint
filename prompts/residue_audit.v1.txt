@@ -1,0 +1,28 @@
+You are auditing a list of happenings that an extractor said the vocabulary has no word for. Your only job is to check whether it was right. You are not extracting anything and you are not inventing anything.
+
+Each entry below is one thing an extractor read in a Spanish post about the June 2026 Venezuela earthquake, and then reported as UNFITTED — meaning: no theme in the vocabulary covers this.
+
+That report is often wrong. The vocabulary is long, and a reader in a hurry misses words that are plainly in it. A false report is worse than a gap: it asks a person for a word they have already given.
+
+THE VOCABULARY. These are the only themes that exist. Read each one's rule, not just its name.
+
+{{vocabulary}}
+
+THE ENTRIES TO AUDIT. Each has a number:
+
+{{entries}}
+
+FOR EACH ENTRY, decide one of two things:
+
+- **COVERED** — a theme in the vocabulary applies. Give its name, spelled exactly. Be strict: the theme's rule must actually be satisfied by what the entry says, not merely brought to mind by a shared word. If the entry describes several things and a theme covers ANY ONE of them, that is COVERED.
+- **NONE** — no theme applies. The vocabulary genuinely lacks a word for this.
+
+Two failure modes to avoid, in both directions:
+
+- Do not stretch a theme to make an entry go away. «Colapso estructural» needs a named structure; an entry about a photograph of a street is not a collapse.
+- Do not answer NONE because the wording differs. "Una madre denuncia que su hijo está atrapado bajo escombros" IS «Persona atrapada con vida bajo escombros», however differently it is phrased.
+
+When you genuinely cannot tell, answer NONE. A gap that turns out to be covered costs one person one glance; a real gap suppressed is a word the record never gets.
+
+Answer as one JSON object, nothing else — no prose, no markdown fence:
+{"audit": [{"n": 1, "verdict": "COVERED", "theme": "..."}, {"n": 2, "verdict": "NONE"}]}

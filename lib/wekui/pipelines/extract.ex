@@ -69,7 +69,12 @@ defmodule Wekui.Pipelines.Extract do
   # happenings and the model duly filed ten claims under `Solicitud de información`,
   # which the write path then refused. An answer list must not contain answers that are
   # not allowed.
-  defp vocabulary(event) do
+  @doc """
+  The ratified vocabulary as the model receives it — grouped by family, happenings
+  and topics apart. Public because the residue audit must judge against EXACTLY the
+  list the extractor was given; two renderings of one vocabulary is two vocabularies.
+  """
+  def vocabulary(event) do
     active = Taxonomy.list_active_themes!(event.id)
     {happenings, topics} = Enum.split_with(active, &(&1.nature == :happening))
 

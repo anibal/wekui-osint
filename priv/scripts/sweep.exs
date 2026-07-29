@@ -34,6 +34,7 @@ alias Wekui.Capture
 alias Wekui.Core
 alias Wekui.Narrative
 alias Wekui.Pipelines.Extract
+alias Wekui.Pipelines.ResidueAudit
 
 event_name = System.get_env("EVENT", "litoral-central-2026")
 batch_size = System.get_env("BATCH", "25") |> String.to_integer()
@@ -158,6 +159,36 @@ else
   # a sweep whose findings survive only until the next command is not methodical.
   #
   # tmp/ is git-ignored: the residue quotes real posts, which name real people.
+  if posts > 0 do
+    say.(
+      "residue #{length(residue)} raw entries — #{Float.round(length(residue) * 100 / posts, 1)} per 100 posts"
+    )
+  end
+
+  # AUDIT BEFORE ANYONE READS IT (rung four, `docs/mechanisms.md`). Measured on 18
+  # accumulated entries, 17 named a happening the vocabulary already held: at 44
+  # themes the residue had stopped being the corpus asking for words and become the
+  # extractor failing to find them. An unaudited residue is a queue.
+  #
+  # The audit is another fallible judge, so it may only REMOVE entries, never add or
+  # rewrite one, and anything it does not rule on stays.
+  audited =
+    if residue == [] or System.get_env("AUDIT") == "0" do
+      %{real: residue, covered: %{}, unaudited: []}
+    else
+      case ResidueAudit.run(event, Enum.uniq(residue)) do
+        {:ok, r} ->
+          say.("audit: #{map_size(r.covered)} of #{length(Enum.uniq(residue))} already covered")
+          r
+
+        {:error, e} ->
+          say.("audit FAILED (#{inspect(e)}) — every entry kept")
+          %{real: Enum.uniq(residue), covered: %{}, unaudited: []}
+      end
+    end
+
+  residue = audited.real
+
   if residue != [] do
     IO.puts("\n  ── what the vocabulary could not name ──\n")
     for entry <- residue, do: IO.puts("  - #{entry}")
