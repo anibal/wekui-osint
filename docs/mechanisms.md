@@ -50,7 +50,7 @@ above has failed, and it reaches them **as a pattern, never as a row**.
 | 1 | **Deterministic evidence** | free | anything the record already knows | the numeral rule; corpus co-occurrence; handle collisions |
 | 2 | **Structural repair** | free | the question is a defect | the parse direction; pruning stale links |
 | 3 | **External corroboration** | quota | "does this exist in the world" | Tavily / Nominatim / OSM on an unresolved building |
-| 4 | **Audit prompt** | cents | one narrow, checkable question about one artifact | "is *Aaron C.* a correct handle for this full name?" |
+| 4 | **Audit prompt** ✅ **[BUILT]** | cents | one narrow, checkable question about one artifact | `Wekui.Pipelines.ResidueAudit` — "does any theme already cover this?" |
 | 5 | **Adversarial prompt** | cents | a confident answer that is wrong | "REFUTE this place match. Default to refuted if unsure." |
 | 6 | **Independent panel** | cents×N | is the structure real or the reader's? | the three-reader taxonomy spike: 58–67% above chance |
 | 7 | **A person** | irreplaceable | meaning the data cannot supply | *"Caraballeda is the parish"*; *"a death and a body are two facts"* |
@@ -120,6 +120,25 @@ The anchor is **real posts** — text a family actually wrote. A model may label
 cluster and propose over them; every score is computed against the world, and every
 negative test case is a real post. Independence beats iteration: three readers
 compared by code told us more than one reader iterating three times ever could.
+
+## 7b. [MEASURED] What the ladder has actually done
+
+Rung 4 is built and in the sweep. On 18 accumulated residue entries it found **17
+already covered** — at 17 themes the residue was the corpus asking for words; at 45 it
+had become the extractor failing to find them. Since then the audited residue has held
+near **1 entry per 100 posts** across ~2,000 posts.
+
+The rule that makes it safe: it may only REMOVE an entry, never add or rewrite one. A
+verdict naming a theme that does not exist covers nothing; an entry it does not rule on
+stays; unreadable output suppresses nothing. A gap wrongly confirmed costs one glance,
+and a real gap suppressed is a word the record never gets.
+
+And rungs 1 and 2 keep paying. Four defects this week were found only by making an
+instrument say what it was doing rather than that something happened: a model copying
+an id's label (~50 claims lost), a routed topic whose citations were discarded (posts
+re-read every sweep), a live-lock on two posts, and the F54 gate refusing 3% of all
+claims because names were reaching `subject`. **Three of the four were in instruments
+built to detect defects.**
 
 ## 8. [OPEN] Order
 
