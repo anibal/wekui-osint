@@ -36,6 +36,8 @@ defmodule Wekui.Narrative do
       define :identify_person, action: :identify
       define :get_person, action: :read, get_by: [:id]
       define :list_persons, action: :by_event, args: [:event_id]
+      define :current_persons, action: :current_for_event, args: [:event_id]
+      define :merge_person, action: :merge_into
       define :set_person_handle, action: :set_handle
       define :set_person_kind, action: :set_kind
       define :approve_person, action: :approve

@@ -16,12 +16,27 @@ defmodule Wekui.Narrative.Person do
   and pending review until they say otherwise. A minor is never a Person here — the
   extractor records no minor's name — so a Person is always someone whose name may be
   held.
+
+  ## One human being, several rows
+
+  The upsert holds only for a name written the **same way twice**. It does not hold for
+  the way people actually write: measured on the pilot event, **668 Person rows carried
+  zero exact name collisions** while one woman held four of them — `Belkys Josefina
+  Barreto García`, `Belkis Josefina Barreto García`, `Belkys Barreto`, `Belkis Barreto`.
+  A person counted twice is counted twice in everything the record later says.
+
+  So a Person can be **merged into** another. It is a deprecation and never a rewrite
+  ([[decision-2026-07-24-merge-is-deprecation]], [[principle-never-rewrite-the-record]]):
+  the row survives, carries `merged_into_id`, and every Claim that named it also names
+  the survivor. Nothing is deleted and the merge reads back — which is what makes it safe
+  for a machine to do (`Wekui.Narrative.PersonDuplicates`).
   """
 
   use Ash.Resource, otp_app: :wekui, domain: Wekui.Narrative, data_layer: AshSqlite.DataLayer
 
   alias Wekui.Core.Changes.Fold
   alias Wekui.Narrative.Changes.DeriveHandle
+  alias Wekui.Validations.Reference
 
   @kinds [:private, :public]
   @statuses [:pending_review, :approved, :withheld]
@@ -43,6 +58,8 @@ defmodule Wekui.Narrative.Person do
 
     references do
       reference :event, on_delete: :restrict
+      # Nothing here is ever deleted: the survivor outlives the row it absorbed.
+      reference :merged_into, on_delete: :restrict
     end
   end
 
@@ -87,11 +104,55 @@ defmodule Wekui.Narrative.Person do
       change set_attribute(:status, :withheld)
     end
 
+    update :merge_into do
+      description """
+      Folds this Person into another: the same human being, written down twice. The row
+      is NOT removed — it keeps its name, carries `merged_into_id` and the reason, and
+      stops being current. Carrying the Claims across is the caller's half, in one
+      transaction (`Wekui.Narrative.PersonMerge`).
+      """
+
+      accept [:merged_into_id, :merge_note]
+      require_atomic? false
+
+      validate present(:merged_into_id)
+      validate {Reference, resource: __MODULE__, attribute: :merged_into_id}
+
+      # A row already folded away cannot be folded again — the survivor of the first
+      # merge is where the second belongs, or the chain says two things about one person.
+      validate fn changeset, _context ->
+        if Ash.Changeset.get_data(changeset, :merged_into_id) do
+          {:error, field: :merged_into_id, message: "has already been merged away"}
+        else
+          :ok
+        end
+      end
+
+      validate fn changeset, _context ->
+        if Ash.Changeset.get_argument_or_attribute(changeset, :merged_into_id) ==
+             Ash.Changeset.get_data(changeset, :id) do
+          {:error, field: :merged_into_id, message: "cannot be merged into itself"}
+        else
+          :ok
+        end
+      end
+
+      change set_attribute(:merged_at, &DateTime.utc_now/0)
+    end
+
     read :by_event do
-      description "Every person of one Event, oldest first."
+      description "Every person of one Event, oldest first — merged rows included."
       argument :event_id, :uuid, allow_nil?: false
 
       filter expr(event_id == ^arg(:event_id))
+      prepare build(sort: [inserted_at: :asc, id: :asc])
+    end
+
+    read :current_for_event do
+      description "Every person of one Event that has not been merged away."
+      argument :event_id, :uuid, allow_nil?: false
+
+      filter expr(event_id == ^arg(:event_id) and is_nil(merged_into_id))
       prepare build(sort: [inserted_at: :asc, id: :asc])
     end
   end
@@ -131,12 +192,28 @@ defmodule Wekui.Narrative.Person do
       constraints one_of: @statuses
     end
 
+    attribute :merged_at, :utc_datetime_usec do
+      description "When this row was folded into another. Set with merged_into_id; nil while the row is current."
+      public? true
+    end
+
+    attribute :merge_note, :string do
+      description "Why the two rows were judged one human being — the half a later reader cannot reconstruct."
+      public? true
+    end
+
     timestamps()
   end
 
   relationships do
     belongs_to :event, Wekui.Core.Event do
       allow_nil? false
+      public? true
+    end
+
+    # The row this one turned out to be. A merged Person keeps its name and its place in
+    # the record; it simply stops being current.
+    belongs_to :merged_into, __MODULE__ do
       public? true
     end
   end

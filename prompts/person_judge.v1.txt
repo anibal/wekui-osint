@@ -1,0 +1,41 @@
+You are checking a public, evidence-based memorial of the June 2026 Venezuela earthquake for the SAME PERSON recorded more than once.
+
+A Venezuelan name has up to four parts, in this order:
+
+    FIRST NAME · middle name · FIRST SURNAME · second surname
+    Belkys       Josefina      Barreto         García
+
+The two parts in capitals identify the person. The other two are optional — many people have no middle name and some give no second surname, and its absence means nothing at all.
+
+THE TEST, applied to every pair:
+
+    Do the FIRST NAME and the FIRST SURNAME name the same person?
+    If yes, it is one person. If either one differs, it is two people.
+
+A DIFFERENT FIRST NAME IS A DIFFERENT PERSON. There is no exception. "Cattleya Guanipa" and "Nayhara Guanipa" are two people. "Gerolmi Guanipa" and "Sebastián Guanipa Tirado" are two people. However much else matches, the first name decides.
+
+WHY THE SHORT AND LONG FORMS ARE ONE PERSON. In daily life a person writes "Belkys Barreto". In a disaster they write "Belkys Josefina Barreto García", because more parts make them easier to find. The long form does not add a person; it adds detail about the same one. A dropped middle name or a dropped second surname is a matter of how much someone had time to type.
+
+DO THIS IN ORDER. First read both names for what they SAY, through their spelling. Only then look at who was named beside them. The togetherness signal below breaks ties between people whose FIRST NAMES GENUINELY DIFFER — it never separates two spellings of one name. "Belkys Barreto" and "Belkis Barreto" are one woman written twice, whatever else the report says.
+
+WHO IS NAMED BESIDE THEM — READ THIS THE RIGHT WAY ROUND. Families live together, so families were buried together, and one post asks after a whole household at once. Each entry below lists the other entries named in the SAME report. **Being named together is evidence that two entries are DIFFERENT people, not evidence that they are the same.** It means a brother and a sister, a mother and a daughter, cousins in one apartment — and merging any of them erases a person from the record.
+
+The one exception, and it is narrow: a frightened relative sometimes writes one person twice in a single post, once short and once full. That is the same first name AND the same first surname, and nothing else.
+
+Conversely, one person recorded twice usually appears in SEPARATE reports, because two different relatives each wrote in about them.
+
+SPELLING IS NOT IDENTITY. Read a name by its SOUND and its POSITION, never by its letters. Two things mangle these names, and both are ordinary:
+
+By SOUND — Spanish does not distinguish b from v, or s from z from soft c; h is silent; ll and y are one sound; accents get dropped; a surname gets written as one word. "Belkis" and "Belkys" are one name. "Rey Rujano" and "Reyrujan" are one surname.
+
+By TYPING — these were written in a hurry, on a phone, by people with every level of schooling, about their own missing family. Expect letters transposed ("Marai" for "Maria"), letters doubled or dropped ("Gonzalez"/"Gonzalz"), a predictive keyboard replacing a name with a common word or a different name it knows, and misspellings that follow no rule at all. A name mangled this way is still that name.
+
+So a single mangled letter is never what makes two entries two people. What makes them two people is a DIFFERENT NAME — "Cattleya" and "Nayhara" are not one name typed badly.
+
+WHEN A NAME IS ONLY ONE WORD, or you cannot tell which part is which, leave it alone. A person wrongly left apart is a small redundancy a reader can see through. Two people wrongly merged is one family's relative erased into another's, with nothing to announce the loss. When you cannot tell, they are TWO.
+
+THE ENTRIES:
+{{entries}}
+
+Answer as one JSON object, nothing else — no prose, no markdown fence. Give ONLY the groups holding more than one entry; list each entry by its number. `why` names the first name and first surname you matched on:
+{"groups": [{"same": [1, 4], "why": "..."}]}

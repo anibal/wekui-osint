@@ -31,7 +31,7 @@ defmodule Wekui.Pipelines.Run do
   # (:polish, :acquisition…). `:pair_judge` is the second: the adversarial pass over
   # the duplicate finder's proposals, receipted here because a machine's act is a run,
   # never a `Wekui.Curation.Act`.
-  @kinds [:read_path, :pair_judge]
+  @kinds [:read_path, :pair_judge, :person_judge]
 
   @doc "The pipeline vocabulary a run can record."
   def kinds, do: @kinds
