@@ -163,6 +163,41 @@ defmodule Wekui.Pipelines.Extract do
     end
   end
 
+  # A NAME THE MODEL ITSELF DECLARED IS REMOVED FROM THE ROLE, not left to refuse the
+  # claim. The F54 gate refuses a `subject` naming a private individual, correctly and
+  # absolutely — and that was costing 2–3% of every batch: the whole happening left the
+  # record because one field carried a word that belonged in the next field along.
+  #
+  # This only removes what the model put in "names" itself. It is not a scrub of
+  # anything that looks like a name; it is a repair of a field the model filled twice.
+  # Nothing is lost to a reader: names live on the [[person]] behind the handle gate,
+  # and the beat renders the handle. What is left is the role — "un hombre de 21 años"
+  # — which is what the field was always for.
+  #
+  # If nothing survives, the subject is simply absent, which the record allows and
+  # which is far better than losing the happening.
+  defp without_declared_names(claim) do
+    names = claim["names"] |> List.wrap() |> Enum.filter(&is_binary/1)
+
+    case claim["subject_role"] do
+      role when is_binary(role) and names != [] ->
+        names
+        |> Enum.sort_by(&(-String.length(&1)))
+        |> Enum.reduce(role, &String.replace(&2, &1, ""))
+        |> String.replace(~r/\s*[,;]\s*[,;]+/u, ",")
+        |> String.trim()
+        |> String.trim(",")
+        |> String.trim()
+        |> case do
+          "" -> nil
+          cleaned -> cleaned
+        end
+
+      role ->
+        role
+    end
+  end
+
   # The material renders a post as `[id 2071059613336949047] …`, and the model copies
   # the id WITH ITS LABEL: "id 2071059613336949047". An exact lookup misses, the claim
   # cites nothing, and it is dropped — two whole batches went that way, about fifty
@@ -209,7 +244,7 @@ defmodule Wekui.Pipelines.Extract do
           event_id: event.id,
           theme_id: theme_id,
           kind: to_string(claim["kind"] || "otro"),
-          subject: claim["subject_role"],
+          subject: without_declared_names(claim),
           magnitude: claim["magnitude"],
           place_mention: claim["place_mention"],
           status: claim["status"],

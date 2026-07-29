@@ -265,6 +265,51 @@ defmodule Wekui.Pipelines.ExtractTest do
       assert prompt =~ ~r/PERSONAS AFECTADAS\n- «Persona atrapada»/
     end
 
+    test "a name the model declared is stripped from the role, not left to refuse", ctx do
+      # The F54 gate refuses a `subject` naming a private individual — correctly and
+      # absolutely — and that was costing 2-3% of every batch: the whole happening
+      # left the record because one field carried a word that belonged in the next
+      # field along. Measured: 9 refusals in 375 posts.
+      stub_claims([
+        %{
+          "theme" => "Persona rescatada con vida",
+          "kind" => "rescate",
+          "subject_role" => "Eliezer Alfonso, Gorkys Hernández, dos vecinos",
+          "names" => ["Eliezer Alfonso", "Gorkys Hernández"],
+          "citations" => ["111"],
+          "confidence" => 0.9
+        }
+      ])
+
+      assert {:ok, %{drafted: 1, skipped: 0}} =
+               Extract.run(ctx.event, ctx.agent, [ctx.p1], place_scope: "Caraballeda")
+
+      assert [claim] = Narrative.list_claims!(ctx.event.id)
+      # The role survives; the names do not. Nothing is lost to a reader — the names
+      # live on the person behind the handle gate.
+      assert claim.subject == "dos vecinos"
+      assert length(Narrative.list_claim_persons!(claim.id)) == 2
+    end
+
+    test "a role that is ONLY names becomes absent, and the claim still lands", ctx do
+      stub_claims([
+        %{
+          "theme" => "Persona rescatada con vida",
+          "kind" => "rescate",
+          "subject_role" => "Víctor Sardinha",
+          "names" => ["Víctor Sardinha"],
+          "citations" => ["111"],
+          "confidence" => 0.9
+        }
+      ])
+
+      assert {:ok, %{drafted: 1}} =
+               Extract.run(ctx.event, ctx.agent, [ctx.p1], place_scope: "Caraballeda")
+
+      assert [claim] = Narrative.list_claims!(ctx.event.id)
+      assert is_nil(claim.subject)
+    end
+
     test "an id copied with its label still finds its post", ctx do
       # The material renders `[id 2071059613336949047] …` and the model copies the
       # label with the number. Two whole batches — about fifty claims — were dropped
