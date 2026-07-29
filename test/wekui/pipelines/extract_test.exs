@@ -127,7 +127,7 @@ defmodule Wekui.Pipelines.ExtractTest do
       }
     ])
 
-    assert {:ok, %{drafted: 0, skipped: 1, skips: [:no_valid_citations]}} =
+    assert {:ok, %{drafted: 0, skipped: 1, skips: [{:no_valid_citations, _}]}} =
              Extract.run(ctx.event, ctx.agent, [ctx.p1])
   end
 
@@ -263,6 +263,37 @@ defmodule Wekui.Pipelines.ExtractTest do
       assert prompt =~ "PERSONAS AFECTADAS"
       # The child sits under its family heading, not loose among forty siblings.
       assert prompt =~ ~r/PERSONAS AFECTADAS\n- «Persona atrapada»/
+    end
+
+    test "an id copied with its label still finds its post", ctx do
+      # The material renders `[id 2071059613336949047] …` and the model copies the
+      # label with the number. Two whole batches — about fifty claims — were dropped
+      # this way before the skip reason said what had actually been cited.
+      stub_claims([
+        %{
+          "theme" => "Persona rescatada con vida",
+          "kind" => "rescate",
+          "citations" => ["id 111"],
+          "confidence" => 0.9
+        }
+      ])
+
+      assert {:ok, %{drafted: 1, skipped: 0}} =
+               Extract.run(ctx.event, ctx.agent, [ctx.p1], place_scope: "Caraballeda")
+    end
+
+    test "a citation that matches nothing still refuses, and says what it cited", ctx do
+      stub_claims([
+        %{
+          "theme" => "Persona rescatada con vida",
+          "kind" => "rescate",
+          "citations" => ["9999"],
+          "confidence" => 0.9
+        }
+      ])
+
+      assert {:ok, %{drafted: 0, skipped: 1, skips: [{:no_valid_citations, ["9999"]}]}} =
+               Extract.run(ctx.event, ctx.agent, [ctx.p1], place_scope: "Caraballeda")
     end
 
     test "a topic put in the wrong field is routed, not lost", ctx do

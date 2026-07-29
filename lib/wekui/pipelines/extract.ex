@@ -147,16 +147,35 @@ defmodule Wekui.Pipelines.Extract do
   defp write_claim(event, agent, claim, by_xid) do
     posts =
       (claim["citations"] || [])
-      |> Enum.map(&Map.get(by_xid, to_string(&1)))
+      |> Enum.map(&cited_post(by_xid, &1))
       |> Enum.reject(&is_nil/1)
 
     case posts do
       [] ->
-        {:skip, :no_valid_citations}
+        # WHAT it cited, not just that nothing matched. Seen twice: a whole batch of
+        # 21 claims refused this way, and the reason column could only say
+        # `:no_valid_citations` — true, useless, and the same shape as a model that
+        # has stopped reading the material at all.
+        {:skip, {:no_valid_citations, Enum.map(List.wrap(claim["citations"]), &to_string/1)}}
 
       [first | _rest] ->
         write_filed(event, agent, claim, posts, first)
     end
+  end
+
+  # The material renders a post as `[id 2071059613336949047] …`, and the model copies
+  # the id WITH ITS LABEL: "id 2071059613336949047". An exact lookup misses, the claim
+  # cites nothing, and it is dropped — two whole batches went that way, about fifty
+  # claims, before the skip reason said what had actually been cited.
+  #
+  # "Spell out output hygiene and don't trust it — the parser must be lenient
+  # regardless" (`.claude/skills/prompt-craft`). So the label is stripped, and a last
+  # resort keeps only the digits.
+  defp cited_post(by_xid, id) do
+    raw = id |> to_string() |> String.trim()
+
+    [raw, String.replace(raw, ~r/^#?\s*id[:\s]+/i, ""), String.replace(raw, ~r/\D/, "")]
+    |> Enum.find_value(&Map.get(by_xid, &1))
   end
 
   # NO THEME, NO CLAIM. A happening the vocabulary cannot name does not become a claim
