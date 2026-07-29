@@ -184,6 +184,7 @@ defmodule Wekui.Pipelines.ReadPath.Steps do
           # A topic the model put in "theme" — routed correctly anyway, and counted so
           # the slip stays visible.
           "routed_from_theme" => summary.routed_from_theme,
+          "judged" => summary.judged,
           "unfitted" => summary.unfitted
         }
 

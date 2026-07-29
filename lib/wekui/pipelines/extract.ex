@@ -13,6 +13,7 @@ defmodule Wekui.Pipelines.Extract do
   """
 
   alias Wekui.Clients.Worker
+  alias Wekui.Judgment
   alias Wekui.Narrative
   alias Wekui.Narrative.PlaceResolver
   alias Wekui.Narrative.ThemeResolver
@@ -34,7 +35,8 @@ defmodule Wekui.Pipelines.Extract do
            {:ok, claims, unfitted, topics} <- parse(content) do
         by_xid = Map.new(posts, &{to_string(&1.x_id), &1})
         written = Enum.map(claims, &write_claim(event, agent, &1, by_xid))
-        {:ok, summarize(written, unfitted, topics, posts, by_xid)}
+        judged = judge_topics(event, agent, written, topics, by_xid)
+        {:ok, summarize(written, unfitted, topics, posts, by_xid, judged)}
       end
     else
       {:error, {:state_gate, :worker_not_ready}}
@@ -228,6 +230,55 @@ defmodule Wekui.Pipelines.Extract do
     end
   end
 
+  # A POST ROUTED TO A TOPIC LEAVES A RECORD. Until now it left none: the routing
+  # existed only inside a run summary, so the record could not say what became of a
+  # post that was read and correctly produced no claim. "Every post is accounted for"
+  # was true per run and lost immediately after — which is not accounted for.
+  #
+  # `Wekui.Judgment.ThemeJudgment` has modelled exactly this since before the
+  # vocabulary existed: an Actor's answer to *what is this Post about*, append-only,
+  # superseding, with a partial-unique slot on (post, theme). It had zero rows.
+  #
+  # `judge_set` replaces a post's whole set in one step, so the current answer always
+  # reads as one coherent judgement from one Actor rather than an accretion.
+  defp judge_topics(event, agent, written, topics, by_xid) do
+    routed =
+      for({:routed, name} <- written, do: name)
+      |> Enum.map(&%{"topic" => &1, "citations" => []})
+
+    (topics ++ routed)
+    |> Enum.flat_map(fn entry ->
+      case active_topic(event, entry["topic"]) do
+        nil ->
+          []
+
+        theme ->
+          for id <- List.wrap(entry["citations"]), post = by_xid[to_string(id)], do: {post, theme}
+      end
+    end)
+    |> Enum.group_by(fn {post, _theme} -> post end, fn {_post, theme} -> theme.id end)
+    |> Enum.map(fn {post, theme_ids} ->
+      Judgment.judge_theme_set!(%{
+        event_id: event.id,
+        post_id: post.id,
+        theme_ids: Enum.uniq(theme_ids),
+        actor_id: agent.id,
+        confidence: 0.7
+      })
+
+      post.id
+    end)
+    |> length()
+  end
+
+  defp active_topic(event, name) do
+    folded = Normalize.fold(to_string(name || ""))
+
+    event.id
+    |> Taxonomy.list_active_themes!()
+    |> Enum.find(&(&1.nature == :topic and Normalize.fold(&1.name) == folded))
+  end
+
   defp link_persons(event, claim, names) do
     for name <- names, is_binary(name) and String.trim(name) != "" do
       person = Narrative.identify_person!(%{event_id: event.id, full_name: name})
@@ -256,7 +307,7 @@ defmodule Wekui.Pipelines.Extract do
   # claim citations and reported 14 of 20 looting posts "unread" while three `unfitted`
   # entries were citing most of them — the accounting was wrong in the direction that
   # makes the pipeline look worse than it is, which is still wrong.
-  defp summarize(results, unfitted, topics, posts, by_xid) do
+  defp summarize(results, unfitted, topics, posts, by_xid, judged) do
     from_claims =
       for({:ok, claim} <- results, do: claim.id)
       |> Enum.flat_map(&Narrative.list_claim_citations!/1)
@@ -285,6 +336,8 @@ defmodule Wekui.Pipelines.Extract do
       cited: MapSet.size(from_claims),
       unfitted: Enum.map(unfitted, &to_string(&1["what_happened"] || "")),
       topics: Enum.frequencies(named ++ recovered),
+      # Posts that now carry a durable theme judgment, not just a line in this summary.
+      judged: judged,
       # A HAPPENING name in the topics list is the model declining to claim something
       # it recognised — a lost claim, not a topic, and invisible until counted.
       misrouted_topics: Enum.frequencies(misrouted),

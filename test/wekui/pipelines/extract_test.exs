@@ -52,9 +52,6 @@ defmodule Wekui.Pipelines.ExtractTest do
     with_vocabulary =
       agent!(ctx.event, %{prompt: "Vocabulary:\n{{vocabulary}}\nMaterial:\n{{material}}"})
 
-    with_vocabulary =
-      agent!(ctx.event, %{prompt: "Vocabulary:\n{{vocabulary}}\nMaterial:\n{{material}}"})
-
     _ = Extract.run(ctx.event, with_vocabulary, [ctx.p1], place_scope: "Caraballeda")
     receive do: ({:prompt, p} -> p), after: (1000 -> flunk("no prompt captured"))
   end
@@ -206,6 +203,18 @@ defmodule Wekui.Pipelines.ExtractTest do
       assert summary.drafted == 0
       assert summary.topics == %{"Solicitud de información" => 2}
       assert summary.misrouted_topics == %{}
+
+      # AND IT LEAVES A RECORD. Routing used to live only inside this summary, so the
+      # record could not say what became of a post that was read and correctly
+      # produced no claim. "Every post is accounted for" was true per run and lost
+      # immediately after, which is not accounted for.
+      assert summary.judged == 2
+
+      for post <- [ctx.p1, ctx.p2] do
+        assert [judgment] = Wekui.Judgment.current_theme_judgments!(post.id)
+        assert judgment.theme_id
+      end
+
       # Both posts are accounted for by the topics list — routed, not lost.
       assert summary.unread == 0
       assert Narrative.list_claims!(ctx.event.id) == []

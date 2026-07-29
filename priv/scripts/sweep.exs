@@ -12,8 +12,11 @@
 # and the wall is on what the model has to WRITE, which scales with posts and not with
 # minutes ([[open-extraction-does-not-batch]]).
 #
-# WHAT COUNTS AS UNREAD. A post no claim ABLE TO SPEAK cites. A claim with no theme is
-# silent, so a post cited only by silent claims has not been read by the vocabulary.
+# WHAT COUNTS AS READ. Either a claim ABLE TO SPEAK cites it — a claim with no theme
+# is silent, so a post cited only by silent claims has not been read — or it carries a
+# current theme judgment, meaning the extractor read it and correctly found no claim
+# in it. Before topic routing was persisted, those posts looked unread and were paid
+# for again on every sweep.
 #
 # WHAT IT DOES NOT DO. Only extract, per batch — which resolves each new claim as it is
 # written. Verify and render are event-wide passes that re-walk every current claim, so
@@ -32,6 +35,7 @@ Logger.configure(level: :warning)
 
 alias Wekui.Capture
 alias Wekui.Core
+alias Wekui.Judgment
 alias Wekui.Narrative
 alias Wekui.Pipelines.Extract
 alias Wekui.Pipelines.ResidueAudit
@@ -64,9 +68,17 @@ unread = fn ->
     |> Enum.flat_map(&Narrative.list_claim_citations!(&1.id))
     |> MapSet.new(& &1.post_id)
 
+  topical =
+    event.id
+    |> Judgment.list_theme_judgments!()
+    |> Enum.filter(&is_nil(&1.superseded_at))
+    |> MapSet.new(& &1.post_id)
+
+  read = MapSet.union(spoken, topical)
+
   event.id
   |> Capture.list_posts!()
-  |> Enum.reject(&MapSet.member?(spoken, &1.id))
+  |> Enum.reject(&MapSet.member?(read, &1.id))
   |> Enum.sort_by(& &1.posted_at, DateTime)
 end
 
