@@ -27,6 +27,7 @@ defmodule Wekui.Narrative.BeatRenderer do
   alias Wekui.Core
   alias Wekui.Narrative
   alias Wekui.Narrative.ClaimPlace
+  alias Wekui.Taxonomy
   alias Wekui.Tree
 
   require Ash.Query
@@ -69,8 +70,27 @@ defmodule Wekui.Narrative.BeatRenderer do
     |> Enum.map(&Narrative.get_claim!/1)
     |> Enum.filter(fn c ->
       is_nil(c.superseded_at) and not before?(c.first_seen_at, from) and
-        not before?(to, c.first_seen_at)
+        not before?(to, c.first_seen_at) and themed?(c)
     end)
+  end
+
+  # THE GATE. A claim reaches a reader only if the record can say what KIND of
+  # happening it is — which means a [[theme]] a person has taken into the vocabulary.
+  #
+  # A claim with no theme predates the vocabulary. Its `kind` is whatever a model
+  # typed, and nothing could refuse one: that is how "¿alguien tiene información sobre
+  # residencias Albatros?" became *a person is missing*, twenty-three times, and how
+  # `solicitud de información sobre edificio: []` — a field name, a colon and nothing
+  # — reached the memorial's Spanish.
+  #
+  # Those claims stay on the record: they are honest accounts of what the extractor
+  # read, and the record is append-only. They simply do not speak until a themed
+  # reading supersedes them.
+  defp themed?(claim) do
+    case claim.theme_id && Taxonomy.get_theme(claim.theme_id) do
+      {:ok, %{lifecycle: :active, nature: :happening}} -> true
+      _no_ratified_happening -> false
+    end
   end
 
   defp before?(a, b), do: DateTime.compare(a, b) == :lt

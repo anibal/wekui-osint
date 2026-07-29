@@ -27,7 +27,10 @@ defmodule Wekui.Narrative.BeatRendererTest do
       post: post,
       la_guaira: la_guaira,
       caraballeda: caraballeda,
-      opp: opp
+      opp: opp,
+      # A claim reaches a reader only under a theme a person ratified. Every claim
+      # below carries one; the gate itself is tested at the foot of this file.
+      theme: theme!(event)
     }
   end
 
@@ -37,6 +40,7 @@ defmodule Wekui.Narrative.BeatRendererTest do
         Map.merge(
           %{
             event_id: ctx.event.id,
+            theme_id: ctx.theme.id,
             first_seen_at: ~U[2026-06-25 04:00:00.000000Z],
             actor_id: ctx.agent.id,
             confidence: 0.9
@@ -152,5 +156,67 @@ defmodule Wekui.Narrative.BeatRendererTest do
     clauses = beat(ctx, ctx.caraballeda).clauses
     assert Enum.map(clauses, & &1.place_name) == ["OPP 25", "Caraballeda"]
     assert Enum.map(clauses, & &1.cite_ns) == [[1], [2]]
+  end
+
+  # The gate the free `kind` string could never have: a claim reaches a reader only
+  # when the record can say what KIND of happening it is, and only a person can put a
+  # theme into the vocabulary.
+  describe "a claim reaches no reader without a ratified theme" do
+    test "a claim with no theme at all is silent", ctx do
+      Narrative.draft_claim!(%{
+        event_id: ctx.event.id,
+        kind: "colapso",
+        first_seen_at: ~U[2026-06-25 04:00:00.000000Z],
+        actor_id: ctx.agent.id,
+        confidence: 0.9
+      })
+      |> then(fn claim ->
+        Narrative.link_place!(%{
+          claim_id: claim.id,
+          place_id: ctx.opp.id,
+          how_resolved: :mention_exact,
+          confidence: 0.9
+        })
+      end)
+
+      assert BeatRenderer.render(ctx.caraballeda.id, @from, @to).clauses == []
+    end
+
+    test "a theme nobody has ratified yet is refused at the write path", ctx do
+      # Stronger than silence: the claim cannot be drafted at all. A vocabulary entry
+      # nobody signed does not exist, so nothing can be filed under it.
+      proposed =
+        Wekui.Taxonomy.create_theme!(%{
+          event_id: ctx.event.id,
+          name: "colapso estructural",
+          applies_when: "the post states that a named building came down",
+          nature: :happening
+        })
+
+      error =
+        assert_raise Ash.Error.Invalid, fn ->
+          claim!(ctx, %{kind: "colapso", theme_id: proposed.id}, ctx.opp)
+        end
+
+      assert Exception.message(error) =~ "a person has taken into the vocabulary"
+    end
+
+    test "a topic is refused at the write path, before it can reach a beat", ctx do
+      plea =
+        Wekui.Taxonomy.create_theme!(%{
+          event_id: ctx.event.id,
+          name: "solicitud de información",
+          applies_when: "the post asks whether anyone has news, and asserts nothing",
+          nature: :topic,
+          lifecycle: :active
+        })
+
+      error =
+        assert_raise Ash.Error.Invalid, fn ->
+          claim!(ctx, %{kind: "búsqueda", theme_id: plea.id}, ctx.opp)
+        end
+
+      assert Exception.message(error) =~ "is a topic, not a happening"
+    end
   end
 end

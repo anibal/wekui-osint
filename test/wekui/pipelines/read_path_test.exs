@@ -49,6 +49,17 @@ defmodule Wekui.Pipelines.ReadPathTest do
     opp =
       place!(event, %{canonical_name: "OPP 25", type: "edificio", parent_id: tanaguarena.id})
 
+    # The vocabulary the extractor's free-text `kind` gets filed under. Without an
+    # active happening theme a claim reaches no reader, so the pipeline's own tests
+    # must run against a ratified vocabulary — as the real event does.
+    for name <- ["rescate", "cifra oficial"] do
+      theme!(event, %{
+        name: name,
+        applies_when: "the post states that a #{name} occurred",
+        nature: :happening
+      })
+    end
+
     rescue_post =
       post!(event, %{
         x_id: "3923",

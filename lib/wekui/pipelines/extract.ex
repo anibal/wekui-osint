@@ -15,6 +15,7 @@ defmodule Wekui.Pipelines.Extract do
   alias Wekui.Clients.Worker
   alias Wekui.Narrative
   alias Wekui.Narrative.PlaceResolver
+  alias Wekui.Narrative.ThemeResolver
 
   @doc """
   Extracts claims from `posts` (a batch of Posts) using `agent` (the extractor,
@@ -86,6 +87,10 @@ defmodule Wekui.Pipelines.Extract do
       [first | _rest] ->
         attrs = %{
           event_id: event.id,
+          # The extractor's own words, filed under a theme the vocabulary holds. A
+          # kind that reaches none is written without one and reaches no reader —
+          # honest, on the record, and silent (`Wekui.Narrative.ThemeResolver`).
+          theme_id: theme_id(event, claim["kind"]),
           kind: to_string(claim["kind"] || "otro"),
           subject: claim["subject_role"],
           magnitude: claim["magnitude"],
@@ -106,6 +111,13 @@ defmodule Wekui.Pipelines.Extract do
           {:error, error} ->
             {:skip, {:rejected, error}}
         end
+    end
+  end
+
+  defp theme_id(event, kind) do
+    case ThemeResolver.resolve(event.id, to_string(kind || "")) do
+      {:ok, theme} -> theme.id
+      :no_theme -> nil
     end
   end
 

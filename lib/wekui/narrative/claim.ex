@@ -39,6 +39,7 @@ defmodule Wekui.Narrative.Claim do
 
   alias Wekui.Judgment.Changes.Retract
   alias Wekui.Judgment.Validations.Provenance
+  alias Wekui.Narrative.Validations.ClaimableTheme
   alias Wekui.Narrative.Validations.NoPrivateName
   alias Wekui.Validations.Reference
 
@@ -58,6 +59,7 @@ defmodule Wekui.Narrative.Claim do
     references do
       reference :event, on_delete: :restrict
       reference :actor, on_delete: :restrict
+      reference :theme, on_delete: :restrict
       reference :superseded_by, on_delete: :restrict
     end
   end
@@ -77,6 +79,7 @@ defmodule Wekui.Narrative.Claim do
 
       accept [
         :event_id,
+        :theme_id,
         :kind,
         :subject,
         :magnitude,
@@ -94,6 +97,11 @@ defmodule Wekui.Narrative.Claim do
       # agent, absent for a person.
       validate {Reference, resource: Wekui.Core.Actor, attribute: :actor_id}
       validate Provenance
+      # The vocabulary entry the record files this happening under. Optional on the
+      # resource because 67 claims predate the vocabulary entirely; enforced where it
+      # bites — a claim whose theme is not an ACTIVE HAPPENING never reaches a reader.
+      validate {Reference, resource: Wekui.Taxonomy.Theme, attribute: :theme_id}
+      validate ClaimableTheme
 
       # The persons red line, on the write path (F54). The subject is STRICT — no
       # person name at all, not even an allowlisted public figure (a public figure used
@@ -107,6 +115,24 @@ defmodule Wekui.Narrative.Claim do
       accept []
       require_atomic? false
       change Retract
+    end
+
+    update :file_under_theme do
+      description """
+      Files an already-drafted claim under a vocabulary entry.
+
+      NOT a rewrite of what the claim says: `kind` — the extractor's own words — is
+      untouched, and no assertion changes. Filing is the same kind of thing as a
+      ClaimPlace link, "a current best reading, not a historical fact", and it exists
+      because 67 claims were drafted before there was any vocabulary to file them
+      under. A claim whose words reach no active happening theme stays unfiled and
+      reaches no reader.
+      """
+
+      accept [:theme_id]
+
+      validate {Reference, resource: Wekui.Taxonomy.Theme, attribute: :theme_id}
+      validate ClaimableTheme
     end
 
     update :record_support do
@@ -143,7 +169,7 @@ defmodule Wekui.Narrative.Claim do
     uuid_primary_key :id
 
     attribute :kind, :string do
-      description "The state-change type — a rescue, a collapse, an official toll. Vocabulary still to settle, so a plain string for now."
+      description "What the extractor called this happening, in its own words — kept as provenance, never as the vocabulary. What the record FILES it under is the theme."
       allow_nil? false
       public? true
     end
@@ -214,6 +240,11 @@ defmodule Wekui.Narrative.Claim do
 
     belongs_to :actor, Wekui.Core.Actor do
       allow_nil? false
+      public? true
+    end
+
+    belongs_to :theme, Wekui.Taxonomy.Theme do
+      description "The vocabulary entry this happening is filed under — active, and a happening rather than a topic. Absent on the claims that predate the vocabulary; those reach no reader."
       public? true
     end
 
