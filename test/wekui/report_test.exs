@@ -592,8 +592,10 @@ defmodule Wekui.ReportTest do
       report = Report.render(ctx.event)
 
       assert report =~ "**2 accounts**"
-      assert report =~ "withdrew 2"
+      assert report =~ "took **2** more pair(s) off this queue"
       assert report =~ "⚑"
+      # The receipt never claims credit for what the rules did.
+      assert report =~ "done by rules, not by the model"
     end
   end
 end

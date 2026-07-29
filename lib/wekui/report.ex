@@ -730,13 +730,20 @@ defmodule Wekui.Report do
     withdrawn = PairJudge.withdrawn(world.event.id)
     upheld = PairJudge.upheld(world.event.id)
 
+    offered = ClaimDuplicates.find(world.event.id)
+
     pairs =
-      world.event.id
-      |> ClaimDuplicates.find()
-      |> Enum.reject(fn pair ->
+      Enum.reject(offered, fn pair ->
         two = MapSet.new([pair.claim.id, pair.other.id])
         MapSet.member?(apart, two) or MapSet.member?(withdrawn, two)
       end)
+
+    # Count only what the judge actually took OFF THIS QUEUE. A receipt outlives the
+    # finder it ran against: rules landing afterwards refused 6 of its 42 upheld pairs
+    # and 28 of its 94 withdrawals, and reporting the raw totals would credit the model
+    # with work the rules did.
+    live = MapSet.new(offered, &MapSet.new([&1.claim.id, &1.other.id]))
+    withdrew = Enum.count(withdrawn, &MapSet.member?(live, &1))
 
     # GROUPS, NOT PAIRS. The finder is pairwise because its rule is; a person is not.
     # Measured, 3,213 pairs were 261 groups, and one clique of 61 claims held 1,516
@@ -764,7 +771,7 @@ defmodule Wekui.Report do
             A group is what to **look at together**, never what to merge: accounts join
             through each other, so a generic account can hold two plainly different ones
             in the same group. The largest come first.
-            #{judged_note(withdrawn, upheld)}
+            #{judged_note(withdrew, groups, upheld)}
             #{bounded(groups, &duplicate_group_entry(&1, upheld), "group")}
             """,
             answer:
@@ -780,21 +787,25 @@ defmodule Wekui.Report do
     end
   end
 
-  defp judged_note(withdrawn, upheld) do
-    if MapSet.size(withdrawn) == 0 do
+  defp judged_note(withdrew, groups, upheld) do
+    if withdrew == 0 do
       ""
     else
-      "\nTwo adversarial readings have already been over the finder's pairs and " <>
-        "**withdrew #{MapSet.size(withdrawn)}**; the **#{MapSet.size(upheld)}** both " <>
-        "called one happening are marked ⚑. Nothing was merged — a merge is yours.\n"
+      flagged = Enum.count(groups, &flagged?(&1, upheld))
+
+      "\nTwo adversarial readings took **#{withdrew}** more pair(s) off this queue, and " <>
+        "the #{flagged} of #{length(groups)} group(s) holding a pair they both called " <>
+        "one happening are marked ⚑. Most of the shortening above was done by rules, " <>
+        "not by the model. Nothing was merged — a merge is yours.\n"
     end
   end
 
+  defp flagged?(group, upheld) do
+    Enum.any?(group.pairs, &MapSet.member?(upheld, MapSet.new([&1.claim.id, &1.other.id])))
+  end
+
   defp duplicate_group_entry(group, upheld) do
-    flag =
-      if Enum.any?(group.pairs, &MapSet.member?(upheld, MapSet.new([&1.claim.id, &1.other.id]))),
-        do: "⚑ ",
-        else: ""
+    flag = if flagged?(group, upheld), do: "⚑ ", else: ""
 
     shown = Enum.take(group.claims, @group_shown)
     rest = group.size - length(shown)
