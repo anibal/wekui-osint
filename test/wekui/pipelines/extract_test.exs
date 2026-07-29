@@ -32,6 +32,33 @@ defmodule Wekui.Pipelines.ExtractTest do
     %{event: event, agent: agent, p1: p1, p2: p2, rescate: rescate}
   end
 
+  # The prompt as the model actually receives it.
+  defp capture_prompt(ctx, claims) do
+    me = self()
+
+    Req.Test.stub(Wekui.Clients.Worker.Live, fn conn ->
+      {:ok, body, conn} = Plug.Conn.read_body(conn)
+
+      send(
+        me,
+        {:prompt, body |> Jason.decode!() |> get_in(["messages", Access.at(0), "content"])}
+      )
+
+      Req.Test.json(conn, %{
+        "choices" => [%{"message" => %{"content" => Jason.encode!(%{"claims" => claims})}}]
+      })
+    end)
+
+    with_vocabulary =
+      agent!(ctx.event, %{prompt: "Vocabulary:\n{{vocabulary}}\nMaterial:\n{{material}}"})
+
+    with_vocabulary =
+      agent!(ctx.event, %{prompt: "Vocabulary:\n{{vocabulary}}\nMaterial:\n{{material}}"})
+
+    _ = Extract.run(ctx.event, with_vocabulary, [ctx.p1], place_scope: "Caraballeda")
+    receive do: ({:prompt, p} -> p), after: (1000 -> flunk("no prompt captured"))
+  end
+
   defp stub_claims(claims) do
     content = Jason.encode!(%{"claims" => claims})
 
@@ -201,6 +228,32 @@ defmodule Wekui.Pipelines.ExtractTest do
 
       assert summary.topics == %{}
       assert summary.misrouted_topics == %{"Persona rescatada con vida" => 1}
+    end
+
+    test "the vocabulary reaches the model grouped by family, not as a flat list", ctx do
+      # At 17 themes a flat list was fine. At 40 the model stopped finding words that
+      # were plainly there — roughly ten of twenty-six residue entries named a
+      # happening the vocabulary already had. A residue entry the vocabulary can
+      # already answer is worse than a gap: it asks a person for a word that exists.
+      family =
+        theme!(ctx.event, %{
+          name: "Personas afectadas",
+          applies_when: "never classify against this node directly",
+          nature: :topic
+        })
+
+      theme!(ctx.event, %{
+        name: "Persona atrapada",
+        applies_when: "the post asserts a person is trapped alive",
+        nature: :happening,
+        parent_id: family.id
+      })
+
+      prompt = capture_prompt(ctx, [])
+
+      assert prompt =~ "PERSONAS AFECTADAS"
+      # The child sits under its family heading, not loose among forty siblings.
+      assert prompt =~ ~r/PERSONAS AFECTADAS\n- «Persona atrapada»/
     end
 
     test "a topic put in the wrong field is routed, not lost", ctx do

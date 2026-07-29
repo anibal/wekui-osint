@@ -70,23 +70,44 @@ defmodule Wekui.Pipelines.Extract do
   # which the write path then refused. An answer list must not contain answers that are
   # not allowed.
   defp vocabulary(event) do
-    {happenings, topics} =
-      event.id
-      |> Taxonomy.list_active_themes!()
-      |> Enum.split_with(&(&1.nature == :happening))
+    active = Taxonomy.list_active_themes!(event.id)
+    {happenings, topics} = Enum.split_with(active, &(&1.nature == :happening))
 
     """
     HAPPENINGS — the ONLY names that may appear in a claim's "theme":
-    #{lines(happenings)}
+    #{grouped(happenings, active)}
 
     TOPICS — these are NOT claims and must never appear in "theme". A post that is only
     doing one of these belongs in "topics", where naming it is a complete answer:
-    #{lines(topics)}
+    #{grouped(topics, active)}
     """
   end
 
+  # GROUPED BY FAMILY, not a flat list. At 17 themes a flat list was fine; at 40 the
+  # model stopped finding words that were plainly there — "Rescatistas confirmaron que
+  # no había sobrevivientes" went to `unfitted` while «Búsqueda sin señales de vida»
+  # sat in the list, and about ten of twenty-six residue entries were that shape.
+  #
+  # A residue entry the vocabulary can already answer is worse than a gap: it asks a
+  # person for a word that exists. So the tree the operator insisted on is used to
+  # break the list into families a reader can scan, with the hub as the heading it was
+  # always meant to be.
+  defp grouped(themes, active) do
+    by_id = Map.new(active, &{&1.id, &1})
+
+    themes
+    |> Enum.group_by(&(&1.parent_id && by_id[&1.parent_id] && by_id[&1.parent_id].name))
+    |> Enum.sort_by(fn {family, _} -> {is_nil(family), family} end)
+    |> Enum.map_join("\n\n", fn
+      {nil, loose} -> lines(loose)
+      {family, kin} -> "  #{String.upcase(family)}\n#{lines(kin)}"
+    end)
+  end
+
   defp lines(themes) do
-    Enum.map_join(themes, "\n", fn theme ->
+    themes
+    |> Enum.sort_by(& &1.name)
+    |> Enum.map_join("\n", fn theme ->
       "- «#{theme.name}» — applies when: #{theme.applies_when}"
     end)
   end
