@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "page_id": "2FKJZZBRWRQ7WBHS3NG6MYPZ4Q",
+  "last_synced_hash": "sha256:61d1954b9aba0c9aedb8d1338804e817c7262cfc36da94161dab8e3ed7a3a43a",
+  "last_synced_at": "2026-07-25T10:08:51.424082-05:00",
+  "blocks": [
+    {
+      "id": "01KYCX4SYSM64KPX6GFH11QDCW",
+      "line": 1,
+      "indent": 0,
+      "content_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "ref_handle": "blk-11qdcw"
+    }
+  ],
+  "pipeline_version": 2
+}

@@ -39,6 +39,7 @@ defmodule Wekui.Report do
   alias Wekui.Narrative.PlaceResolver
   alias Wekui.Normalize
   alias Wekui.Pipelines
+  alias Wekui.Pipelines.PairJudge
   alias Wekui.Taxonomy
   alias Wekui.Tree
 
@@ -54,6 +55,11 @@ defmodule Wekui.Report do
   # A question with fifty candidates is a wall, not a question. The rest are
   # counted, never silently dropped.
   @max_candidates 6
+
+  # How many accounts of one duplicate group a person actually reads. A group of sixty
+  # is a fact about the group; reading sixty is not a review. Defined here with the
+  # others, above every use — the `@spot_checks` lesson.
+  @group_shown 6
 
   @doc """
   Renders the whole record of `event` as markdown. `opts`: `:at` (the timestamp
@@ -708,6 +714,12 @@ defmodule Wekui.Report do
   # across batches it does not, and that is the defect that compounds fastest as the
   # corpus grows. Same shape as the duplicate places, and it stops in the same place:
   # a "no" moves nothing, so it needs an act.
+  #
+  # Two things shorten this queue before a person sees it, and they are not the same
+  # kind of thing. A person's `distinguish_claims` is a RULING and removes the pair for
+  # good. `Wekui.Pipelines.PairJudge` only WITHDRAWS A MACHINE'S PROPOSAL — a pair two
+  # adversarial readings refused — which a machine may do to another machine's guess and
+  # may never do to a person's. Neither ever merges.
   defp duplicate_claims(world) do
     apart =
       for act <- world.acts,
@@ -715,45 +727,94 @@ defmodule Wekui.Report do
           into: MapSet.new(),
           do: MapSet.new([act.claim_id, act.before["not_id"]])
 
-    world.event.id
-    |> ClaimDuplicates.find()
-    |> Enum.reject(&MapSet.member?(apart, MapSet.new([&1.claim.id, &1.other.id])))
-    |> case do
+    withdrawn = PairJudge.withdrawn(world.event.id)
+    upheld = PairJudge.upheld(world.event.id)
+
+    pairs =
+      world.event.id
+      |> ClaimDuplicates.find()
+      |> Enum.reject(fn pair ->
+        two = MapSet.new([pair.claim.id, pair.other.id])
+        MapSet.member?(apart, two) or MapSet.member?(withdrawn, two)
+      end)
+
+    # GROUPS, NOT PAIRS. The finder is pairwise because its rule is; a person is not.
+    # Measured, 3,213 pairs were 261 groups, and one clique of 61 claims held 1,516
+    # pairs on its own — 47% of the whole queue restating one fact.
+    groups = ClaimDuplicates.cluster(pairs)
+
+    case groups do
       [] ->
         []
 
-      found ->
+      groups ->
         [
           %{
             kind: :duplicate_claim,
-            title: "#{length(found)} claim(s) that may be one happening told twice",
-            claim_ids: Enum.flat_map(found, &[&1.claim.id, &1.other.id]),
+            title:
+              "#{length(groups)} group(s) of claims that may be one happening told " <>
+                "more than once (#{length(pairs)} pairs)",
+            claim_ids: Enum.flat_map(groups, fn group -> Enum.map(group.claims, & &1.id) end),
             body: """
             A subject carrying its own mark — an age, a count — is offered wherever it
             appears; a generic subject is only offered when both accounts sit at the
             same place and close in time, because a woman missing in one building and
             a woman missing in another are two claims.
 
-            #{bounded(found, &duplicate_claim_entry/1, "pair")}
+            A group is what to **look at together**, never what to merge: accounts join
+            through each other, so a generic account can hold two plainly different ones
+            in the same group. The largest come first.
+            #{judged_note(withdrawn, upheld)}
+            #{bounded(groups, &duplicate_group_entry(&1, upheld), "group")}
             """,
             answer:
               "Do NOT answer these one by one — at this scale that is not a review, it " <>
                 "is a second job. Read the sample and tell me what the finder is getting " <>
-                "wrong, and that becomes a rule. Per pair, when a pair is genuinely " <>
-                "worth it: **merge** (the earlier account keeps its evidence and absorbs " <>
-                "the other's), or **apart** (two happenings — recorded, so it is never " <>
-                "asked again)."
+                "wrong, and that becomes a rule. Where a group is genuinely worth it: " <>
+                "**merge** (the earliest account keeps its evidence and absorbs the " <>
+                "others), or **apart** (recorded, so it is never asked again). A big " <>
+                "group usually needs neither — it needs splitting, and that is the " <>
+                "answer to give."
           }
         ]
     end
   end
 
-  defp duplicate_claim_entry(%{claim: claim, other: other, score: score}) do
+  defp judged_note(withdrawn, upheld) do
+    if MapSet.size(withdrawn) == 0 do
+      ""
+    else
+      "\nTwo adversarial readings have already been over the finder's pairs and " <>
+        "**withdrew #{MapSet.size(withdrawn)}**; the **#{MapSet.size(upheld)}** both " <>
+        "called one happening are marked ⚑. Nothing was merged — a merge is yours.\n"
+    end
+  end
+
+  defp duplicate_group_entry(group, upheld) do
+    flag =
+      if Enum.any?(group.pairs, &MapSet.member?(upheld, MapSet.new([&1.claim.id, &1.other.id]))),
+        do: "⚑ ",
+        else: ""
+
+    shown = Enum.take(group.claims, @group_shown)
+    rest = group.size - length(shown)
+
     """
-      - **#{line(other)}** — #{where(other)}
-        may be **#{line(claim)}** — #{where(claim)}
-        (subjects #{Float.round(score, 2)} alike)\
+      - #{flag}**#{group.size} accounts**, joined by #{length(group.pairs)} pair(s) — #{basis(group)}
+    #{Enum.map_join(shown, "\n", fn claim -> "        · #{line(claim)} — #{where(claim)}" end)}#{if rest > 0, do: "\n        …and #{rest} more account(s) in this group.", else: ""}\
     """
+  end
+
+  # What the group rests on, at its strongest. The last case means not one account in
+  # it named a subject — only the kind, the place and the clock hold it together.
+  defp basis(group) do
+    bases = Enum.map(group.pairs, & &1.subjects)
+
+    cond do
+      :mark in bases -> "subjects carry their own marks"
+      :generic in bases -> "generic subjects, same place, close in time"
+      true -> "**no account names a subject** — the weakest thing this offers"
+    end
   end
 
   defp where(claim) do

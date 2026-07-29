@@ -1,0 +1,44 @@
+{
+  "version": 2,
+  "page_id": "3327K92X0YTAJJJHD55WAV9QZD",
+  "last_synced_hash": "sha256:730ee0404096eee96807da89d64616b80c97dce736c3779ab93246de283bafec",
+  "last_synced_at": "2026-07-27T14:39:54.669736-05:00",
+  "blocks": [
+    {
+      "id": "01KYJHEJDD4AA3B705VZQB2EKG",
+      "line": 1,
+      "indent": 0,
+      "content_hash": "sha256:bb242f7fece0488013b85268b31a91d147d9018e4d0d643adb2dfda38bc509fc",
+      "ref_handle": "blk-qb2ekg"
+    },
+    {
+      "id": "01KYJHEJDDATC0AJ32YHBSXPPR",
+      "line": 2,
+      "indent": 0,
+      "content_hash": "sha256:35a022d7952dd6aa65c2aae56301d325710a2eb6160404118f6f2d0e0c8246a5",
+      "ref_handle": "blk-bsxppr"
+    },
+    {
+      "id": "01KYJHEJDD7QQN2KH40HWTZFZY",
+      "line": 3,
+      "indent": 0,
+      "content_hash": "sha256:66d9e458ef2e7043569de9b0ce93b7bd628bddddb4e46a9d5240d492a6d19e48",
+      "ref_handle": "blk-wtzfzy"
+    },
+    {
+      "id": "01KYJHEJDDAKX7M3B54MNSNHE4",
+      "line": 4,
+      "indent": 0,
+      "content_hash": "sha256:32304a6a182c0dffed064f7b00fff7b79e369575ff6fbb45b966746a35d6ac82",
+      "ref_handle": "blk-nsnhe4"
+    },
+    {
+      "id": "01KYJHEJDD1FZXPJBN28TEWWAC",
+      "line": 5,
+      "indent": 0,
+      "content_hash": "sha256:7ff75e29f9a1bb90087827e479dea76a937435a3782abe5229d4f6eb7236e5bb",
+      "ref_handle": "blk-tewwac"
+    }
+  ],
+  "pipeline_version": 2
+}

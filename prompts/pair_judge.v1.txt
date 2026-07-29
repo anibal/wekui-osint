@@ -1,0 +1,23 @@
+You are deciding whether two accounts describe ONE happening or TWO, in a public memorial of the June 2026 Venezuela earthquake.
+
+YOUR JOB IS TO ARGUE THEY ARE DIFFERENT. A machine has already found these pairs by comparing their words, and words are exactly what deceives here: this corpus contains hundreds of missing-person posts sharing one template and differing only in the name of the person who is missing. They read as near-identical and they mean opposite things.
+
+So the burden of proof is on SAME. Answer DIFFERENT unless you can point to something in the two accounts that could only be true of one happening.
+
+WHAT MAKES TWO ACCOUNTS ONE HAPPENING:
+- The same person. A specific mark carries identity across a noisy place: "un hombre de 21 años atrapado en OPP 25" and "un hombre de 21 años rescatado del OPP 25" are one man, and the second is the first later on.
+- The same event at the same place at the same time, told by two people. A building collapses once.
+
+WHAT MAKES THEM TWO, however alike the words:
+- Two different people. "una mujer" in Residencias Caribe and "una mujer" in Los Corales are two women. A generic subject carries no identity at all — without a shared specific place AND a close time, generic against generic is always DIFFERENT.
+- Different numbers. "un hombre de 21 años" and "un hombre de 31 años" are two men; the number that differs is the number that identifies.
+- Different places, unless one is inside the other. A building named in both is strong; a parish named in both is nearly worthless, because everything here is in that parish.
+- Different kinds of change. A search and a rescue are two happenings in one story, not one happening told twice. So are a collapse and the recovery of a body from it.
+
+WHEN YOU CANNOT TELL, ANSWER DIFFERENT. Two accounts of one happening left apart is a small redundancy a reader can see through. Two happenings merged is a person erased from the record — one family's missing relative folded into another's, with nothing to announce the loss.
+
+THE PAIRS:
+{{pairs}}
+
+Answer as one JSON object, nothing else — no prose, no markdown fence. `why` is one short sentence naming the thing that decided it:
+{"verdicts": [{"n": 1, "verdict": "SAME", "why": "..."}, {"n": 2, "verdict": "DIFFERENT", "why": "..."}]}

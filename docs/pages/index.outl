@@ -1,8 +1,8 @@
 {
   "version": 2,
   "page_id": "5W3V0G6NBYZ9RRRNVSZWZD9NVR",
-  "last_synced_hash": "sha256:651609b8e5d86ec2122dd733fe219dcc42bdf5422a34e4063bc00bf6b522f438",
-  "last_synced_at": "2026-07-23T16:12:55.058708-05:00",
+  "last_synced_hash": "sha256:4ba978f7002df0a3d03cc5738b78fd40e14f5465f434757a3a403197a974cc5e",
+  "last_synced_at": "2026-07-27T14:39:54.526657-05:00",
   "blocks": [
     {
       "id": "01KY8D600JKEZDF4PK9G98580H",
@@ -61,39 +61,46 @@
       "ref_handle": "blk-rc366c"
     },
     {
-      "id": "01KY8D600JTJFSV1WG5BTY9NRP",
+      "id": "01KYCY779EVHNBA6SKFH5SB4PN",
       "line": 9,
+      "indent": 0,
+      "content_hash": "sha256:b1edb41826c652334c2e7bafa09f2891d82d6b99adc8c1d285a8ad1cd625fef0",
+      "ref_handle": "blk-5sb4pn"
+    },
+    {
+      "id": "01KY8D600JTJFSV1WG5BTY9NRP",
+      "line": 10,
       "indent": 0,
       "content_hash": "sha256:67403311ddbf1da257dde7fb9342946e93760ace7572de33c61316cd8cdb4873",
       "ref_handle": "blk-ty9nrp"
     },
     {
       "id": "01KY8D600JS1GDZQ1S0NJX3DEM",
-      "line": 10,
+      "line": 11,
       "indent": 1,
       "content_hash": "sha256:dc7adcd6e9838f3cae77434a075bedc214195635c9204f3ac89622a7e5148f8e",
       "ref_handle": "blk-jx3dem"
     },
     {
       "id": "01KY8D600JPH4W04FY76GVS7PN",
-      "line": 11,
+      "line": 12,
       "indent": 1,
       "content_hash": "sha256:7f700989abdc8237abe18ccd847fa7d720301783015214d50369f846c9744126",
       "ref_handle": "blk-gvs7pn"
     },
     {
       "id": "01KY8D600JSXPFAB3QEJHQPYQ1",
-      "line": 12,
+      "line": 13,
       "indent": 1,
       "content_hash": "sha256:51439b323e0c840b956763b2121a88bb54b32f514570f1465480b8dd2b018e69",
       "ref_handle": "blk-hqpyq1"
     },
     {
-      "id": "01KY8D600J3JS7W2T9DA87EBF3",
-      "line": 13,
+      "id": "01KYCY779E21ZKA6MGCZMJ4Q2Q",
+      "line": 14,
       "indent": 1,
-      "content_hash": "sha256:9fe30136fa5c1493b4e352981aa16990d030fc1a306227c7e710dad789fdcdc9",
-      "ref_handle": "blk-87ebf3"
+      "content_hash": "sha256:30b200a05edb48c7da1eff9290f92931596e026219255309a10ef2e800013dd0",
+      "ref_handle": "blk-mj4q2q"
     }
   ],
   "pipeline_version": 2

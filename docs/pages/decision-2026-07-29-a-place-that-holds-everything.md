@@ -1,0 +1,13 @@
+decided:: 2026-07-29
+status:: settled
+title:: Decision — a place that holds the whole corpus cannot tell two accounts apart
+type:: decision
+
+- When a [[claim]]'s subject is generic or absent, the shared [[place]] that lets two accounts stand as one happening must be **finer than the administrative area the [[event]] is collected over** — `pais`, `estado`, `municipio` and `parroquia` do not count. A shared building does; so does a shared barrio or sector, for now.
+- **What decided it.** 380 of 2,596 claims sit at «Caraballeda» the parroquia and 62 at «La Guaira» the estado, because that is where the whole corpus is. Treating that as agreement built one group of **61 support claims** and another of **35 collapses**, holding **1,740 of 3,213 pairs between them — 54% of a person's queue, saying only that everything happened in Caraballeda**. Requiring a finer place cut 3,120 pairs to 1,099 and the largest group from 61 accounts to 19.
+- **The rule was already written down, one rung too high.** The pair-judge prompt says *"a parish named in both is nearly worthless, because everything here is in that parish"* — a paid, non-deterministic reading of a fact that never varies. Moving it to rung one of `docs/mechanisms.md` costs nothing per pair and cannot regress between runs. **A rule a prompt states is a rule the code should hold**, whenever the code can see the same thing.
+- **The cut stops at the parroquia on purpose.** Cutting `barrio` and `sector` too — arguably right, since a barrio holds many buildings — took 1,099 pairs to 989. The looser line is kept because the finder's job is recall and the gate is downstream: a duplicate never offered is a duplicate nobody ever rules on, and in a memorial that means one happening counted twice, quietly and forever. The tighter option and its number are recorded so the choice can be reversed on evidence.
+- **What it is NOT.** Not a claim that a parroquia is a bad place to link — the resolver is right to place a claim at the coarsest thing a post actually named. It is only that *sharing* one is not evidence, because it is not a coincidence.
+- **A depth rule was tried and refused.** «Caraballeda» sits at depth 2 of the gazetteer tree (Venezuela → La Guaira → Caraballeda) and a *leaf-only* rule wrongly demoted `Conjunto Residencial Caribe`, a building with towers under it that holds 57 claims. The tree's shape is not uniform enough to carry the meaning; the place's **type** is.
+- Evidence: [[research-2026-07-29-duplicate-claims-at-scale]].
+- Related: [[place]], [[claim]], [[decision-2026-07-29-the-record-knows-who]], [[decision-2026-07-26-gazetteer-from-osm]], and `docs/mechanisms.md`.

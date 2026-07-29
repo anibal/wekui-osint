@@ -27,9 +27,11 @@ defmodule Wekui.Pipelines.Run do
 
   alias Wekui.Validations.Reference
 
-  # What the system was asked to do. The read path is the only rung built; the
-  # vocabulary widens as the others land (:polish, :acquisition…).
-  @kinds [:read_path]
+  # What the system was asked to do. The vocabulary widens as the rungs land
+  # (:polish, :acquisition…). `:pair_judge` is the second: the adversarial pass over
+  # the duplicate finder's proposals, receipted here because a machine's act is a run,
+  # never a `Wekui.Curation.Act`.
+  @kinds [:read_path, :pair_judge]
 
   @doc "The pipeline vocabulary a run can record."
   def kinds, do: @kinds

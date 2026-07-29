@@ -9,4 +9,5 @@ type:: hub
 - [[open-payload-facts]] — which further facts should be lifted out of the Payload.
 - [[open-when-two-posts-say-the-same-thing]] — there is no word for this yet, on purpose.
 - [[open-extraction-does-not-batch]] — the extractor reads a whole corpus in one prompt, so the record is being kept small to fit the pipeline.
+- [[open-persons-are-not-deduplicated]] — places and claims are checked for being recorded twice; people, who matter most, are not.
 - When a question is answered by evidence, the answer becomes a dated entry in the [[decision-log]] and the open page shrinks to a pointer at it — never a silent deletion.

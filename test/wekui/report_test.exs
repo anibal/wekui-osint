@@ -527,4 +527,73 @@ defmodule Wekui.ReportTest do
   test "says so plainly when no run has rendered a beat", ctx do
     assert Report.render(ctx.event) =~ "No completed run has rendered a beat yet"
   end
+
+  # The finder offers pairs; a person is asked about groups. Measured on the corpus,
+  # 3,213 pairs were 261 groups — printed as pairs the question is a wall.
+  describe "the claims that may be one happening told more than once" do
+    defp duplicates!(ctx) do
+      for _one_of_three <- 1..3 do
+        claim!(ctx, %{kind: "rescate", subject: "un niño de 11 años"}, place: ctx.caribe)
+      end
+    end
+
+    test "are asked as one group, counting the pairs behind it", ctx do
+      duplicates!(ctx)
+
+      report = Report.render(ctx.event)
+
+      assert report =~
+               "1 group(s) of claims that may be one happening told more than once (3 pairs)"
+
+      assert report =~ "**3 accounts**, joined by 3 pair(s) — subjects carry their own marks"
+      # And it says what a group is, so nobody reads it as a verdict.
+      assert report =~ "A group is what to **look at together**, never what to merge"
+    end
+
+    test "a group where nothing names a subject says so, rather than showing a score", ctx do
+      for _one_of_two <- 1..2 do
+        claim!(ctx, %{kind: "colapso de edificio", subject: nil}, place: ctx.caribe)
+      end
+
+      report = Report.render(ctx.event)
+
+      assert report =~ "**no account names a subject** — the weakest thing this offers"
+    end
+
+    test "a pair a person set apart is never asked again", ctx do
+      [one, two, three] = duplicates!(ctx)
+      curator = curator!(ctx.event)
+
+      Curation.distinguish_claims!(one, two, curator, "two boys, two buildings")
+      Curation.distinguish_claims!(one, three, curator, "two boys, two buildings")
+      Curation.distinguish_claims!(two, three, curator, "two boys, two buildings")
+
+      refute Report.render(ctx.event) =~ "may be one happening told more than once"
+    end
+
+    # A machine may withdraw another machine's proposal — that is all a `:pair_judge`
+    # receipt does. It never merges: `Wekui.Curation` refuses an agent as curator.
+    test "a pair two adversarial readings withdrew leaves the question, and says so", ctx do
+      [one, two, three] = duplicates!(ctx)
+
+      Wekui.Pipelines.start_run!(%{
+        event_id: ctx.event.id,
+        actor_id: ctx.agent.id,
+        kind: :pair_judge,
+        options: %{}
+      })
+      |> Wekui.Pipelines.finalize_run!(%{
+        summary: %{
+          "different" => [[one.id, two.id], [one.id, three.id]],
+          "same" => [[two.id, three.id]]
+        }
+      })
+
+      report = Report.render(ctx.event)
+
+      assert report =~ "**2 accounts**"
+      assert report =~ "withdrew 2"
+      assert report =~ "⚑"
+    end
+  end
 end

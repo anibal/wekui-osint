@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "page_id": "61208R8Y6G323WR4N89QAX894F",
+  "last_synced_hash": "sha256:82f43d45e4bc070c8f6ef7bca360082a0ffd6f6e3eb896ae5e10083fc82912d9",
+  "last_synced_at": "2026-07-29T02:42:13.371547-05:00",
+  "blocks": [
+    {
+      "id": "01KYPD5WBVAQK332RNZQB5503K",
+      "line": 1,
+      "indent": 0,
+      "content_hash": "sha256:5c02945d9b122f259a368dddbb2bd65759e8325c900a1ec2ba9b2c4e7b8c6e70",
+      "ref_handle": "blk-b5503k"
+    },
+    {
+      "id": "01KYPD5WBV68APC2Q7VC6PPMQF",
+      "line": 2,
+      "indent": 0,
+      "content_hash": "sha256:2bea8e73f47fe73bb83ebf5fa4e43dc158320c9dc8d8defcc576e3be8e877bb5",
+      "ref_handle": "blk-6ppmqf"
+    },
+    {
+      "id": "01KYPD5WBV8DEXKXF12BP9WSZE",
+      "line": 3,
+      "indent": 0,
+      "content_hash": "sha256:ae3914ffdb27677ddff0ab95c78698891b3e3d19060872736b95547dcef19f79",
+      "ref_handle": "blk-p9wsze"
+    },
+    {
+      "id": "01KYPD5WBVTMP7BTPDZJD93ASS",
+      "line": 4,
+      "indent": 0,
+      "content_hash": "sha256:7691f54a2f2ccff24636f494d3a2b201a03bc5271f3dd7e169369fe021c64c08",
+      "ref_handle": "blk-d93ass"
+    },
+    {
+      "id": "01KYPD5WBVJYPD6CKJJQNGG3XZ",
+      "line": 5,
+      "indent": 0,
+      "content_hash": "sha256:8add6ec81ca2691fa73fbd6d0ccbeaf5f1cbbc52615f9c3fdc5266981587edba",
+      "ref_handle": "blk-ngg3xz"
+    },
+    {
+      "id": "01KYPD5WBVDJ2WSPRXHXE4W8FZ",
+      "line": 6,
+      "indent": 0,
+      "content_hash": "sha256:97f1d1c55739956496d4fc24e29011e2d23b79983e00ab804c538b1530d1549e",
+      "ref_handle": "blk-e4w8fz"
+    },
+    {
+      "id": "01KYPD5WBV1NR5S2TK39P2456R",
+      "line": 7,
+      "indent": 0,
+      "content_hash": "sha256:c784457a0b78329eaefad3308057cfe4ef304ced90961c51b0ddbaf5c71c63b7",
+      "ref_handle": "blk-p2456r"
+    },
+    {
+      "id": "01KYPD5WBVM0Y4RNKBG7CTN618",
+      "line": 8,
+      "indent": 0,
+      "content_hash": "sha256:acc292302333786a432b408e2412968a054e95a33f3a06e4b2556f9ed41dc17d",
+      "ref_handle": "blk-ctn618"
+    }
+  ],
+  "pipeline_version": 2
+}

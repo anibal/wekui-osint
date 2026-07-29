@@ -67,6 +67,21 @@ above has failed, and it reaches them **as a pattern, never as a row**.
   ever added: a claim accumulated every place it had ever guessed at, and the report
   asked which of the machine's own two guesses it had meant. A pass now retracts what
   the current reading does not support. **[BUILT]**
+- **A rule a prompt states is a rule the code should hold.** The pair-judge prompt said
+  *"a parish named in both is nearly worthless, because everything here is in that
+  parish"* — a paid, non-deterministic reading of a fact that never varies. As a rung-1
+  rule it cut the duplicate queue from 3,120 pairs to 1,099. Whenever the code can see
+  what the prompt is describing, the prompt is the wrong place to keep it: rung 5 costs
+  money per item and can regress between runs, rung 1 does neither. Three of the four
+  fixes in `research-2026-07-29-duplicate-claims-at-scale` were this same move.
+  **[BUILT]**
+- **Ask a rung whether the question is its shape.** Pairwise judging cannot partition a
+  dense group: refute the edge between `equipo USAR El Salvador` and `equipo USAR de
+  Perú` and both still sit in one group through the generic `equipo extranjero` that
+  joins them. Twelve groups held 77% of 3,213 duplicate pairs, so judging every pair
+  would have spent nearly half the budget where the answer means nothing. The judge now
+  runs only on pairs that stand alone; a dense group needs a partition, and a partition
+  is a person's. **[BUILT]**
 
 ## 4. [PROPOSAL] What reaches the report changes shape
 
@@ -139,6 +154,21 @@ an id's label (~50 claims lost), a routed topic whose citations were discarded (
 re-read every sweep), a live-lock on two posts, and the F54 gate refusing 3% of all
 claims because names were reaching `subject`. **Three of the four were in instruments
 built to detect defects.**
+
+Rung 5 is now built and measured, and its lesson is about **which rung, not how good the
+prompt**. Two independent readings — the second with A and B swapped, to defeat
+positional bias — over 160 standalone duplicate pairs: 94 withdrawn, 42 upheld, 24
+split. Only a unanimous SAME upholds, and a split stays a split, because rolling a third
+reading until two agree is picking the run that reads cleanest. But the same two readings
+**upheld five pairs naming plainly different people** — `gladismaria pineda ramirez`
+against `mirta guedez` — which a rung-1 comparison of the Person rows refuses for free
+and never gets wrong. The queue as a whole went from 3,213 pairs to 1,033, and 261 groups
+to 129, almost entirely on rungs 1 and 2.
+
+The general form: **the model is for what the record does not already know.** Every time
+a prompt was asked something the database could answer, the prompt eventually got it
+wrong, and the cost of being wrong at rung 5 is paid in the thing being protected — here,
+five people erased from a memorial.
 
 ## 8. [OPEN] Order
 

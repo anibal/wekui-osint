@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "page_id": "72ZNVKKKHZPKVMKDS03WJF5XAJ",
+  "last_synced_hash": "sha256:f52b7be7cb0b98f25a928d9ef22d08752ce25e99bd94606239b58db9555e3cb6",
+  "last_synced_at": "2026-07-27T14:39:54.330821-05:00",
+  "blocks": [
+    {
+      "id": "01KYJHEJ2TCJBCN53N00F11RDJ",
+      "line": 1,
+      "indent": 0,
+      "content_hash": "sha256:d4a7880ad9f52296f3cf00e93c1bceaf8cca0db8e9e65e3a50a7239245ed9871",
+      "ref_handle": "blk-f11rdj"
+    },
+    {
+      "id": "01KYJHEJ2TFGSQNZSZ4F78XX7B",
+      "line": 2,
+      "indent": 0,
+      "content_hash": "sha256:f1635ce4727813dae9699be3a10da27faa87d062667f33fb24808821ab8ffd3e",
+      "ref_handle": "blk-78xx7b"
+    },
+    {
+      "id": "01KYJHEJ2T8JC183DYTY6ZGYMP",
+      "line": 3,
+      "indent": 0,
+      "content_hash": "sha256:623acc41a3941bd1413d61d37e40afac556f2c656dc52d8c14236f17c1523e9b",
+      "ref_handle": "blk-6zgymp"
+    },
+    {
+      "id": "01KYJHEJ2T587HYJZH3K5ZRT84",
+      "line": 4,
+      "indent": 0,
+      "content_hash": "sha256:7f73be86660103dbcda0d92db0f9ce320348960df6fc825d4618be913f62b1d9",
+      "ref_handle": "blk-5zrt84"
+    },
+    {
+      "id": "01KYJHEJ2T0JX72V8J0NAZPGHX",
+      "line": 5,
+      "indent": 0,
+      "content_hash": "sha256:21f8d35e3e6133c84c91ca363173c48d42be209159866aa18ae8a6810e027a84",
+      "ref_handle": "blk-azpghx"
+    },
+    {
+      "id": "01KYJHEJ2TMN3MKFTWXZ1WXA19",
+      "line": 6,
+      "indent": 0,
+      "content_hash": "sha256:1983f0e7329997ea7796cf96a2ee9b38b2bf3ca6cfa2df623cfb6a99350c7329",
+      "ref_handle": "blk-1wxa19"
+    },
+    {
+      "id": "01KYJHEJ2TGWFWM6P50Q80X7Q0",
+      "line": 7,
+      "indent": 0,
+      "content_hash": "sha256:455ec314b6bd1463e522edbf7b6248d73ab46f389de6bcece8bb9ef97447e7d4",
+      "ref_handle": "blk-80x7q0"
+    },
+    {
+      "id": "01KYJHEJ2T6RY9NC79V6VXKSJM",
+      "line": 8,
+      "indent": 0,
+      "content_hash": "sha256:fdb27274d39764d1d1e936e86ca69d48dc0e77786f7e95ea2a9b9d09769df9ed",
+      "ref_handle": "blk-vxksjm"
+    }
+  ],
+  "pipeline_version": 2
+}

@@ -1,0 +1,79 @@
+{
+  "version": 2,
+  "page_id": "01FQAWBS19WV1D6D85PJFZXZ0G",
+  "last_synced_hash": "sha256:823815893611c2ffe096969f3711849252235ea5af78ee290b0b63953ed5d245",
+  "last_synced_at": "2026-07-27T14:39:54.791738-05:00",
+  "blocks": [
+    {
+      "id": "01KYJHEJH7XKF3K0PSZJ6P3KQS",
+      "line": 1,
+      "indent": 0,
+      "content_hash": "sha256:80f27f4cb867005c301de362be38f292c3432ab6120fc65665516b25585d4ccc",
+      "ref_handle": "blk-6p3kqs"
+    },
+    {
+      "id": "01KYJHEJH7ZDRA6P46GMN6MQM4",
+      "line": 2,
+      "indent": 0,
+      "content_hash": "sha256:cd3fe7707646f1f87d4361344c9e7798e50562b41953a77e1be8a6038ddb6cd5",
+      "ref_handle": "blk-n6mqm4"
+    },
+    {
+      "id": "01KYJHEJH7M1QGXEVA3F2N8MRA",
+      "line": 3,
+      "indent": 0,
+      "content_hash": "sha256:5b4f52de5c426ce6886e9a1f32b11f750d29d14a3401f6b008bbbea62af8639e",
+      "ref_handle": "blk-2n8mra"
+    },
+    {
+      "id": "01KYJHEJH76GPSJGSVT9SHGBXF",
+      "line": 4,
+      "indent": 0,
+      "content_hash": "sha256:ee962a0a3d8d71f4ce57b9cee1528f7df6c76705e44b7a1f55ac88120adde125",
+      "ref_handle": "blk-shgbxf"
+    },
+    {
+      "id": "01KYJHEJH7VHCA13A2AXCF1B5M",
+      "line": 5,
+      "indent": 0,
+      "content_hash": "sha256:e05c060a78b94a2e3934c4b32b3f7a23b68c7b72f3e2bb960d5fab369b0d047c",
+      "ref_handle": "blk-cf1b5m"
+    },
+    {
+      "id": "01KYJHEJH7FB63QQZWTMH6DQ0X",
+      "line": 6,
+      "indent": 0,
+      "content_hash": "sha256:633d388244524928370327a832125700129a5e9d5caae5ece5148cc6d8564141",
+      "ref_handle": "blk-h6dq0x"
+    },
+    {
+      "id": "01KYJHEJH7QKKRP75BG7VDYM14",
+      "line": 7,
+      "indent": 0,
+      "content_hash": "sha256:ec9911bfd2d2cd1a69c6f51b3345a0ecfb02e88d7d85175b004fbe021f3ca557",
+      "ref_handle": "blk-vdym14"
+    },
+    {
+      "id": "01KYJHEJH7200NHQA8P1Y9D2TZ",
+      "line": 8,
+      "indent": 0,
+      "content_hash": "sha256:3c86523ea5f1561d58d206522d999f207b84b30c08be6a9beb072579b30ca327",
+      "ref_handle": "blk-y9d2tz"
+    },
+    {
+      "id": "01KYJHEJH7FRHTFKN8DVD5H3NA",
+      "line": 9,
+      "indent": 0,
+      "content_hash": "sha256:844f7cff21a83bfd11e6d752451d7e14af317d1d89b1fb215ad0501fbec7a9c8",
+      "ref_handle": "blk-d5h3na"
+    },
+    {
+      "id": "01KYJHEJH7DC9JJN44649DQVAP",
+      "line": 10,
+      "indent": 0,
+      "content_hash": "sha256:09fb991e714802e1daa567afbb4c3c1575363af7aceafcdb7daf28caeb956c9b",
+      "ref_handle": "blk-9dqvap"
+    }
+  ],
+  "pipeline_version": 2
+}
