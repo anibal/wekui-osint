@@ -437,6 +437,65 @@
         "on": "2026-07-28",
         "why": "Cut by my two-of-three-readers threshold, which filters by SAMPLE SIZE, not by reality. The full corpus carries it (damnificados 40, refugio 24, and every reader had a damage-without-collapse theme that the post-overlap match failed to pair)."
       }
+    },
+    {
+      "name": "Seguridad y orden público",
+      "parent": null,
+      "nature": "topic",
+      "definition": "Structural node: what happened to safety and order in the aftermath.",
+      "applies_when": "Never classify against this node directly — it groups the themes below it. Use the finest child that fits.",
+      "not_to_be_confused_with": null,
+      "evidence": {
+        "proposed_by": "assistant",
+        "on": "2026-07-29",
+        "why": "A structural node so the two looting themes below it are not loose at the root. Mine, not the corpus's — discard it and reparent them if the shape is wrong."
+      }
+    },
+    {
+      "name": "Saqueo de comercios",
+      "parent": "Seguridad y orden público",
+      "nature": "happening",
+      "definition": "A shop, pharmacy, bakery or other business was looted after the earthquake.",
+      "applies_when": "The post states that a specific named business or commercial premises was looted, is being looted, or was emptied by a crowd.",
+      "not_to_be_confused_with": "Saqueo de viviendas — that is homes and vehicles, not businesses. And a post that only DENOUNCES looting in general, naming nothing, is «Crítica o denuncia de la respuesta».",
+      "evidence": {
+        "proposed_by": "the corpus, through the residue list",
+        "on": "2026-07-29",
+        "trials": 3,
+        "verbatim": "Saqueos en comercios afectados por el sismo en La Guaira, incluyendo Farmatodo en Caribe, Farmatodo de Los Corales, panadería Karol en Palmar Este, Farmatodo de Tanaguarena, y un negocio en la calle Real de Caraballeda.",
+        "why": "Reached by the extractor's `unfitted` list on 20 looting posts, in 3 of 3 identical runs. Nobody wrote this theme from a desk — it is the corpus asking for a word it does not have."
+      }
+    },
+    {
+      "name": "Saqueo de viviendas",
+      "parent": "Seguridad y orden público",
+      "nature": "happening",
+      "definition": "Homes, apartments or vehicles in a damaged building were looted — often once the rescuers had gone.",
+      "applies_when": "The post states that apartments, homes or vehicles at a named building or street were looted or robbed after the earthquake.",
+      "not_to_be_confused_with": "Saqueo de comercios — that is businesses. The timing, when the post gives it, belongs in the claim's nuance rather than in the choice of theme.",
+      "evidence": {
+        "proposed_by": "the corpus, through the residue list",
+        "on": "2026-07-29",
+        "trials": 3,
+        "verbatim": "Saqueos en el edificio Golf Mar tras la búsqueda de rescatistas. / Robo y saqueo en apartamentos y carros del edificio Golf Mar tras la búsqueda.",
+        "why": "Reached by the extractor's `unfitted` list on 20 looting posts, in 3 of 3 identical runs. Nobody wrote this theme from a desk — it is the corpus asking for a word it does not have."
+      }
+    },
+    {
+      "name": "Estado de los servicios básicos",
+      "parent": "Edificaciones e infraestructura",
+      "nature": "happening",
+      "definition": "Water, power, telephone or internet service was lost, or is reported still working, somewhere named.",
+      "applies_when": "The post states that a basic service — water, electricity, telephone, internet, a telecom repeater — failed, was restored, or is the only one still working, at a named place.",
+      "not_to_be_confused_with": "Daño estructural sin colapso — that is the fabric of a building; this is the service reaching it.",
+      "evidence": {
+        "proposed_by": "the corpus, through the residue list",
+        "on": "2026-07-29",
+        "trials": 2,
+        "verbatim": "Una repetidora de telecomunicaciones en Caribe es la única que funciona para comunicación con familiares. / En Caraballeda no hay agua ni sitios donde comprar porque todo está saqueado.",
+        "why": "Reached by the extractor's `unfitted` list on 20 looting posts, in 2 of 3 identical runs. Nobody wrote this theme from a desk — it is the corpus asking for a word it does not have.",
+        "also": "Reader A proposed `Servicios básicos caídos` in the 2026-07-27 spike and my two-of-three-readers threshold cut it — the THIRD real theme that threshold lost, after `Damnificados y refugio` and `Daño estructural sin colapso`. The corpus has now asked for it directly."
+      }
     }
   ],
   "retired_by_operator_2026_07_28": [

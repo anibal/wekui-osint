@@ -195,4 +195,35 @@ defmodule Wekui.Taxonomy.SeedTest do
       assert gone.applies_when =~ "whereabouts are unknown"
     end
   end
+
+  # The loop closing for the first time: the machine proposed, the code measured, and
+  # the word waits for a person. These four were not written from a desk — the
+  # extractor's `unfitted` list reached for them on real posts, in repeated runs.
+  describe "the themes the corpus asked for" do
+    test "arrive proposed, like every other, and carry who proposed them", %{event: event} do
+      Seed.litoral_central(event.id)
+      themes = Map.new(Taxonomy.list_themes!(event.id), &{&1.name, &1})
+
+      for name <- [
+            "Saqueo de comercios",
+            "Saqueo de viviendas",
+            "Estado de los servicios básicos"
+          ] do
+        assert themes[name], "the seed lost #{inspect(name)}"
+        assert themes[name].lifecycle == :proposed
+      end
+    end
+
+    test "looting of shops and looting of homes are kept apart", %{event: event} do
+      Seed.litoral_central(event.id)
+      themes = Map.new(Taxonomy.list_themes!(event.id), &{&1.name, &1})
+
+      # The extractor found them separately in every trial: shops emptied by a crowd,
+      # and apartments robbed once the rescuers had gone. Two different things.
+      assert themes["Saqueo de comercios"].applies_when =~ "business or commercial premises"
+      assert themes["Saqueo de viviendas"].applies_when =~ "apartments, homes or vehicles"
+      assert themes["Saqueo de comercios"].parent_id == themes["Seguridad y orden público"].id
+      assert themes["Saqueo de viviendas"].parent_id == themes["Seguridad y orden público"].id
+    end
+  end
 end
