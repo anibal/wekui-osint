@@ -138,11 +138,22 @@ defmodule Wekui.Pipelines.Extract do
   # This also closes a leak by construction: an unfiled claim was still storing the
   # model's free prose, and free prose about this corpus contains private names.
   defp write_filed(event, agent, claim, posts, first) do
-    case theme_id(event, claim) do
-      nil ->
+    case classify(event, claim) do
+      # A TOPIC name in "theme" is not a mistake worth losing a post over. The model
+      # recognised the post as that topic and put the answer in the wrong field —
+      # unambiguous intent, so route it rather than refuse it.
+      #
+      # Measured: on 2026-06-28, a batch dominated by resource requests, the model put
+      # a topic in "theme" eight times out of twenty-four. v9's rule holds on a mixed
+      # batch and slips on a lopsided one, so the pipeline has to be forgiving of a
+      # known, unambiguous error — and count it, or the slip is invisible.
+      {:topic, name} ->
+        {:routed, name}
+
+      :none ->
         {:skip, {:no_theme, to_string(claim["theme"] || "")}}
 
-      theme_id ->
+      {:happening, theme_id} ->
         attrs = %{
           event_id: event.id,
           theme_id: theme_id,
@@ -173,25 +184,21 @@ defmodule Wekui.Pipelines.Extract do
   # fuzzy resolver is the fallback for a model that answered off-list or for a legacy
   # claim, and it refuses far more than it accepts — by design
   # (`Wekui.Narrative.ThemeResolver`).
-  defp theme_id(event, claim) do
+  defp classify(event, claim) do
     named = Normalize.fold(to_string(claim["theme"] || ""))
+    active = Taxonomy.list_active_themes!(event.id)
 
-    chosen =
-      event.id
-      |> Taxonomy.list_active_themes!()
-      |> Enum.filter(&(&1.nature == :happening))
-      |> Enum.find(&(Normalize.fold(&1.name) == named))
-
-    cond do
-      chosen -> chosen.id
-      true -> fallback(event, claim["kind"])
+    case Enum.find(active, &(Normalize.fold(&1.name) == named)) do
+      %{nature: :happening} = theme -> {:happening, theme.id}
+      %{nature: :topic} = theme -> {:topic, theme.name}
+      nil -> fallback(event, claim["kind"])
     end
   end
 
   defp fallback(event, kind) do
     case ThemeResolver.resolve(event.id, to_string(kind || "")) do
-      {:ok, theme} -> theme.id
-      :no_theme -> nil
+      {:ok, theme} -> {:happening, theme.id}
+      :no_theme -> :none
     end
   end
 
@@ -237,17 +244,21 @@ defmodule Wekui.Pipelines.Extract do
       |> MapSet.new(& &1.id)
       |> MapSet.union(from_claims)
 
+    # A topic the model put in "theme" instead of "topics" still routed correctly; it
+    # just arrived through the wrong door, and the count says how often.
+    recovered = for({:routed, name} <- results, do: name)
     {named, misrouted} = split_topics(topics, hd(posts).event_id)
 
     %{
       claims: length(results),
       drafted: Enum.count(results, &match?({:ok, _}, &1)),
       skipped: Enum.count(results, &match?({:skip, _}, &1)),
+      routed_from_theme: Enum.frequencies(recovered),
       skips: for({:skip, reason} <- results, do: reason),
       posts: length(posts),
       cited: MapSet.size(from_claims),
       unfitted: Enum.map(unfitted, &to_string(&1["what_happened"] || "")),
-      topics: Enum.frequencies(named),
+      topics: Enum.frequencies(named ++ recovered),
       # A HAPPENING name in the topics list is the model declining to claim something
       # it recognised — a lost claim, not a topic, and invisible until counted.
       misrouted_topics: Enum.frequencies(misrouted),

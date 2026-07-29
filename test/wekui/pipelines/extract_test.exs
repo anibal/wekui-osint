@@ -203,6 +203,31 @@ defmodule Wekui.Pipelines.ExtractTest do
       assert summary.misrouted_topics == %{"Persona rescatada con vida" => 1}
     end
 
+    test "a topic put in the wrong field is routed, not lost", ctx do
+      # Measured on 2026-06-28: a batch dominated by resource requests, and the model
+      # put a topic name in "theme" eight times out of twenty-four. The rule holds on
+      # a mixed batch and slips on a lopsided one. Refusing loses the post; the intent
+      # was unambiguous, so route it — and count how often it arrived that way.
+      content =
+        Jason.encode!(%{
+          "claims" => [
+            %{"theme" => "Solicitud de información", "kind" => "pedido", "citations" => ["111"]}
+          ]
+        })
+
+      Req.Test.stub(Wekui.Clients.Worker.Live, fn conn ->
+        Req.Test.json(conn, %{"choices" => [%{"message" => %{"content" => content}}]})
+      end)
+
+      assert {:ok, summary} = Extract.run(ctx.event, ctx.agent, [ctx.p1], place_scope: "C")
+
+      assert summary.drafted == 0
+      assert summary.skipped == 0
+      assert summary.topics == %{"Solicitud de información" => 1}
+      assert summary.routed_from_theme == %{"Solicitud de información" => 1}
+      assert Narrative.list_claims!(ctx.event.id) == []
+    end
+
     test "every post is accounted for: cited, unfitted, or read and dropped", ctx do
       content =
         Jason.encode!(%{

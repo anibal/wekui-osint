@@ -524,6 +524,36 @@
         "verbatim": "Se desmonta un puente de guerra en El Rosal para ser llevado a Caraballeda.",
         "why": "The FIRST batch read from a different day — 2026-06-29, day five — asked for this on its first run. Reader C also had a temporary-bridge post in its residue during the 2026-07-27 spike. Two mechanisms, two methods, two days, the same gap."
       }
+    },
+    {
+      "name": "Respuesta ausente o detenida",
+      "parent": "Respuesta institucional y operativa",
+      "nature": "happening",
+      "definition": "Rescuers or equipment have not reached a named place, or the work there has stalled for want of fuel, an operator or machinery.",
+      "applies_when": "The post states that at a named place no rescuers or machinery have arrived, or that work has stopped or cannot continue because fuel, an operator, equipment or personnel are missing. It REPORTS an absence; it does not ask for anything.",
+      "not_to_be_confused_with": "Solicitud de recursos and Solicitud de rescate — those ASK. This asserts that nothing has come, which is a fact about the world. Same line the whole vocabulary turns on.",
+      "evidence": {
+        "proposed_by": "the corpus, through the residue list",
+        "on": "2026-07-29",
+        "trials": 6,
+        "verbatim": "Una grúa de 100 toneladas está a 5 minutos del lugar donde se necesita, sin operador, desde hace más de 24 horas. / Se reporta que en Caraballeda hay rescatistas pero no combustible ni suficientes operadores de maquinaria. / en el edificio Rota Sol Place, avenida José María España Caraballeda, no han llegado rescatistas.",
+        "why": "Six residue entries across three separate days (Jun 27, 28, 30), clustered rather than proposed one by one. The largest thing the vocabulary cannot hold."
+      }
+    },
+    {
+      "name": "Obstrucción de la respuesta",
+      "parent": "Respuesta institucional y operativa",
+      "nature": "happening",
+      "definition": "Rescuers or aid were held, blocked, diverted or delayed by an authority or a third party.",
+      "applies_when": "The post states that rescuers, equipment or aid were detained, blocked, turned back, diverted or made to wait by an authority or anyone else — an event with a time and a place, not an opinion about the response.",
+      "not_to_be_confused_with": "Crítica o denuncia de la respuesta — that is the author's judgement of how things are going. This is something that was DONE to the response.",
+      "evidence": {
+        "proposed_by": "the corpus, through the residue list",
+        "on": "2026-07-29",
+        "trials": 2,
+        "verbatim": "Régimen retuvo 8 horas a rescatistas para un acto protocolar. / Un ciudadano ruso dio transporte a rescatistas retenidos.",
+        "why": "Two residue entries, plus independent corroboration from the 2026-07-27 spike: reader B proposed `Obstrucción institucional` over 7 posts and marked it a HAPPENING, while reader C called the same thing a topic. That was the single nature disagreement in the entire spike — and the corpus has now settled it. Rescuers held for eight hours is an event."
+      }
     }
   ],
   "retired_by_operator_2026_07_28": [

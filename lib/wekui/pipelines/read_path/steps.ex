@@ -181,6 +181,9 @@ defmodule Wekui.Pipelines.ReadPath.Steps do
           "topics" => summary.topics,
           # A happening named in the topics list is a claim that got away.
           "misrouted_topics" => summary.misrouted_topics,
+          # A topic the model put in "theme" — routed correctly anyway, and counted so
+          # the slip stays visible.
+          "routed_from_theme" => summary.routed_from_theme,
           "unfitted" => summary.unfitted
         }
 

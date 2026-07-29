@@ -66,6 +66,14 @@ reason_for = fn name ->
     %{"ruled_by" => "operator", "why" => why} ->
       "Ruled by the operator on 2026-07-28: #{why}"
 
+    %{"proposed_by" => by, "why" => why, "verbatim" => verbatim} ->
+      "Proposed by #{by} on 2026-07-29 — #{why} The corpus's own words: “#{verbatim}” " <>
+        "Approved by the operator: “those themes are excellent.”"
+
+    %{"proposed_by" => by, "why" => why} ->
+      "Proposed by #{by} on 2026-07-29 — #{why} Approved by the operator: " <>
+        "“those themes are excellent.”"
+
     %{"restored_by" => "assistant", "why" => why} ->
       "RESTORED BY THE ASSISTANT, not ruled by him — #{why} Promoted because a vocabulary entry is reversible by one act and an open question is not. Discard it if it does not belong."
 
