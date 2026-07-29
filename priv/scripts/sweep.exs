@@ -134,13 +134,34 @@ else
               # cluster. Not knowing WHAT was refused made a whole batch opaque.
               if s.skipped >= 3 do
                 s.skips
-                |> Enum.map(fn {_kind, name} -> name end)
+                |> Enum.map(fn
+                  {:no_theme, name} ->
+                    "«#{name}» — not in the vocabulary"
+
+                  {:rejected, %Ash.Error.Invalid{errors: [e | _]}} ->
+                    "refused at the write path: #{e.message}"
+
+                  {:rejected, _other} ->
+                    "refused at the write path"
+
+                  other ->
+                    inspect(other)
+                end)
                 |> Enum.frequencies()
                 |> Enum.sort_by(&(-elem(&1, 1)))
-                |> Enum.each(fn {name, count} -> say.("        refused #{count}× «#{name}»") end)
+                |> Enum.each(fn {label, count} -> say.("        #{count}× #{label}") end)
               end
 
-              {:cont, {[s | tallies], failures, :budget_spent}}
+              # A batch that accounts for NONE of its posts will be handed exactly the
+              # same posts next time, and the sweep spends its whole budget on two
+              # posts it cannot place. Seen live: five batches, two posts, five calls.
+              # Set them aside like a failure — they stay unread for the next sweep.
+              if s.unread >= s.posts do
+                say.("        accounted for nothing — set aside")
+                {:cont, {[s | tallies], [Enum.map(posts, & &1.id) | failures], :budget_spent}}
+              else
+                {:cont, {[s | tallies], failures, :budget_spent}}
+              end
 
             {:error, error} ->
               IO.puts(
