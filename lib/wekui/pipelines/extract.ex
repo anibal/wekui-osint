@@ -31,10 +31,10 @@ defmodule Wekui.Pipelines.Extract do
     if Worker.ready?() do
       with rendered <- render(event, agent, posts, opts),
            {:ok, %{content: content}} <- Worker.complete(rendered, model: agent.model),
-           {:ok, claims, unfitted} <- parse(content) do
+           {:ok, claims, unfitted, topics} <- parse(content) do
         by_xid = Map.new(posts, &{to_string(&1.x_id), &1})
         written = Enum.map(claims, &write_claim(event, agent, &1, by_xid))
-        {:ok, summarize(written, unfitted, posts)}
+        {:ok, summarize(written, unfitted, topics, posts)}
       end
     else
       {:error, {:state_gate, :worker_not_ready}}
@@ -63,9 +63,12 @@ defmodule Wekui.Pipelines.Extract do
   # does not stop a reader stretching it over evidence that does not bear it — so each
   # theme carries its `applies_when` verbatim.
   #
-  # The TOPICS are here for the refusal they make possible. Naming them is what lets a
-  # model recognise a plea AS a plea instead of reaching for the nearest happening; an
-  # open field makes "this is not a claim" inexpressible.
+  # The TOPICS are here for the refusal they make possible — naming a plea AS a plea is
+  # what stops the model reaching for the nearest happening. They are rendered as a
+  # SEPARATE, explicitly unselectable list: v8 showed them in the same shape as the
+  # happenings and the model duly filed ten claims under `Solicitud de información`,
+  # which the write path then refused. An answer list must not contain answers that are
+  # not allowed.
   defp vocabulary(event) do
     {happenings, topics} =
       event.id
@@ -73,11 +76,11 @@ defmodule Wekui.Pipelines.Extract do
       |> Enum.split_with(&(&1.nature == :happening))
 
     """
-    HAPPENINGS — every claim must name exactly one of these:
+    HAPPENINGS — the ONLY names that may appear in a claim's "theme":
     #{lines(happenings)}
 
-    TOPICS — a post may be about one of these and NO CLAIM FOLLOWS from it. Recognising
-    one is how you know to record nothing:
+    TOPICS — these are NOT claims and must never appear in "theme". A post that is only
+    doing one of these belongs in "topics", where naming it is a complete answer:
     #{lines(topics)}
     """
   end
@@ -94,7 +97,7 @@ defmodule Wekui.Pipelines.Extract do
   defp parse(content) do
     case content |> strip_fence() |> Jason.decode() do
       {:ok, %{"claims" => claims} = answer} when is_list(claims) ->
-        {:ok, claims, List.wrap(answer["unfitted"])}
+        {:ok, claims, List.wrap(answer["unfitted"]), List.wrap(answer["topics"])}
 
       {:ok, _no_claims_key} ->
         {:error, :no_claims}
@@ -214,7 +217,7 @@ defmodule Wekui.Pipelines.Extract do
   # posts the model reported as evidencing something the vocabulary has no word for,
   # and the rest — which evidenced nothing. Before this, a post that fit nothing simply
   # vanished, and a silence is not auditable (`docs/mechanisms.md`).
-  defp summarize(results, unfitted, posts) do
+  defp summarize(results, unfitted, topics, posts) do
     cited =
       for({:ok, claim} <- results, do: claim.id)
       |> Enum.flat_map(&Narrative.list_claim_citations!/1)
@@ -228,6 +231,7 @@ defmodule Wekui.Pipelines.Extract do
       posts: length(posts),
       cited: MapSet.size(cited),
       unfitted: Enum.map(unfitted, &to_string(&1["what_happened"] || "")),
+      topics: Enum.frequencies(Enum.map(topics, &to_string(&1["topic"] || ""))),
       unread: length(posts) - MapSet.size(cited)
     }
   end

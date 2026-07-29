@@ -148,6 +148,32 @@ defmodule Wekui.Pipelines.ExtractTest do
       assert Narrative.list_claims!(ctx.event.id) == []
     end
 
+    test "a plea has a home, so the model is not tempted to make it a claim", ctx do
+      # v8 listed the TOPICS in the same shape as the happenings and told the model a
+      # topic post "needs no entry anywhere". It duly filed ten claims under
+      # «Solicitud de información», which the write path refused. Models are bad at
+      # doing nothing; give the plea somewhere to go.
+      content =
+        Jason.encode!(%{
+          "claims" => [],
+          "topics" => [
+            %{"topic" => "Solicitud de información", "citations" => ["111"]},
+            %{"topic" => "Solicitud de información", "citations" => ["222"]}
+          ]
+        })
+
+      Req.Test.stub(Wekui.Clients.Worker.Live, fn conn ->
+        Req.Test.json(conn, %{"choices" => [%{"message" => %{"content" => content}}]})
+      end)
+
+      assert {:ok, summary} =
+               Extract.run(ctx.event, ctx.agent, [ctx.p1, ctx.p2], place_scope: "Caraballeda")
+
+      assert summary.drafted == 0
+      assert summary.topics == %{"Solicitud de información" => 2}
+      assert Narrative.list_claims!(ctx.event.id) == []
+    end
+
     test "every post is accounted for: cited, unfitted, or read and dropped", ctx do
       content =
         Jason.encode!(%{

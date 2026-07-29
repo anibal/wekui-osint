@@ -37,10 +37,11 @@ alias Wekui.Pipelines
 
 event_name = System.get_env("EVENT", "litoral-central-2026")
 place_name = System.get_env("PLACE_NAME", "Caraballeda")
-# v8: the only prompt that reads the ratified vocabulary, so the only one whose claims
-# can reach a reader at all. The default must be the best reading we have, or the next
-# person runs a worse one by accident.
-prompt_file = System.get_env("EXTRACTION_PROMPT", "prompts/extraction.v8.txt")
+# v9: audited against `prompt-craft` and measured over three identical runs. v8 refused
+# 10 of 21 claims by filing pleas under a TOPIC; v9 refused none of 56 across three
+# trials and routed every plea to `topics`. The default must be the best reading we
+# have, or the next person runs a worse one by accident.
+prompt_file = System.get_env("EXTRACTION_PROMPT", "prompts/extraction.v9.txt")
 model = System.get_env("EXTRACTION_MODEL", "deepseek-ai/DeepSeek-V4-Flash")
 batch_from = System.get_env("FROM", "2026-06-25T04:00:00Z")
 batch_to = System.get_env("TO", "2026-06-25T05:00:00Z")
