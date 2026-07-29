@@ -34,6 +34,7 @@ defmodule Wekui.Report do
   alias Wekui.Curation.Act
   alias Wekui.Gazetteer.Duplicates
   alias Wekui.Narrative
+  alias Wekui.Narrative.Handle
   alias Wekui.Narrative.Duplicates, as: ClaimDuplicates
   alias Wekui.Narrative.PlaceResolver
   alias Wekui.Normalize
@@ -393,7 +394,7 @@ defmodule Wekui.Report do
             guesses a position in the tree. **A claim with no place appears in no
             beat** — it is not flagged to a reader anywhere; it is simply absent.
 
-            #{Enum.map_join(claims, "\n", &"  - “#{&1.claim.place_mention}” — #{line(&1)}")}
+            #{bounded(claims, &"  - “#{&1.claim.place_mention}” — #{line(&1)}", "mention", 8)}
             """,
             answer:
               "Name the place (and where it sits), or leave it — an honest absence beats a guess."
@@ -487,35 +488,81 @@ defmodule Wekui.Report do
           derived
           |> Enum.group_by(& &1.display_handle)
           |> Enum.filter(fn {_handle, people} -> length(people) > 1 end)
-          |> Enum.flat_map(fn {_handle, people} -> people end)
 
-        clean = derived -- colliding
-        {sample, rest} = Enum.split(clean, @spot_checks)
+        clean = derived -- Enum.flat_map(colliding, &elem(&1, 1))
+
+        # One rule per REASON the derivation refused, plus one for collisions if any —
+        # not one per person and not one per collision.
+        rules =
+          length(Enum.uniq_by(needs_handle, &elem(Handle.derive(&1.full_name), 1))) +
+            if(colliding == [], do: 0, else: 1)
 
         [
           %{
             kind: :pending_person,
             title:
-              "#{length(persons)} person(s) at the handle gate — #{length(needs_handle) + length(colliding) + length(sample)} need you",
+              "#{length(persons)} person(s) at the handle gate — #{rules} rule(s) would settle them",
             claim_ids: [],
             body: """
             A reader only ever sees the handle. The full name is here so you can
             check the handle is right — it is written nowhere a reader reaches.
 
             **Nothing below was approved for you.** Being told is a decision about a
-            person's dignity and it stays yours. What the machine did was sort the
-            queue by whether it is a decision at all.
+            person's dignity and it stays yours. What the machine did was stop
+            presenting #{length(persons)} rows when the answer is a handful of rules.
 
-            #{person_table("#{length(needs_handle)} have no handle — the derivation refused, so one has to be written", needs_handle, world)}
-            #{person_table("#{length(colliding)} collide — two people, one handle, which identifies neither", colliding, world)}
-            #{person_table("#{length(clean)} derived cleanly and collide with nobody — #{min(@spot_checks, length(clean))} to spot-check", sample, world)}
-            #{roster(rest, world)}
+            #{refusal_groups(needs_handle, world)}
+            #{collision_group(colliding, world)}
+            #{person_table("#{length(clean)} derived cleanly and collide with nobody — #{min(@spot_checks, length(clean))} to spot-check", Enum.take(clean, @spot_checks), world)}
             """,
             answer:
-              "Write a handle for the ones that have none, break the collisions, and check the sample. If the sample is right, **approve the rest as a batch** — that is one ruling about the derivation, not #{length(clean)} rulings about people."
+              "Give a rule for each group above, not a handle each. If the sample of clean ones is right, **approve the rest as a batch** — that is one ruling about the derivation, not #{length(clean)} rulings about people."
           }
         ]
     end
+  end
+
+  # ONE RULE PER REASON, NOT ONE ROW PER PERSON. `Wekui.Narrative.Handle` refuses for a
+  # named reason — a lone token, a compound surname it cannot split — and the reason is
+  # the question. 111 people at this gate were TWO reasons: 74 lone given names and 37
+  # names carrying a particle. A rule for each settles both, and the next hundred.
+  defp refusal_groups([], _world), do: ""
+
+  defp refusal_groups(persons, world) do
+    persons
+    |> Enum.group_by(&elem(Handle.derive(&1.full_name), 1))
+    |> Enum.sort_by(fn {_reason, people} -> -length(people) end)
+    |> Enum.map_join("\n", fn {reason, people} ->
+      person_table(
+        "#{length(people)} the derivation refused as #{refusal_phrase(reason)} — #{min(@spot_checks, length(people))} shown",
+        Enum.take(people, @spot_checks),
+        world
+      )
+    end)
+  end
+
+  defp refusal_phrase(:too_few_tokens), do: "**a lone token** (a given name with no surname)"
+
+  defp refusal_phrase(:has_particle),
+    do: "**carrying a particle** (`de`, `del`, `da`, `la`) it cannot split"
+
+  defp refusal_phrase(:not_a_string), do: "**not a name at all**"
+  defp refusal_phrase(other), do: "**#{other}**"
+
+  # Two people, one handle, which identifies neither. A real defect, and also a rule —
+  # what a second initial or a middle name should do about it.
+  defp collision_group([], _world), do: ""
+
+  defp collision_group(colliding, world) do
+    shown = Enum.take(colliding, @spot_checks)
+
+    """
+    **#{length(colliding)} handle(s) shared by two or more people — #{length(shown)} shown**
+
+    | shown as | full name | in |
+    |---|---|---|
+    #{Enum.map_join(shown, "\n", fn {_handle, people} -> Enum.map_join(people, "\n", &person_row(&1, world)) end)}
+    """
   end
 
   defp person_table(_title, [], _world), do: ""
@@ -527,20 +574,6 @@ defmodule Wekui.Report do
     | shown as | full name | in |
     |---|---|---|
     #{Enum.map_join(persons, "\n", &person_row(&1, world))}
-    """
-  end
-
-  defp roster([], _world), do: ""
-
-  defp roster(persons, world) do
-    """
-    <details><summary>and #{length(persons)} more, listed so nothing is hidden</summary>
-
-    | shown as | full name | in |
-    |---|---|---|
-    #{Enum.map_join(persons, "\n", &person_row(&1, world))}
-
-    </details>
     """
   end
 
@@ -586,7 +619,7 @@ defmodule Wekui.Report do
             The evidence does not bear these as they stand. Nothing is withheld —
             a beat tells them as “según un reporte sin confirmar”.
 
-            #{Enum.map_join(claims, "\n", &"  - **#{&1.claim.support}** — #{line(&1)}\n    #{&1.claim.support_note}")}
+            #{bounded(claims, &"  - **#{&1.claim.support}** — #{line(&1)}\n    #{&1.claim.support_note}", "claim", 8)}
             """,
             answer: "Correct the claim, retract it, or accept the attribution."
           }
@@ -610,7 +643,7 @@ defmodule Wekui.Report do
             proposed the finer under it. A proposed place cannot widen the name
             gate until a human promotes it.
 
-            #{Enum.map_join(places, "\n", &"  - **#{&1.canonical_name}** (#{&1.type}) — #{path(&1)}")}
+            #{bounded(places, &"  - **#{&1.canonical_name}** (#{&1.type}) — #{path(&1)}", "place", 8)}
             """,
             answer: "Promote, rename, or discard."
           }
@@ -701,12 +734,15 @@ defmodule Wekui.Report do
             same place and close in time, because a woman missing in one building and
             a woman missing in another are two claims.
 
-            #{Enum.map_join(found, "\n\n", &duplicate_claim_entry/1)}
+            #{bounded(found, &duplicate_claim_entry/1, "pair")}
             """,
             answer:
-              "Per pair: **merge** (the earlier account keeps its evidence and absorbs " <>
-                "the other's), or **apart** (two happenings — I record that so it is " <>
-                "never asked again)."
+              "Do NOT answer these one by one — at this scale that is not a review, it " <>
+                "is a second job. Read the sample and tell me what the finder is getting " <>
+                "wrong, and that becomes a rule. Per pair, when a pair is genuinely " <>
+                "worth it: **merge** (the earlier account keeps its evidence and absorbs " <>
+                "the other's), or **apart** (two happenings — recorded, so it is never " <>
+                "asked again)."
           }
         ]
     end
@@ -886,12 +922,40 @@ defmodule Wekui.Report do
     end
   end
 
+  # THE RECORD, NOT A DUMP OF IT. This wrote every current claim in full. At 67 claims
+  # that was a reference; at 2,596 it was two megabytes nobody opens, and a document a
+  # person cannot read is not a review surface — the same rule that bounds the
+  # questions bounds this (`docs/mechanisms.md`).
+  #
+  # The newest are shown because the newest are the ones just written and least
+  # checked. The rest are on the record and reachable; they are simply not printed.
+  @claims_shown 60
+
+  # NOTHING IS LISTED IN FULL. A question body that grows with the corpus is the same
+  # failure as a question class that grows with it: 3,213 duplicate pairs printed in
+  # full were 557KB, 84% of a report nobody could open. The count is the fact; the
+  # sample is what a person reads; the rest are on the record.
+  defp bounded(items, render, noun, shown \\ @spot_checks) do
+    sample = Enum.take(items, shown)
+    rest = length(items) - length(sample)
+
+    Enum.map_join(sample, "\n\n", render) <>
+      if rest > 0,
+        do:
+          "\n\n  …and #{rest} more #{noun}(s), not printed. The count above is the fact; reading them all is not the job.",
+        else: ""
+  end
+
   defp claims_section(world) do
+    shown = world.claims |> Enum.reverse() |> Enum.take(@claims_shown)
+    rest = length(world.claims) - length(shown)
+
     """
 
     ## The claims (#{length(world.claims)})
 
-    #{Enum.map_join(world.claims, "\n", &claim_entry/1)}
+    #{if rest > 0, do: "The #{length(shown)} most recent are below. The other #{rest} are on the record — this file is a review surface, not a dump of it.\n", else: ""}
+    #{Enum.map_join(shown, "\n", &claim_entry/1)}
     """
   end
 

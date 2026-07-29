@@ -218,10 +218,11 @@ defmodule Wekui.ReportTest do
 
     report = Report.render(ctx.event)
 
-    assert report =~ "25 person(s) at the handle gate — 3 need you"
+    assert report =~ "25 person(s) at the handle gate"
+    assert report =~ ~r/rule\(s\) would settle them/
     assert report =~ "derived cleanly and collide with nobody — 3 to spot-check"
-    # The rest are listed, never hidden.
-    assert report =~ "and 22 more, listed so nothing is hidden"
+    # A rule per group, never a row per person.
+    assert report =~ "Give a rule for each group above, not a handle each"
     assert report =~ "approve the rest as a batch"
   end
 
@@ -235,7 +236,7 @@ defmodule Wekui.ReportTest do
 
     report = Report.render(ctx.event)
 
-    assert report =~ "2 collide — two people, one handle, which identifies neither"
+    assert report =~ ~r/1 handle\(s\) shared by two or more people/
   end
 
   test "a name the derivation refused is separated from the ones it read", ctx do
@@ -247,7 +248,7 @@ defmodule Wekui.ReportTest do
 
     report = Report.render(ctx.event)
 
-    assert report =~ "1 have no handle — the derivation refused"
+    assert report =~ "the derivation refused as **a lone token**"
   end
 
   test "asks about a claim the support gate flagged", ctx do
