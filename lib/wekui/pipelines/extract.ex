@@ -16,6 +16,8 @@ defmodule Wekui.Pipelines.Extract do
   alias Wekui.Narrative
   alias Wekui.Narrative.PlaceResolver
   alias Wekui.Narrative.ThemeResolver
+  alias Wekui.Normalize
+  alias Wekui.Taxonomy
 
   @doc """
   Extracts claims from `posts` (a batch of Posts) using `agent` (the extractor,
@@ -29,9 +31,10 @@ defmodule Wekui.Pipelines.Extract do
     if Worker.ready?() do
       with rendered <- render(event, agent, posts, opts),
            {:ok, %{content: content}} <- Worker.complete(rendered, model: agent.model),
-           {:ok, claims} <- parse(content) do
+           {:ok, claims, unfitted} <- parse(content) do
         by_xid = Map.new(posts, &{to_string(&1.x_id), &1})
-        {:ok, summarize(Enum.map(claims, &write_claim(event, agent, &1, by_xid)))}
+        written = Enum.map(claims, &write_claim(event, agent, &1, by_xid))
+        {:ok, summarize(written, unfitted, posts)}
       end
     else
       {:error, {:state_gate, :worker_not_ready}}
@@ -51,7 +54,38 @@ defmodule Wekui.Pipelines.Extract do
     |> String.replace("{{t_start}}", iso(Keyword.get(opts, :t_start)))
     |> String.replace("{{t_end}}", iso(Keyword.get(opts, :t_end)))
     |> String.replace("{{prior}}", Keyword.get(opts, :prior, "(ninguno)"))
+    |> String.replace("{{vocabulary}}", vocabulary(event))
     |> String.replace("{{material}}", material)
+  end
+
+  # The ratified vocabulary, rendered for the model: what it may say happened, and what
+  # it may NOT turn into a claim. The rule matters more than the name — a name alone
+  # does not stop a reader stretching it over evidence that does not bear it — so each
+  # theme carries its `applies_when` verbatim.
+  #
+  # The TOPICS are here for the refusal they make possible. Naming them is what lets a
+  # model recognise a plea AS a plea instead of reaching for the nearest happening; an
+  # open field makes "this is not a claim" inexpressible.
+  defp vocabulary(event) do
+    {happenings, topics} =
+      event.id
+      |> Taxonomy.list_active_themes!()
+      |> Enum.split_with(&(&1.nature == :happening))
+
+    """
+    HAPPENINGS — every claim must name exactly one of these:
+    #{lines(happenings)}
+
+    TOPICS — a post may be about one of these and NO CLAIM FOLLOWS from it. Recognising
+    one is how you know to record nothing:
+    #{lines(topics)}
+    """
+  end
+
+  defp lines(themes) do
+    Enum.map_join(themes, "\n", fn theme ->
+      "- «#{theme.name}» — applies when: #{theme.applies_when}"
+    end)
   end
 
   defp iso(nil), do: ""
@@ -59,9 +93,14 @@ defmodule Wekui.Pipelines.Extract do
 
   defp parse(content) do
     case content |> strip_fence() |> Jason.decode() do
-      {:ok, %{"claims" => claims}} when is_list(claims) -> {:ok, claims}
-      {:ok, _no_claims_key} -> {:error, :no_claims}
-      {:error, error} -> {:error, {:invalid_json, error}}
+      {:ok, %{"claims" => claims} = answer} when is_list(claims) ->
+        {:ok, claims, List.wrap(answer["unfitted"])}
+
+      {:ok, _no_claims_key} ->
+        {:error, :no_claims}
+
+      {:error, error} ->
+        {:error, {:invalid_json, error}}
     end
   end
 
@@ -85,12 +124,25 @@ defmodule Wekui.Pipelines.Extract do
         {:skip, :no_valid_citations}
 
       [first | _rest] ->
+        write_filed(event, agent, claim, posts, first)
+    end
+  end
+
+  # NO THEME, NO CLAIM. A happening the vocabulary cannot name does not become a claim
+  # that says nothing and reaches nobody — it belongs in `unfitted`, where a person
+  # decides whether the vocabulary should grow.
+  #
+  # This also closes a leak by construction: an unfiled claim was still storing the
+  # model's free prose, and free prose about this corpus contains private names.
+  defp write_filed(event, agent, claim, posts, first) do
+    case theme_id(event, claim) do
+      nil ->
+        {:skip, {:no_theme, to_string(claim["theme"] || "")}}
+
+      theme_id ->
         attrs = %{
           event_id: event.id,
-          # The extractor's own words, filed under a theme the vocabulary holds. A
-          # kind that reaches none is written without one and reaches no reader —
-          # honest, on the record, and silent (`Wekui.Narrative.ThemeResolver`).
-          theme_id: theme_id(event, claim["kind"]),
+          theme_id: theme_id,
           kind: to_string(claim["kind"] || "otro"),
           subject: claim["subject_role"],
           magnitude: claim["magnitude"],
@@ -114,7 +166,26 @@ defmodule Wekui.Pipelines.Extract do
     end
   end
 
-  defp theme_id(event, kind) do
+  # The model chose from a CLOSED list, so the name is matched exactly (folded). The
+  # fuzzy resolver is the fallback for a model that answered off-list or for a legacy
+  # claim, and it refuses far more than it accepts — by design
+  # (`Wekui.Narrative.ThemeResolver`).
+  defp theme_id(event, claim) do
+    named = Normalize.fold(to_string(claim["theme"] || ""))
+
+    chosen =
+      event.id
+      |> Taxonomy.list_active_themes!()
+      |> Enum.filter(&(&1.nature == :happening))
+      |> Enum.find(&(Normalize.fold(&1.name) == named))
+
+    cond do
+      chosen -> chosen.id
+      true -> fallback(event, claim["kind"])
+    end
+  end
+
+  defp fallback(event, kind) do
     case ThemeResolver.resolve(event.id, to_string(kind || "")) do
       {:ok, theme} -> theme.id
       :no_theme -> nil
@@ -139,12 +210,25 @@ defmodule Wekui.Pipelines.Extract do
 
   defp confidence(_absent), do: nil
 
-  defp summarize(results) do
+  # EVERY POST IS ACCOUNTED FOR. A batch splits into the posts a claim cites, the
+  # posts the model reported as evidencing something the vocabulary has no word for,
+  # and the rest — which evidenced nothing. Before this, a post that fit nothing simply
+  # vanished, and a silence is not auditable (`docs/mechanisms.md`).
+  defp summarize(results, unfitted, posts) do
+    cited =
+      for({:ok, claim} <- results, do: claim.id)
+      |> Enum.flat_map(&Narrative.list_claim_citations!/1)
+      |> MapSet.new(& &1.post_id)
+
     %{
       claims: length(results),
       drafted: Enum.count(results, &match?({:ok, _}, &1)),
       skipped: Enum.count(results, &match?({:skip, _}, &1)),
-      skips: for({:skip, reason} <- results, do: reason)
+      skips: for({:skip, reason} <- results, do: reason),
+      posts: length(posts),
+      cited: MapSet.size(cited),
+      unfitted: Enum.map(unfitted, &to_string(&1["what_happened"] || "")),
+      unread: length(posts) - MapSet.size(cited)
     }
   end
 end

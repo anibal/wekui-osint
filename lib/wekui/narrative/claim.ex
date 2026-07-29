@@ -107,7 +107,13 @@ defmodule Wekui.Narrative.Claim do
       # person name at all, not even an allowlisted public figure (a public figure used
       # to point at a private relative is the leak). The nuance is lenient — a public
       # official acting publicly may be named there.
-      validate {NoPrivateName, strict: [:subject], lenient: [:nuance]}
+      # `kind` is STRICT alongside `subject`. It was left out while it held a single
+      # type word — "colapso" cannot name anybody. The moment the prompt invited a
+      # short phrase instead, the model wrote "Sonia Carolina Muñoz Martínez
+      # desaparecida en Edificio Coral Suites" into it, twenty times. A gate protects
+      # the fields it was told about, and widening what a field holds without
+      # revisiting the gate is exactly how a red line is crossed by accident.
+      validate {NoPrivateName, strict: [:subject, :kind], lenient: [:nuance]}
     end
 
     update :retract do

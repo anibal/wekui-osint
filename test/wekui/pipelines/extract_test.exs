@@ -11,7 +11,18 @@ defmodule Wekui.Pipelines.ExtractTest do
     agent = agent!(event, %{prompt: "Extract from:\n{{material}}"})
     p1 = post!(event, %{x_id: "111", text: "rescate en Caraballeda"})
     p2 = post!(event, %{x_id: "222", text: "chatter irrelevante"})
-    %{event: event, agent: agent, p1: p1, p2: p2}
+
+    # The ratified vocabulary. A claim the model cannot file under one of these is not
+    # written at all — it belongs in `unfitted`, where a person decides whether the
+    # vocabulary should grow.
+    rescate =
+      theme!(event, %{
+        name: "Persona rescatada con vida",
+        applies_when: "the post asserts a named person was pulled out alive",
+        nature: :happening
+      })
+
+    %{event: event, agent: agent, p1: p1, p2: p2, rescate: rescate}
   end
 
   defp stub_claims(claims) do
@@ -25,6 +36,7 @@ defmodule Wekui.Pipelines.ExtractTest do
   test "writes claims, evidence, and persons from the worker's output", ctx do
     stub_claims([
       %{
+        "theme" => "Persona rescatada con vida",
         "kind" => "rescate",
         "subject_role" => "un hombre de 21 años",
         "names" => ["Aaron Levi Cantillo Vargas"],
@@ -96,5 +108,72 @@ defmodule Wekui.Pipelines.ExtractTest do
     end)
 
     assert {:ok, %{claims: 0, drafted: 0}} = Extract.run(ctx.event, ctx.agent, [ctx.p1])
+  end
+
+  # Both of these were shipped and caught on the record within one turn. They are
+  # tested by name because the failure mode is silent.
+  describe "the vocabulary is the refusal" do
+    test "a happening the vocabulary cannot name is not written as a claim", ctx do
+      stub_claims([
+        %{
+          "theme" => "Saqueo de un comercio",
+          "kind" => "saqueo",
+          "citations" => ["111"],
+          "confidence" => 0.8
+        }
+      ])
+
+      assert {:ok, %{drafted: 0, skipped: 1, skips: [{:no_theme, "Saqueo de un comercio"}]}} =
+               Extract.run(ctx.event, ctx.agent, [ctx.p1], place_scope: "Caraballeda")
+
+      assert Narrative.list_claims!(ctx.event.id) == []
+    end
+
+    test "a private name in `kind` is refused — a gate protects the fields it knows", ctx do
+      # The prompt invited a short phrase instead of a type word and the model wrote
+      # "Sonia Carolina Muñoz Martínez desaparecida en Edificio Coral Suites" into
+      # `kind`, twenty times. `kind` was outside the red line while it held one word.
+      stub_claims([
+        %{
+          "theme" => "Persona rescatada con vida",
+          "kind" => "Aaron Levi Cantillo Vargas rescatado en OPP 25",
+          "citations" => ["111"],
+          "confidence" => 0.9
+        }
+      ])
+
+      assert {:ok, %{drafted: 0, skipped: 1}} =
+               Extract.run(ctx.event, ctx.agent, [ctx.p1], place_scope: "Caraballeda")
+
+      assert Narrative.list_claims!(ctx.event.id) == []
+    end
+
+    test "every post is accounted for: cited, unfitted, or read and dropped", ctx do
+      content =
+        Jason.encode!(%{
+          "claims" => [
+            %{
+              "theme" => "Persona rescatada con vida",
+              "kind" => "rescate",
+              "citations" => ["111"],
+              "confidence" => 0.9
+            }
+          ],
+          "unfitted" => [%{"what_happened" => "un saqueo", "citations" => ["222"]}]
+        })
+
+      Req.Test.stub(Wekui.Clients.Worker.Live, fn conn ->
+        Req.Test.json(conn, %{"choices" => [%{"message" => %{"content" => content}}]})
+      end)
+
+      assert {:ok, summary} =
+               Extract.run(ctx.event, ctx.agent, [ctx.p1, ctx.p2], place_scope: "Caraballeda")
+
+      # A post that fit nothing used to vanish, and a silence is not auditable.
+      assert summary.posts == 2
+      assert summary.cited == 1
+      assert summary.unread == 1
+      assert summary.unfitted == ["un saqueo"]
+    end
   end
 end
