@@ -22,6 +22,13 @@ defmodule Wekui.Pipelines.ExtractTest do
         nature: :happening
       })
 
+    # A TOPIC, so the pipeline can tell a routed plea from a mis-routed happening.
+    theme!(event, %{
+      name: "Solicitud de información",
+      applies_when: "the post asks whether anyone has news and asserts nothing itself",
+      nature: :topic
+    })
+
     %{event: event, agent: agent, p1: p1, p2: p2, rescate: rescate}
   end
 
@@ -171,7 +178,29 @@ defmodule Wekui.Pipelines.ExtractTest do
 
       assert summary.drafted == 0
       assert summary.topics == %{"Solicitud de información" => 2}
+      assert summary.misrouted_topics == %{}
+      # Both posts are accounted for by the topics list — routed, not lost.
+      assert summary.unread == 0
       assert Narrative.list_claims!(ctx.event.id) == []
+    end
+
+    test "a HAPPENING named in the topics list is a lost claim, and it is counted", ctx do
+      # The model recognised something real and declined to claim it. That is not a
+      # topic; it is a claim that got away, and it is invisible unless counted.
+      content =
+        Jason.encode!(%{
+          "claims" => [],
+          "topics" => [%{"topic" => "Persona rescatada con vida", "citations" => ["111"]}]
+        })
+
+      Req.Test.stub(Wekui.Clients.Worker.Live, fn conn ->
+        Req.Test.json(conn, %{"choices" => [%{"message" => %{"content" => content}}]})
+      end)
+
+      assert {:ok, summary} = Extract.run(ctx.event, ctx.agent, [ctx.p1], place_scope: "C")
+
+      assert summary.topics == %{}
+      assert summary.misrouted_topics == %{"Persona rescatada con vida" => 1}
     end
 
     test "every post is accounted for: cited, unfitted, or read and dropped", ctx do
@@ -195,11 +224,12 @@ defmodule Wekui.Pipelines.ExtractTest do
       assert {:ok, summary} =
                Extract.run(ctx.event, ctx.agent, [ctx.p1, ctx.p2], place_scope: "Caraballeda")
 
-      # A post that fit nothing used to vanish, and a silence is not auditable.
+      # A post that fit nothing used to vanish, and a silence is not auditable. All
+      # three lists carry citations, so all three count as accounted for.
       assert summary.posts == 2
       assert summary.cited == 1
-      assert summary.unread == 1
       assert summary.unfitted == ["un saqueo"]
+      assert summary.unread == 0
     end
   end
 end

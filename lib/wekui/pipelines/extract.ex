@@ -34,7 +34,7 @@ defmodule Wekui.Pipelines.Extract do
            {:ok, claims, unfitted, topics} <- parse(content) do
         by_xid = Map.new(posts, &{to_string(&1.x_id), &1})
         written = Enum.map(claims, &write_claim(event, agent, &1, by_xid))
-        {:ok, summarize(written, unfitted, topics, posts)}
+        {:ok, summarize(written, unfitted, topics, posts, by_xid)}
       end
     else
       {:error, {:state_gate, :worker_not_ready}}
@@ -213,15 +213,31 @@ defmodule Wekui.Pipelines.Extract do
 
   defp confidence(_absent), do: nil
 
-  # EVERY POST IS ACCOUNTED FOR. A batch splits into the posts a claim cites, the
-  # posts the model reported as evidencing something the vocabulary has no word for,
-  # and the rest — which evidenced nothing. Before this, a post that fit nothing simply
-  # vanished, and a silence is not auditable (`docs/mechanisms.md`).
-  defp summarize(results, unfitted, topics, posts) do
-    cited =
+  # EVERY POST IS ACCOUNTED FOR. A batch splits into the posts a claim cites, the posts
+  # the model routed to a topic, the posts it reported as evidencing something the
+  # vocabulary has no word for, and the rest — which evidenced nothing. Before this a
+  # post that fit nothing simply vanished, and a silence is not auditable
+  # (`docs/mechanisms.md`).
+  #
+  # All three lists carry citations, so all three count. An earlier version counted only
+  # claim citations and reported 14 of 20 looting posts "unread" while three `unfitted`
+  # entries were citing most of them — the accounting was wrong in the direction that
+  # makes the pipeline look worse than it is, which is still wrong.
+  defp summarize(results, unfitted, topics, posts, by_xid) do
+    from_claims =
       for({:ok, claim} <- results, do: claim.id)
       |> Enum.flat_map(&Narrative.list_claim_citations!/1)
       |> MapSet.new(& &1.post_id)
+
+    accounted =
+      (unfitted ++ topics)
+      |> Enum.flat_map(&List.wrap(&1["citations"]))
+      |> Enum.map(&Map.get(by_xid, to_string(&1)))
+      |> Enum.reject(&is_nil/1)
+      |> MapSet.new(& &1.id)
+      |> MapSet.union(from_claims)
+
+    {named, misrouted} = split_topics(topics, hd(posts).event_id)
 
     %{
       claims: length(results),
@@ -229,10 +245,22 @@ defmodule Wekui.Pipelines.Extract do
       skipped: Enum.count(results, &match?({:skip, _}, &1)),
       skips: for({:skip, reason} <- results, do: reason),
       posts: length(posts),
-      cited: MapSet.size(cited),
+      cited: MapSet.size(from_claims),
       unfitted: Enum.map(unfitted, &to_string(&1["what_happened"] || "")),
-      topics: Enum.frequencies(Enum.map(topics, &to_string(&1["topic"] || ""))),
-      unread: length(posts) - MapSet.size(cited)
+      topics: Enum.frequencies(named),
+      # A HAPPENING name in the topics list is the model declining to claim something
+      # it recognised — a lost claim, not a topic, and invisible until counted.
+      misrouted_topics: Enum.frequencies(misrouted),
+      unread: length(posts) - MapSet.size(accounted)
     }
+  end
+
+  defp split_topics(topics, event_id) do
+    active = Taxonomy.list_active_themes!(event_id)
+    names = Map.new(active, &{Normalize.fold(&1.name), &1.nature})
+
+    topics
+    |> Enum.map(&to_string(&1["topic"] || ""))
+    |> Enum.split_with(&(Map.get(names, Normalize.fold(&1)) == :topic))
   end
 end

@@ -37,7 +37,7 @@
 #
 # Idempotent: authors and posts are both upserts, and post identity is (event, x_id).
 #
-# Overridable: OLD_DB, EVENT, ROOT_PLACE, FROM, TO, LIMIT, INCLUDE_HELD.
+# Overridable: OLD_DB, EVENT, ROOT_PLACE, FROM, TO, LIMIT, INCLUDE_HELD, MATCH.
 
 require Ash.Query
 
@@ -52,6 +52,9 @@ root_place = System.get_env("ROOT_PLACE", "5") |> String.to_integer()
 from = System.get_env("FROM", "2026-06-25T04:00:00")
 to = System.get_env("TO", "2026-06-25T05:00:00")
 limit = System.get_env("LIMIT", "100000") |> String.to_integer()
+# An optional text filter, for pulling a targeted set — e.g. every post about looting,
+# to probe whether the vocabulary has a word for it.
+matching = System.get_env("MATCH", "")
 include_held? = System.get_env("INCLUDE_HELD") == "1"
 
 say = fn message -> IO.puts("  " <> message) end
@@ -71,6 +74,7 @@ IO.puts("\n── porting Caraballeda's posts ───────────�
 say.("from   #{old_db}")
 say.("into   #{event.name} (#{event.id})")
 say.("window #{from} → #{to}")
+if matching != "", do: say.("match  posts containing #{inspect(matching)}")
 
 # ── the old app, read-only ────────────────────────────────────────────────────
 #
@@ -97,12 +101,13 @@ join authors a on a.id = po.author_id
 where pj.superseded_at is null
   and po.posted_at >= ?2
   and po.posted_at < ?3
+  and (?5 = '' or lower(po.normalized_text) like '%' || ?5 || '%')
 order by po.posted_at asc, po.id asc
 limit ?4
 """
 
 {:ok, statement} = Exqlite.Sqlite3.prepare(db, sql)
-:ok = Exqlite.Sqlite3.bind(statement, [root_place, from, to, limit])
+:ok = Exqlite.Sqlite3.bind(statement, [root_place, from, to, limit, String.downcase(matching)])
 {:ok, rows} = Exqlite.Sqlite3.fetch_all(db, statement)
 :ok = Exqlite.Sqlite3.close(db)
 
