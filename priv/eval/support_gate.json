@@ -91,6 +91,26 @@
       "claim_id": "0bdefba7-a851-4b72-95e1-a6c6e96aa784",
       "verdict": "supported",
       "why": "'Equipos especializados de Francia y Estados Unidos lograron sacar con vida...' Two named foreign countries with personnel present and working. Corroborated by a second post in another language."
+    },
+    {
+      "claim_id": "b0dd52fe-2bc7-42de-afd3-6afc88e68d60",
+      "verdict": "overstated",
+      "why": "THE RULE IS MET AND THE CERTAINTY IS ADDED. 'Posible senales de vida en la OPP22' reports signs detected, which the rule names outright as qualifying. What the claim drops is the word 'posible': it states as fact that a person is alive under the rubble. Gist borne, strength inflated."
+    },
+    {
+      "claim_id": "c00c1fbd-482d-47ed-858c-4d21d77f2a6c",
+      "verdict": "overstated",
+      "why": "THE CLAIM PICKED THE HEDGED PERSON AND UNHEDGED HER. The post asserts flatly that two named men are missing, then adds 'posiblemente su mama tambien en sillas de ruedas'. The claim is about the woman in the wheelchair and states her missing as fact. The happening is real; this person's part of it is not asserted."
+    },
+    {
+      "claim_id": "8c4ef07d-2c6e-4b35-98a7-9b468c291fb8",
+      "verdict": "unsupported",
+      "why": "THE OTHER SIDE OF THAT LINE, AND WHY THE PAIR MATTERS. 'Rescatar personas que PUEDAN ESTAR aun vivas' is hope, not a sign: no contact, no sound, no movement. The rule is not met at all, so this is unsupported where the OPP22 case is overstated. Signs detected but hedged is overstated; no signs at all is unsupported."
+    },
+    {
+      "claim_id": "3ed2862f-2895-4589-a1e4-c93dbcd5a616",
+      "verdict": "supported",
+      "why": "'Estan buscando a:' four people, each named, with the building they lived in. Whereabouts unknown is exactly the rule. The record marks this overstated on a note that argues the opposite — it says the number IS supported and then flags it anyway."
     }
   ]
 }

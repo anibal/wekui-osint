@@ -30,6 +30,12 @@ SECOND, only if the rule IS met: do the posts bear the rest of the claim, at the
 
 So: "unsupported" means the wrong thing, or nothing, happened. "overstated" means the right thing happened and the claim inflated it. A claim can only be overstated if it cleared the first question.
 
+A HEDGE DOES NOT FAIL THE RULE — IT CAPS THE STRENGTH, AND THAT IS WHAT "overstated" IS FOR. Use all three verdicts; a gate that only ever answers two has stopped reading one of them. The line runs like this:
+- «Posible señales de vida en la OPP22» — signs WERE detected, and the rule names detected signs outright. The rule is met. What the claim dropped is the word «posible». That is "overstated".
+- «Rescatar personas que puedan estar aún vivas» — no contact, no sound, no movement, only hope. Nothing the rule asks for is present at all. That is "unsupported".
+- A post that asserts one person flatly and adds «posiblemente su mamá también» supports a claim about the first and OVERSTATES one about the second.
+Evidence present but hedged is "overstated". Evidence absent is "unsupported". Do not collapse the two.
+
 READ PAST THE OPENING WORDS, IN BOTH DIRECTIONS. A post very often asks AND tells, and its first phrase is the trap. «Se solicita información sobre EZIO NARDUCCI, donde perdieron comunicación tras el terremoto» opens as a request and then ASSERTS that contact was lost — a claim of a missing person is supported here, and flagging it because it begins "se solicita" would erase a real one. The opposite trap is the same trap: a post that only asks does not become an assertion because it sounds desperate.
 
 UNCONFIRMED IS NOT CONFIRMED. The test is grammatical. When the post puts the event in the conditional or reportative — «habría colapsado», «presuntamente», «dicen que», «no está confirmado» — it evidences that a report circulated, not that the thing happened. A claim stating it outright is at best "overstated"; a claim resting on nothing else is "unsupported".
