@@ -81,7 +81,15 @@ unread = fn ->
     |> Enum.filter(&is_nil(&1.superseded_at))
     |> MapSet.new(& &1.post_id)
 
-  read = MapSet.union(spoken, topical)
+  # A post the extractor read and found no theme in has been READ. Without this it
+  # came back on every pass — six batches on one post, twice.
+  silent =
+    event.id
+    |> Judgment.list_theme_nones!()
+    |> Enum.filter(&is_nil(&1.superseded_at))
+    |> MapSet.new(& &1.post_id)
+
+  read = spoken |> MapSet.union(topical) |> MapSet.union(silent)
 
   event.id
   |> Capture.list_posts!()

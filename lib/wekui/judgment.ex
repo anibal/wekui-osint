@@ -17,6 +17,7 @@ defmodule Wekui.Judgment do
       define :retract_theme_none, action: :retract
       define :get_theme_none, action: :read, get_by: [:id]
       define :current_theme_none, action: :current_for_post, args: [:post_id]
+      define :list_theme_nones, action: :by_event, args: [:event_id]
     end
 
     resource Wekui.Judgment.AuthorTagJudgment do

@@ -373,6 +373,21 @@ defmodule Wekui.Pipelines.ExtractTest do
       assert [_judgment] = Wekui.Judgment.current_theme_judgments!(ctx.p1.id)
     end
 
+    test "a post the extractor said nothing about is recorded as read", ctx do
+      # Without this a post that produced no claim and no topic left no trace, so the
+      # sweep handed it out again on every pass — six batches on one post, twice.
+      # `ThemeNone` has modelled it all along: an Actor's answer that a Post carries
+      # no theme. That IS the answer when the extractor read it and found nothing.
+      stub_claims([])
+
+      assert {:ok, %{drafted: 0, judged: 2}} =
+               Extract.run(ctx.event, ctx.agent, [ctx.p1, ctx.p2], place_scope: "C")
+
+      for post <- [ctx.p1, ctx.p2] do
+        assert [_none] = Wekui.Judgment.current_theme_none!(post.id)
+      end
+    end
+
     test "every post is accounted for: cited, unfitted, or read and dropped", ctx do
       content =
         Jason.encode!(%{

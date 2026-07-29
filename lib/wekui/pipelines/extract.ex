@@ -36,7 +36,8 @@ defmodule Wekui.Pipelines.Extract do
         by_xid = Map.new(posts, &{to_string(&1.x_id), &1})
         written = Enum.map(claims, &write_claim(event, agent, &1, by_xid))
         judged = judge_topics(event, agent, written, topics, by_xid)
-        {:ok, summarize(written, unfitted, topics, posts, by_xid, judged)}
+        silent = judge_silence(event, agent, written, topics, posts, by_xid)
+        {:ok, summarize(written, unfitted, topics, posts, by_xid, judged + silent)}
       end
     else
       {:error, {:state_gate, :worker_not_ready}}
@@ -340,6 +341,48 @@ defmodule Wekui.Pipelines.Extract do
       })
 
       post.id
+    end)
+    |> length()
+  end
+
+  # THE THIRD LEG OF THE CONSERVATION LAW, MADE DURABLE. A post the extractor read and
+  # said nothing about — no claim, no topic — left no trace, so the sweep handed it out
+  # again on every pass. Seen live twice: six batches, one post, six calls.
+  #
+  # `Wekui.Judgment.ThemeNone` has modelled it all along: an Actor's answer that a Post
+  # carries no theme. That IS the extractor's answer when it read a post and found
+  # nothing in it, and it is a real judgement rather than an absence — which is why it
+  # belongs on the record and not in a variable that dies with the run.
+  #
+  # A post cited by an `unfitted` entry is deliberately included: the extractor DID read
+  # it and reported that it evidences something the vocabulary cannot name. That is an
+  # answer about themes, and the entry survives separately in the residue.
+  defp judge_silence(event, agent, written, topics, posts, by_xid) do
+    spoke =
+      for({:ok, claim} <- written, do: claim.id)
+      |> Enum.flat_map(&Narrative.list_claim_citations!/1)
+      |> MapSet.new(& &1.post_id)
+
+    routed =
+      (for({:routed, _name, routed_posts} <- written, post <- routed_posts, do: post.id) ++
+         (topics
+          |> Enum.flat_map(&List.wrap(&1["citations"]))
+          |> Enum.map(&Map.get(by_xid, to_string(&1)))
+          |> Enum.reject(&is_nil/1)
+          |> Enum.map(& &1.id)))
+      |> MapSet.new()
+
+    answered = MapSet.union(spoke, routed)
+
+    posts
+    |> Enum.reject(&MapSet.member?(answered, &1.id))
+    |> Enum.map(fn post ->
+      Judgment.judge_theme_none!(%{
+        event_id: event.id,
+        post_id: post.id,
+        actor_id: agent.id,
+        confidence: 0.6
+      })
     end)
     |> length()
   end

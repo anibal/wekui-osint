@@ -89,6 +89,14 @@ defmodule Wekui.Judgment.ThemeNone do
 
       filter expr(post_id == ^arg(:post_id) and is_nil(superseded_at))
     end
+
+    read :by_event do
+      description "Every 'no theme' answer of one Event — what has been read and found empty."
+      argument :event_id, :uuid, allow_nil?: false
+
+      filter expr(event_id == ^arg(:event_id))
+      prepare build(sort: [inserted_at: :asc, id: :asc])
+    end
   end
 
   attributes do
