@@ -98,6 +98,35 @@ defmodule Wekui.ReportTest do
     assert report =~ "una maestra"
   end
 
+  # At 107 posts this class was 15 separate questions and the operator said he would
+  # not answer them. At 2,791 it was 152 — a question class growing with the corpus,
+  # which is the failure `docs/mechanisms.md` exists to forbid.
+  test "many unsure links become ONE question with a bounded sample", ctx do
+    # A place with no look-alike, so these are low-confidence links and NOT the
+    # gazetteer tie — `ambiguous_names/1` asks that, and it already asks it once.
+    lonely =
+      place!(ctx.event, %{
+        canonical_name: "Quinta Zarzamora",
+        type: "edificio",
+        parent_id: ctx.caraballeda.id
+      })
+
+    for n <- 1..20 do
+      claim!(ctx, %{subject: "persona #{n}", place_mention: "Quinta Zarzamora"},
+        place: lonely,
+        how: :mention_fuzzy,
+        confidence: 0.65
+      )
+    end
+
+    report = Report.render(ctx.event)
+
+    assert report =~ "place link(s) the resolver was unsure of — 3 to spot-check"
+    # One question, not twenty.
+    assert report |> String.split("A place link the resolver is unsure of") |> length() == 1
+    assert report =~ "that is a rule, and it will settle the other"
+  end
+
   test "says how unsure the resolver was when it was not sure", ctx do
     place!(ctx.event, %{
       canonical_name: "Caribe Mar",

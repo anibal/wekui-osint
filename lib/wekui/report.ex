@@ -43,6 +43,13 @@ defmodule Wekui.Report do
 
   @low_confidence 0.7
 
+  # How many of anything a person must actually look at. THREE, whether the corpus
+  # holds three hundred posts or three hundred thousand — human attention is bounded
+  # and machine attention is not (`docs/mechanisms.md`). Defined here, above every use:
+  # an attribute read before it is set expands to nil, and a bounded sample of nil is
+  # not bounded, it is broken.
+  @spot_checks 3
+
   # A question with fifty candidates is a wall, not a question. The rest are
   # counted, never silently dropped.
   @max_candidates 6
@@ -302,29 +309,70 @@ defmodule Wekui.Report do
   # IS the mention. Asking "confirm the place, or name the right one" about it asked a
   # person to confirm a tautology, ten times, while the SAME decision waited under
   # "places a machine proposed". One question wearing two costumes.
+  # ONE QUESTION, A BOUNDED SAMPLE — not one question per link.
+  #
+  # This asked separately about every low-confidence link. At 107 posts that was 15
+  # questions and the operator said plainly he would not answer them. At 2,791 posts it
+  # was **152**, which is the failure `docs/mechanisms.md` exists to forbid: a question
+  # class that grows with the corpus.
+  #
+  # And most of them were not questions at all. Confidence 0.65 is `mention_fuzzy` with
+  # a SOLE candidate — there was no alternative to name, so "confirm the place, or name
+  # the right one" asked a person to confirm a match against nothing. A true tie is a
+  # different question and `ambiguous_names/1` already asks it.
+  #
+  # So: the resolver's low-confidence links are DECISIONS it made, with their
+  # provenance, and what reaches a person is a sample to spot-check. Three, whether the
+  # corpus holds three hundred posts or three hundred thousand.
   defp low_confidence(world, covered) do
-    world.claims
-    |> Enum.flat_map(fn detail ->
-      for %{link: link, place: place} <- detail.links,
-          place,
-          link.how_resolved != :mention_ancestor,
-          link.confidence && link.confidence < @low_confidence,
-          detail.claim.id not in covered do
-        %{
-          kind: :low_confidence,
-          title: "A place link the resolver is unsure of (#{link.confidence})",
-          claim_ids: [detail.claim.id],
-          body: """
-          “#{detail.claim.place_mention}” was linked to **#{path(place)}**
-          (#{link.how_resolved}, confidence #{link.confidence}) — matched, but
-          without anything in the mention to anchor which one was meant.
+    unsure =
+      world.claims
+      |> Enum.flat_map(fn detail ->
+        for %{link: link, place: place} <- detail.links,
+            place,
+            link.how_resolved != :mention_ancestor,
+            link.confidence && link.confidence < @low_confidence,
+            detail.claim.id not in covered do
+          %{detail: detail, link: link, place: place}
+        end
+      end)
 
-            - #{line(detail)}
-          """,
-          answer: "Confirm the place, or name the right one."
-        }
-      end
-    end)
+    case unsure do
+      [] ->
+        []
+
+      all ->
+        # Weakest first: if any of these is wrong, it is likeliest to be one of them.
+        sample = all |> Enum.sort_by(& &1.link.confidence) |> Enum.take(@spot_checks)
+        by_how = all |> Enum.frequencies_by(& &1.link.how_resolved)
+
+        [
+          %{
+            kind: :low_confidence,
+            title:
+              "#{length(all)} place link(s) the resolver was unsure of — #{length(sample)} to spot-check",
+            claim_ids: Enum.map(sample, & &1.detail.claim.id),
+            body: """
+            These are decisions the resolver already made, each with its confidence on
+            the record. Nothing here is waiting on you — check the sample, and if it is
+            right, the rest are made the same way.
+
+            How they were matched: #{Enum.map_join(by_how, ", ", fn {how, n} -> "#{n} #{how}" end)}.
+
+            #{Enum.map_join(sample, "\n", &unsure_row/1)}
+            """,
+            answer:
+              "Check these three. If one is wrong, say which and why — that is a rule, and it will settle the other #{length(all) - length(sample)} without your reading them."
+          }
+        ]
+    end
+  end
+
+  defp unsure_row(%{detail: detail, link: link, place: place}) do
+    """
+    - “#{detail.claim.place_mention}” → **#{path(place)}**
+      (#{link.how_resolved}, only #{link.confidence} sure) — #{line(detail)}
+    """
   end
 
   defp unresolved(world) do
@@ -412,11 +460,6 @@ defmodule Wekui.Report do
 
     "| **#{theme.name}** | #{(parent && parent.name) || "—"} | #{rule} |"
   end
-
-  # How many of a person's handles a human must actually look at. THREE, whether the
-  # corpus holds three hundred posts or three hundred thousand — human attention is
-  # bounded and machine attention is not (`docs/mechanisms.md`).
-  @spot_checks 3
 
   # The handle gate, bounded.
   #
