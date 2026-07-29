@@ -138,7 +138,10 @@ defmodule Wekui.Narrative.BeatRenderer do
     {cites, sources} = cite(claim, sources)
 
     ctx = %{
-      kind: claim.kind,
+      # The THEME, never `kind`. A claim only reaches here filed under a theme a
+      # person ratified, so this string is curated Spanish — not whatever a model
+      # typed. `kind` stays on the claim as provenance and is never displayed.
+      theme: theme_name(claim),
       subject: claim.subject,
       status: claim.status,
       magnitude: claim.magnitude,
@@ -193,11 +196,27 @@ defmodule Wekui.Narrative.BeatRenderer do
 
   defp first_name(handle), do: handle |> String.split() |> hd()
 
-  ## ─────────────────────────── per-kind templates ───────────────────────────
+  defp theme_name(claim) do
+    case claim.theme_id && Taxonomy.get_theme(claim.theme_id) do
+      {:ok, theme} -> theme.name
+      _unfiled -> nil
+    end
+  end
 
-  # `kind` is an open string, so match on keywords with a generic fallback.
+  ## ─────────────────────────── per-theme templates ───────────────────────────
+
+  # THE VOCABULARY IS THE DISPATCH TABLE. This matched `kind` — an open string —
+  # against five keyword families with a fallback that printed `"#{kind}: #{subject}"`,
+  # which is a field name and a colon, in a public memorial. It is how
+  # `solicitud de información sobre edificio: []` and
+  # `70% de edificios afectados en Tanaguarena: []` reached the reader.
+  #
+  # Now it dispatches on the theme: a closed, ratified, curated set of Spanish names.
+  # The families stay because a theme's name reads the way its family reads, and the
+  # fallback can no longer print a field — the worst it can do is say plainly that
+  # something of a named kind occurred.
   defp clause(ctx) do
-    k = String.downcase(ctx.kind || "")
+    k = String.downcase(ctx.theme || "")
 
     cond do
       # Ordered by specificity so an overlapping keyword can't misfire: a toll that
@@ -243,7 +262,35 @@ defmodule Wekui.Narrative.BeatRenderer do
       else: "el balance oficial reportó #{parts}"
   end
 
-  defp generic_clause(ctx), do: "#{ctx.kind}: #{ctx.person || ctx.subject}"
+  # Never a field name, never a bare colon, never an empty slot. A theme the families
+  # do not know still has a curated Spanish name, so the honest thing is to say that
+  # it happened — and to name whom, when the claim knows.
+  defp generic_clause(ctx) do
+    what = ctx.theme |> to_string() |> String.trim() |> lower_first()
+    whom = ctx.person || ctx.subject
+
+    case {what, whom} do
+      {"", nil} -> "se registró un hecho"
+      {"", who} -> "se registró un hecho relativo a #{who}"
+      {what, nil} -> "se registró #{article(what)}#{what}"
+      {what, who} -> "se registró #{article(what)}#{what}, relativo a #{who}"
+    end
+  end
+
+  # The vocabulary's names are written as labels ("Colapso estructural"), so they need
+  # an article to sit inside a sentence. Spanish gender is guessed from the ending —
+  # wrong sometimes, and a wrong article reads as a typo while a missing one reads as
+  # a machine. The LLM polish pass the operator described is what fixes this properly.
+  defp article(what) do
+    cond do
+      String.starts_with?(what, ["un ", "una ", "el ", "la ", "los ", "las "]) -> ""
+      String.match?(what, ~r/^[^\s]*(a|ción|sión|dad)\b/u) -> "una "
+      true -> "un "
+    end
+  end
+
+  defp lower_first(""), do: ""
+  defp lower_first(<<first::utf8, rest::binary>>), do: String.downcase(<<first::utf8>>) <> rest
 
   defp trapped(%{"hours" => h}) when not is_nil(h), do: ", tras #{h} horas bajo los escombros"
   defp trapped(%{"horas" => h}) when not is_nil(h), do: ", tras #{h} horas bajo los escombros"

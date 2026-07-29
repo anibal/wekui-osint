@@ -28,19 +28,45 @@ defmodule Wekui.Narrative.BeatRendererTest do
       la_guaira: la_guaira,
       caraballeda: caraballeda,
       opp: opp,
-      # A claim reaches a reader only under a theme a person ratified. Every claim
-      # below carries one; the gate itself is tested at the foot of this file.
-      theme: theme!(event)
+      # A claim reaches a reader only under a theme a person ratified, and the theme
+      # is now the renderer's dispatch table — so the default is a real vocabulary
+      # name and a test that wants another clause names the theme that carries it.
+      theme:
+        theme!(event, %{
+          name: "Colapso estructural",
+          applies_when: "the post states that a named building came down",
+          nature: :happening
+        })
     }
   end
 
+  # The vocabulary IS the dispatch table now, so a test that wants a particular clause
+  # asks for the theme that carries it — exactly as the real record does.
+  defp theme_for(ctx, nil), do: ctx.theme
+
+  defp theme_for(ctx, name) do
+    case Enum.find(Wekui.Taxonomy.list_themes!(ctx.event.id), &(&1.name == name)) do
+      nil ->
+        theme!(ctx.event, %{
+          name: name,
+          applies_when: "the post asserts that #{name} occurred",
+          nature: :happening
+        })
+
+      held ->
+        held
+    end
+  end
+
   defp claim!(ctx, attrs, place, opts \\ []) do
+    {theme, attrs} = Map.pop(attrs, :theme)
+
     c =
       Narrative.draft_claim!(
         Map.merge(
           %{
             event_id: ctx.event.id,
-            theme_id: ctx.theme.id,
+            theme_id: theme_for(ctx, theme).id,
             first_seen_at: ~U[2026-06-25 04:00:00.000000Z],
             actor_id: ctx.agent.id,
             confidence: 0.9
@@ -74,7 +100,12 @@ defmodule Wekui.Narrative.BeatRendererTest do
   test "renders a rescue by the person's handle and role, and cites its post", ctx do
     claim!(
       ctx,
-      %{kind: "rescate en curso", subject: "un hombre de 21 años", status: "atrapado"},
+      %{
+        kind: "rescate en curso",
+        theme: "Persona rescatada con vida",
+        subject: "un hombre de 21 años",
+        status: "atrapado"
+      },
       ctx.opp,
       persons: ["Aaron Levi Cantillo Vargas"]
     )
@@ -87,18 +118,33 @@ defmodule Wekui.Narrative.BeatRendererTest do
   end
 
   test "a claim with no resolved person is told by role — never a raw name", ctx do
-    claim!(ctx, %{kind: "rescate", subject: "una mujer", status: "rescatado"}, ctx.caraballeda)
+    claim!(
+      ctx,
+      %{
+        kind: "rescate",
+        theme: "Persona rescatada con vida",
+        subject: "una mujer",
+        status: "rescatado"
+      },
+      ctx.caraballeda
+    )
+
     prose = beat(ctx, ctx.caraballeda).prose
     assert prose =~ "una mujer"
   end
 
-  test "each kind reaches its own template", ctx do
-    claim!(ctx, %{kind: "colapso de edificio"}, ctx.opp)
-    claim!(ctx, %{kind: "búsqueda de personas desaparecidas", subject: "una maestra"}, ctx.opp)
+  test "each theme reaches its own template", ctx do
+    claim!(ctx, %{kind: "colapso", theme: "Colapso estructural"}, ctx.opp)
 
     claim!(
       ctx,
-      %{kind: "cuerpo de persona fallecida entre rescatistas", subject: "una persona"},
+      %{kind: "búsqueda", theme: "Búsqueda de personas desaparecidas", subject: "una maestra"},
+      ctx.opp
+    )
+
+    claim!(
+      ctx,
+      %{kind: "fallecimiento", theme: "Cuerpo recuperado o identificado", subject: "una persona"},
       ctx.opp
     )
 
@@ -109,7 +155,15 @@ defmodule Wekui.Narrative.BeatRendererTest do
   end
 
   test "an unsupported claim is attributed, not stated as fact", ctx do
-    claim!(ctx, %{kind: "rescate", subject: "un hombre", status: "rescatado"}, ctx.caraballeda,
+    claim!(
+      ctx,
+      %{
+        kind: "rescate",
+        theme: "Persona rescatada con vida",
+        subject: "un hombre",
+        status: "rescatado"
+      },
+      ctx.caraballeda,
       support: :unsupported
     )
 
@@ -119,7 +173,11 @@ defmodule Wekui.Narrative.BeatRendererTest do
   test "scope holds by construction — an ancestor-place claim is excluded", ctx do
     claim!(
       ctx,
-      %{kind: "cifra oficial de fallecidos", magnitude: %{"fallecidos" => 100, "heridos" => 200}},
+      %{
+        kind: "cifra oficial",
+        theme: "Declaración o cifra oficial",
+        magnitude: %{"fallecidos" => 100, "heridos" => 200}
+      },
       ctx.la_guaira
     )
 
@@ -149,7 +207,11 @@ defmodule Wekui.Narrative.BeatRendererTest do
 
     claim!(
       ctx,
-      %{kind: "cifra oficial", first_seen_at: ~U[2026-07-01 10:00:00.000000Z]},
+      %{
+        kind: "cifra oficial",
+        theme: "Declaración o cifra oficial",
+        first_seen_at: ~U[2026-07-01 10:00:00.000000Z]
+      },
       ctx.caraballeda
     )
 
@@ -217,6 +279,44 @@ defmodule Wekui.Narrative.BeatRendererTest do
         end
 
       assert Exception.message(error) =~ "is a topic, not a happening"
+    end
+  end
+
+  # The fallback used to print `"#{kind}: #{subject}"` — a field name, a colon, and
+  # often nothing at all — into a public memorial. It is how
+  # `solicitud de información sobre edificio: []` reached a reader.
+  describe "a theme the templates do not know still reads as Spanish" do
+    test "it says that the thing happened, never a field name", ctx do
+      claim!(ctx, %{kind: "saqueo", theme: "Saqueo de un comercio"}, ctx.opp)
+
+      prose = beat(ctx, ctx.opp).prose
+
+      assert prose =~ "se registró un saqueo de un comercio"
+      refute prose =~ ":"
+      refute prose =~ "saqueo:"
+    end
+
+    test "it names whom, when the claim knows", ctx do
+      claim!(
+        ctx,
+        %{kind: "saqueo", theme: "Saqueo de un comercio", subject: "un comerciante"},
+        ctx.opp
+      )
+
+      assert beat(ctx, ctx.opp).prose =~ "relativo a un comerciante"
+    end
+
+    test "an empty slot never reaches the reader", ctx do
+      # No subject, no person, no magnitude: the worst case, and it must still be a
+      # grammatical sentence rather than a colon with nothing after it.
+      claim!(ctx, %{kind: "algo", theme: "Réplica sísmica"}, ctx.opp)
+
+      prose = beat(ctx, ctx.opp).prose
+
+      # The two shapes the old fallback produced: "kind: [1]" and "... con vida a [1]".
+      refute prose =~ ~r/:\s*\[/
+      refute prose =~ ~r/\s\[\d/
+      assert prose =~ "se registró una réplica sísmica"
     end
   end
 end
